@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit Admin — Gift Card Trades</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#060D0B;font-family:var(--font-d);font-size:13px;font-weight:800}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:700;letter-spacing:.08em;background:rgba(226,75,74,.15);color:var(--red);padding:2px 6px;border-radius:20px;border:1px solid rgba(226,75,74,.2)}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:rgba(0,200,160,.1);color:var(--teal);font-weight:500;border:1px solid rgba(0,200,160,.15)}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--red);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-bottom{margin-top:auto}
+.admin-av{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-role{font-size:11px;color:var(--text-3)}
+.main{flex:1;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.content{flex:1;display:flex;align-items:center;justify-content:center;padding:40px}
+.coming-soon{text-align:center;max-width:460px}
+.cs-icon{font-size:60px;margin-bottom:20px}
+.cs-badge{display:inline-block;background:rgba(0,200,160,.08);border:1px solid rgba(0,200,160,.2);border-radius:20px;padding:6px 18px;font-size:12px;color:var(--teal);font-weight:600;margin-bottom:18px}
+.cs-title{font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--text);margin-bottom:10px}
+.cs-sub{font-size:14px;color:var(--text-2);line-height:1.75;margin-bottom:28px;font-weight:300}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;text-align:left}
+.cs-feat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px}
+.cs-feat-icon{font-size:18px;margin-bottom:5px}
+.cs-feat-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.cs-feat-desc{font-size:11px;color:var(--text-3);line-height:1.5}
+.btn-back{padding:11px 24px;background:var(--teal);color:#060D0B;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer;text-decoration:none;display:inline-block;margin-right:10px}
+.btn-ghost{padding:11px 20px;background:transparent;color:var(--text-2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-family:var(--font-b);cursor:pointer;text-decoration:none;display:inline-block}
+</style>
+</head>
+<body data-theme="light">
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark" style="background:var(--teal)"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">ADMIN</span>
+  </div>
+  <div class="sb-section">Overview</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Users
+    <span class="sb-badge" style="background:var(--teal);color:#060D0B">1,284</span>
+  </a>
+  <div class="sb-section">Trade Reviews</div>
+  <a class="sb-item" href="nexbit-admin-reviews.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Airtime trades
+    <span class="sb-badge">7</span>
+  </a>
+  <a class="sb-item active" href="nexbit-admin-giftcards.html">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/></svg>
+    Gift card trades
+    <span class="sb-badge">3</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-crypto.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto trades
+    <span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-fiberx.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+    MTN FiberX orders
+    <span class="sb-badge" style="background:var(--amber)">5</span>
+  </a>
+  <div class="sb-section">Finance</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
+    Withdrawals
+    <span class="sb-badge">2</span>
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    All transactions
+  </a>
+  <div class="sb-section">Compliance</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+    KYC reviews
+    <span class="sb-badge">5</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Exchange rates
+  </a>
+  <div class="sb-section">System</div>
+  <a class="sb-item" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+  <a class="sb-item" href="nexbit-auth.html"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log out</a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="admin-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">AD</div>
+      <div><div class="sb-user-name">Nexbit Admin</div><div class="sb-user-role" style="font-size:11px;color:var(--text-3)">Super Admin</div></div>
+    </div>
+  </div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left"><h1>Gift Card Trades</h1><p>Admin review panel</p></div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔</button>
+      <div class="admin-av" style="cursor:pointer">AD</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="coming-soon">
+      <div class="cs-icon">🎁</div>
+      <div class="cs-badge">🚧 Feature in development</div>
+      <div class="cs-title">Gift Card Trades</div>
+      <div class="cs-sub">This section will allow your team to review gift card submissions, verify card codes, check values, and approve or reject payouts. It is reserved and ready for when you launch the gift card feature.</div>
+      <div class="cs-grid"><div class="cs-feat"><div class="cs-feat-icon">🔍</div><div class="cs-feat-title">Card verification</div><div class="cs-feat-desc">Review uploaded card images and codes</div></div>
+<div class="cs-feat"><div class="cs-feat-icon">💰</div><div class="cs-feat-title">Rate management</div><div class="cs-feat-desc">Set rates per card brand and currency</div></div>
+<div class="cs-feat"><div class="cs-feat-icon">✅</div><div class="cs-feat-title">Approve & pay</div><div class="cs-feat-desc">One-click wallet credit on approval</div></div>
+<div class="cs-feat"><div class="cs-feat-icon">📊</div><div class="cs-feat-title">Trade analytics</div><div class="cs-feat-desc">Volume, brands, and revenue breakdown</div></div></div>
+      <a class="btn-back" href="nexbit-admin-reviews.html">← Airtime reviews</a>
+      <a class="btn-ghost" href="nexbit-admin-fiberx.html">FiberX orders →</a>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+  });
+</script>
+</body>
+</html>

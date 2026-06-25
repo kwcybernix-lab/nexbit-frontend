@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Sign up / Log in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  
+
+  
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    background: var(--green);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  .left-pattern {
+    position: absolute; inset: 0; opacity: 0.06;
+    background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .left-logo { display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+  .logo-mark {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark span { color: #fff; font-family: var(--font-display); font-size: 14px; font-weight: 700; }
+  .logo-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #fff; }
+  .logo-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    background: rgba(255,255,255,0.18); color: #fff;
+    padding: 2px 8px; border-radius: 20px;
+  }
+
+  .left-content { position: relative; z-index: 1; }
+  .left-content h2 {
+    font-family: var(--font-display); font-size: 36px; font-weight: 800;
+    color: #fff; line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.02em;
+  }
+  .left-content p { font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.65; font-weight: 300; max-width: 340px; }
+
+  .left-features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
+  .feature-item { display: flex; align-items: center; gap: 12px; }
+  .feature-check {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+  .feature-text { font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 300; }
+
+  .left-bottom { position: relative; z-index: 1; }
+  .testimonial {
+    background: rgba(255,255,255,0.1); border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .testimonial-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; font-weight: 300; margin-bottom: 12px; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: #fff;
+  }
+  .author-name { font-size: 13px; font-weight: 500; color: #fff; }
+  .author-loc { font-size: 11px; color: rgba(255,255,255,0.6); }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    display: flex; flex-direction: column;
+    padding: 40px 56px;
+    min-height: 100vh; justify-content: center;
+    background: var(--surface);
+  }
+  .right-top { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .toggle-theme {
+    width: 36px; height: 36px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-2); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .right-top span { font-size: 13px; color: var(--text-2); }
+  .right-top a { font-size: 13px; color: var(--green); font-weight: 500; text-decoration: none; cursor: pointer; }
+
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
+  .auth-tab {
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    padding: 8px 24px; border-radius: 6px; border: none;
+    background: transparent; color: var(--text-2); cursor: pointer; transition: all 0.2s;
+  }
+  .auth-tab.active { background: var(--green); color: #fff; }
+
+  .form-title { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .form-sub { font-size: 14px; color: var(--text-2); margin-bottom: 28px; font-weight: 300; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { display: block; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: 6px; }
+  input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select {
+    width: 100%; padding: 11px 14px;
+    font-family: var(--font-body); font-size: 14px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus { border-color: var(--border-focus); background: var(--surface); }
+  input::placeholder { color: var(--text-3); }
+
+  .input-wrap { position: relative; }
+  .input-wrap input { padding-right: 44px; }
+  .input-icon {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 16px; cursor: pointer; color: var(--text-3); user-select: none;
+  }
+
+  .phone-wrap { display: flex; gap: 8px; }
+  .phone-code {
+    width: 90px; flex-shrink: 0;
+    padding: 11px 10px; font-family: var(--font-body); font-size: 14px;
+    color: var(--text); background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); outline: none;
+  }
+
+  .password-strength { margin-top: 6px; display: flex; gap: 4px; }
+  .strength-bar { height: 3px; flex: 1; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+  .strength-bar.weak { background: #E24B4A; }
+  .strength-bar.medium { background: #BA7517; }
+  .strength-bar.strong { background: var(--green); }
+  .strength-label { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+  .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--green); flex-shrink: 0; }
+  .checkbox-row label { font-size: 13px; color: var(--text-2); font-weight: 300; margin: 0; }
+  .checkbox-row a { color: var(--green); text-decoration: none; font-weight: 400; }
+
+  .btn-submit {
+    width: 100%; padding: 13px;
+    font-family: var(--font-body); font-size: 15px; font-weight: 500;
+    color: #fff; background: var(--green);
+    border: none; border-radius: var(--radius-sm);
+    cursor: pointer; transition: opacity 0.2s; margin-bottom: 20px;
+  }
+  .btn-submit:hover { opacity: 0.88; }
+
+  .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text { font-size: 12px; color: var(--text-3); }
+
+  .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .btn-social {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: transparent; font-family: var(--font-body); font-size: 13px;
+    color: var(--text); cursor: pointer; transition: background 0.2s; font-weight: 400;
+  }
+  .btn-social:hover { background: var(--bg); }
+  .btn-social img { width: 16px; height: 16px; }
+
+  .form-footer { text-align: center; font-size: 13px; color: var(--text-2); }
+  .form-footer a { color: var(--green); text-decoration: none; font-weight: 500; cursor: pointer; }
+
+  .forgot-link { text-align: right; margin-top: -10px; margin-bottom: 18px; }
+  .forgot-link a { font-size: 13px; color: var(--green); text-decoration: none; }
+
+  .error-msg {
+    display: none; background: var(--error-bg); border: 1px solid rgba(226,75,74,0.2);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    font-size: 13px; color: var(--error); margin-bottom: 16px;
+  }
+  .error-msg.show { display: block; }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  @media (max-width: 768px) {
+    body { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 32px 24px; justify-content: flex-start; padding-top: 48px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="left-pattern"></div>
+  <div class="left-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+
+  <div class="left-content">
+    <h2>Africa's smartest trading platform</h2>
+    <p>Join thousands of traders across Africa who trust Nexbit to sell airtime, trade gift cards, and swap crypto — instantly.</p>
+  </div>
+
+  <div class="left-features">
+    <div class="feature-item">
+      <div class="feature-check">⚡</div>
+      <span class="feature-text">Instant settlements — no delays</span>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">🔒</div>
+      <span class="feature-text">Bank-grade security & encryption</span>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">💱</div>
+      <span class="feature-text">Best rates updated in real time</span>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">🌍</div>
+      <span class="feature-text">Available in 15 African countries</span>
+    </div>
+  </div>
+
+  <div class="left-bottom">
+    <div class="testimonial">
+      <p class="testimonial-text">"Nexbit has changed how I handle my business finances. Fast, reliable, and the rates are always competitive."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">OK</div>
+        <div>
+          <div class="author-name">Omowunmi Kayode</div>
+          <div class="author-loc">Ogun, Nigeria</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="right-top">
+    <button class="toggle-theme" id="themeToggle" title="Toggle theme">🌙</button>
+    <span id="switch-hint">Already have an account? <a onclick="switchTab('login')">Log in</a></span>
+  </div>
+
+  <div class="auth-tabs">
+    <button class="auth-tab active" id="tab-signup" onclick="switchTab('signup')">Sign up</button>
+    <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Log in</button>
+  </div>
+
+  <!-- SIGN UP PANEL -->
+  <div class="panel active" id="panel-signup">
+    <h2 class="form-title">Create your account</h2>
+    <p class="form-sub">Start trading in under 2 minutes. No credit card needed.</p>
+
+    <div class="error-msg" id="signup-error">Please fill in all required fields correctly.</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="first-name">First name</label>
+        <input type="text" id="first-name" placeholder="Omowunmi" autocomplete="given-name" />
+      </div>
+      <div class="form-group">
+        <label for="last-name">Last name</label>
+        <input type="text" id="last-name" placeholder="Kayode" autocomplete="family-name" />
+      </div>
+      <div class="form-group full">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="omowunmi@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group full">
+        <label for="phone">Phone number</label>
+        <div class="phone-wrap">
+          <select class="phone-code" id="phone-code">
+            <option value="+234">🇳🇬 +234</option>
+            <option value="+233">🇬🇭 +233</option>
+            <option value="+254">🇰🇪 +254</option>
+            <option value="+27">🇿🇦 +27</option>
+            <option value="+256">🇺🇬 +256</option>
+            <option value="+255">🇹🇿 +255</option>
+            <option value="+251">🇪🇹 +251</option>
+            <option value="+225">🇨🇮 +225</option>
+          </select>
+          <input type="tel" id="phone" placeholder="080 0000 0000" style="flex:1;" />
+        </div>
+      </div>
+      <div class="form-group full">
+        <label for="country">Country</label>
+        <select id="country">
+          <option value="">Select your country</option>
+          <option>Nigeria</option>
+          <option>Ghana</option>
+          <option>Kenya</option>
+          <option>South Africa</option>
+          <option>Uganda</option>
+          <option>Tanzania</option>
+          <option>Ethiopia</option>
+          <option>Côte d'Ivoire</option>
+          <option>Senegal</option>
+          <option>Rwanda</option>
+          <option>Cameroon</option>
+          <option>Zambia</option>
+          <option>Zimbabwe</option>
+          <option>Mali</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" placeholder="Min. 8 characters" oninput="checkStrength(this.value)" />
+          <span class="input-icon" onclick="togglePwd('password', this)">👁</span>
+        </div>
+        <div class="password-strength">
+          <div class="strength-bar" id="bar1"></div>
+          <div class="strength-bar" id="bar2"></div>
+          <div class="strength-bar" id="bar3"></div>
+          <div class="strength-bar" id="bar4"></div>
+        </div>
+        <div class="strength-label" id="strength-label">Enter a password</div>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="terms" />
+      <label for="terms">I agree to Nexbit's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+    </div>
+
+    <button class="btn-submit" id="signup-btn" onclick="handleSignup()">Create account</button>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">or continue with</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="social-btns">
+      <button class="btn-social">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google
+      </button>
+      <button class="btn-social">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </button>
+    </div>
+
+    <p class="form-footer">Already have an account? <a onclick="switchTab('login')">Log in</a></p>
+  </div>
+
+  <!-- LOGIN PANEL -->
+  <div class="panel" id="panel-login">
+    <h2 class="form-title">Welcome back</h2>
+    <p class="form-sub">Log in to your Nexbit account to continue trading.</p>
+
+    <div class="error-msg" id="login-error">Invalid email or password. Please try again.</div>
+
+    <div class="form-group">
+      <label for="login-email">Email address</label>
+      <input type="email" id="login-email" placeholder="omowunmi@email.com" autocomplete="email" />
+    </div>
+
+    <div class="form-group">
+      <label for="login-password">Password</label>
+      <div class="input-wrap">
+        <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password" />
+        <span class="input-icon" onclick="togglePwd('login-password', this)">👁</span>
+      </div>
+    </div>
+
+    <div class="forgot-link"><a href="#" onclick="forgotPassword()">Forgot password?</a></div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="remember" />
+      <label for="remember">Keep me logged in for 30 days</label>
+    </div>
+
+    <button class="btn-submit" id="login-btn" onclick="handleLogin()">Log in</button>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">or continue with</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="social-btns">
+      <button class="btn-social" onclick="signInWithGoogle()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google
+      </button>
+      <button class="btn-social" onclick="signInWithFacebook()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </button>
+    </div>
+    <p class="form-footer">Don't have an account? <a onclick="switchTab('signup')">Sign up free</a></p>
+  </div>
+</div>
+
+<script type="module">
+  // ─────────────────────────────────────────────────────────────
+  // NEXBIT — Supabase Auth Integration
+  // Replace the two config values below with your own from:
+  // https://supabase.com → Project Settings → API
+  // ─────────────────────────────────────────────────────────────
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const SUPABASE_URL    = 'https://qceprouiddkkzymiimxf.supabase.co';
+  const SUPABASE_ANON   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZXByb3VpZGRra3p5bWlpbXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjgzMTMsImV4cCI6MjA5NjQwNDMxM30.ehg3OIW8XjbPDMh2t5ZN9yrevRdjmCN5KuAAsWXVqdo';
+  const BACKEND_API_URL = 'https://nexbit-backend-production.up.railway.app/api/v1'; // Live Railway backend // your Node.js backend
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  // ── Theme toggle ────────────────────────────────────────────
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // ── Tab switcher ────────────────────────────────────────────
+  window.switchTab = (tab) => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+    document.getElementById('switch-hint').innerHTML = tab === 'login'
+      ? "Don't have an account? <a onclick=\"switchTab('signup')\">Sign up free</a>"
+      : "Already have an account? <a onclick=\"switchTab('login')\">Log in</a>";
+    clearErrors();
+  };
+
+  // ── Password show/hide ──────────────────────────────────────
+  window.togglePwd = (id, icon) => {
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    icon.textContent = input.type === 'password' ? '👁' : '🙈';
+  };
+
+  // ── Password strength ───────────────────────────────────────
+  window.checkStrength = (val) => {
+    const bars  = ['bar1','bar2','bar3','bar4'].map(id => document.getElementById(id));
+    const label = document.getElementById('strength-label');
+    bars.forEach(b => b.className = 'strength-bar');
+    let score = 0;
+    if (val.length >= 8)          score++;
+    if (/[A-Z]/.test(val))        score++;
+    if (/[0-9]/.test(val))        score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const cls    = ['','weak','medium','strong','strong'];
+    const labels = ['Enter a password','Too weak','Getting there','Strong password','Very strong'];
+    for (let i = 0; i < score; i++) bars[i].classList.add(cls[score]);
+    label.textContent   = labels[score];
+    label.style.color   = score <= 1 ? '#E24B4A' : score === 2 ? '#BA7517' : '#00C8A0';
+  };
+
+  // ── Helpers ─────────────────────────────────────────────────
+  const setLoading = (btnId, loading, text = '') => {
+    const btn = document.getElementById(btnId);
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Please wait…' : text;
+  };
+
+  const showError = (id, msg) => {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+  };
+
+  const clearErrors = () => {
+    document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+  };
+
+  // After Supabase auth succeeds, tell our Node.js backend
+  // so it can create the user profile + wallet if first login
+  const syncWithBackend = async (session, extraData = {}) => {
+    try {
+      const res = await fetch(`${BACKEND_API_URL}/users/sync`, {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(extraData),
+      });
+      return await res.json();
+    } catch (err) {
+      console.error('Backend sync failed:', err);
+      // Non-fatal — user can still proceed; retry on next login
+    }
+  };
+
+  // ── SIGN UP ─────────────────────────────────────────────────
+  window.handleSignup = async () => {
+    clearErrors();
+    const fn  = document.getElementById('first-name').value.trim();
+    const ln  = document.getElementById('last-name').value.trim();
+    const em  = document.getElementById('email').value.trim();
+    const ph  = document.getElementById('phone').value.trim();
+    const pc  = document.getElementById('phone-code').value;
+    const co  = document.getElementById('country').value;
+    const pw  = document.getElementById('password').value;
+    const tc  = document.getElementById('terms').checked;
+    const ref = document.getElementById('referral-code')?.value?.trim() || '';
+
+    // Client-side validation
+    if (!fn || !ln)       return showError('signup-error', 'Please enter your full name.');
+    if (!em)              return showError('signup-error', 'Please enter your email address.');
+    if (!ph)              return showError('signup-error', 'Please enter your phone number.');
+    if (!co)              return showError('signup-error', 'Please select your country.');
+    if (pw.length < 8)    return showError('signup-error', 'Password must be at least 8 characters.');
+    if (!/[A-Z]/.test(pw))return showError('signup-error', 'Password must contain at least one uppercase letter.');
+    if (!/[0-9]/.test(pw))return showError('signup-error', 'Password must contain at least one number.');
+    if (!tc)              return showError('signup-error', 'Please accept the Terms of Service to continue.');
+
+    setLoading('signup-btn', true);
+
+    try {
+      // 1. Create account in Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email:    em,
+        password: pw,
+        options: {
+          data: {
+            // Store basic profile in Supabase user metadata
+            first_name: fn,
+            last_name:  ln,
+            phone:      `${pc}${ph}`,
+            country:    co,
+          },
+          emailRedirectTo: `${window.location.origin}/dashboard.html`,
+        },
+      });
+
+      if (error) {
+        if (error.message.includes('already registered')) {
+          return showError('signup-error', 'An account with this email already exists. Please log in.');
+        }
+        return showError('signup-error', error.message);
+      }
+
+      // 2. If session exists (email confirmation disabled), sync to backend immediately
+      if (data.session) {
+        await syncWithBackend(data.session, {
+          first_name:    fn,
+          last_name:     ln,
+          phone:         ph,
+          phone_code:    pc,
+          country:       co,
+          referral_code: ref || undefined,
+        });
+        // Redirect to dashboard
+        window.location.href = 'nexbit-dashboard.html';
+        return;
+      }
+
+      // 3. Email confirmation required — show success state
+      document.getElementById('panel-signup').innerHTML = `
+        <div style="text-align:center;padding:20px 0">
+          <div style="font-size:48px;margin-bottom:16px">📧</div>
+          <h2 class="form-title">Check your email</h2>
+          <p class="form-sub" style="margin-bottom:24px">
+            We sent a verification link to <strong>${em}</strong>.<br>
+            Click the link to activate your Nexbit account.
+          </p>
+          <div style="background:var(--green-light);border-radius:var(--radius-sm);padding:14px;font-size:13px;color:var(--green-dark);margin-bottom:20px">
+            ✅ Account created for <strong>${fn} ${ln}</strong>
+          </div>
+          <p style="font-size:12px;color:var(--text-3)">
+            Didn't receive it? Check your spam folder or
+            <a href="#" onclick="resendVerification('${em}')" style="color:var(--green)">resend the email</a>.
+          </p>
+        </div>
+      `;
+
+    } catch (err) {
+      showError('signup-error', 'Something went wrong. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading('signup-btn', false, 'Create account');
+    }
+  };
+
+  // ── RESEND VERIFICATION EMAIL ───────────────────────────────
+  window.resendVerification = async (email) => {
+    const { error } = await supabase.auth.resend({ type: 'signup', email });
+    if (!error) alert('Verification email resent! Please check your inbox.');
+    else alert('Could not resend email. Please try again shortly.');
+  };
+
+  // ── LOG IN ──────────────────────────────────────────────────
+  window.handleLogin = async () => {
+    clearErrors();
+    const em = document.getElementById('login-email').value.trim();
+    const pw = document.getElementById('login-password').value;
+
+    if (!em) return showError('login-error', 'Please enter your email address.');
+    if (!pw) return showError('login-error', 'Please enter your password.');
+
+    setLoading('login-btn', true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email:    em,
+        password: pw,
+      });
+
+      if (error) {
+        if (error.message.includes('Email not confirmed')) {
+          return showError('login-error', 'Please verify your email before logging in. Check your inbox.');
+        }
+        if (error.message.includes('Invalid login')) {
+          return showError('login-error', 'Invalid email or password. Please try again.');
+        }
+        return showError('login-error', error.message);
+      }
+
+      // Sync with backend (creates profile + wallet if first login)
+      await syncWithBackend(data.session);
+
+      // Store session
+      localStorage.setItem('nexbit_session', JSON.stringify({
+        access_token:  data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        user_id:       data.user.id,
+        email:         data.user.email,
+      }));
+
+      // Redirect to dashboard
+      window.location.href = 'nexbit-dashboard.html';
+
+    } catch (err) {
+      showError('login-error', 'Something went wrong. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading('login-btn', false, 'Log in');
+    }
+  };
+
+  // ── GOOGLE OAUTH ────────────────────────────────────────────
+  window.signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options:  { redirectTo: `${window.location.origin}/nexbit-dashboard.html` },
+    });
+    if (error) showError('login-error', 'Google sign-in failed. Please try again.');
+  };
+
+  // ── FACEBOOK OAUTH ──────────────────────────────────────────
+  window.signInWithFacebook = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options:  { redirectTo: `${window.location.origin}/nexbit-dashboard.html` },
+    });
+    if (error) showError('login-error', 'Facebook sign-in failed. Please try again.');
+  };
+
+  // ── FORGOT PASSWORD ─────────────────────────────────────────
+  window.forgotPassword = async () => {
+    const email = document.getElementById('login-email').value.trim();
+    if (!email) return showError('login-error', 'Enter your email address first, then click "Forgot password".');
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password.html`,
+    });
+
+    if (!error) {
+      showError('login-error', ''); // clear
+      document.getElementById('login-error').style.background = 'var(--green-light)';
+      document.getElementById('login-error').style.color = 'var(--green-dark)';
+      document.getElementById('login-error').style.borderColor = 'rgba(29,158,117,.2)';
+      showError('login-error', '✅ Password reset link sent to ' + email);
+    } else {
+      showError('login-error', error.message);
+    }
+  };
+
+  // ── CHECK EXISTING SESSION ON PAGE LOAD ─────────────────────
+  const checkSession = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      // Already logged in — redirect to dashboard
+      window.location.href = 'nexbit-dashboard.html';
+    }
+  };
+  checkSession();
+
+  // ── LISTEN FOR AUTH STATE CHANGES ───────────────────────────
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await syncWithBackend(session);
+      window.location.href = 'nexbit-dashboard.html';
+    }
+  });
+</script>
+</body>
+</html>

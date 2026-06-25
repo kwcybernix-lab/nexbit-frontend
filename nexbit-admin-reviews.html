@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit Admin — Trade Reviews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:700}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--red-light);color:var(--red);padding:2px 6px;border-radius:20px}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--green-light);color:var(--green-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--red);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-badge.green{background:var(--green)}
+.sb-bottom{margin-top:auto}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;display:flex;align-items:center;gap:14px}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.stat-val{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text)}
+.stat-label{font-size:11px;color:var(--text-3);margin-top:2px}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-3)}
+.search-input{width:100%;padding:9px 12px 9px 32px;font-family:var(--font-b);font-size:13px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);outline:none;}
+.search-input:focus{border-color:var(--green)}
+.f-select{padding:8px 12px;font-family:var(--font-b);font-size:12px;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);outline:none;-webkit-appearance:none;min-width:120px}
+.pill-tabs{display:flex;gap:6px}
+.pill{font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);white-space:nowrap;transition:all .15s}
+.pill.active{background:var(--amber);color:#fff;border-color:var(--amber)}
+.pill.active.green-pill{background:var(--green);border-color:var(--green)}
+.pill.active.red-pill{background:var(--red);border-color:var(--red)}
+.pill.active.all-pill{background:var(--text);border-color:var(--text)}
+
+/* TABLE */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.t-header{display:grid;grid-template-columns:180px 1fr 100px 110px 110px 130px 120px;gap:0;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.th{font-size:10px;font-weight:600;letter-spacing:.07em;color:var(--text-3);text-transform:uppercase}
+.t-row{display:grid;grid-template-columns:180px 1fr 100px 110px 110px 130px 120px;gap:0;padding:14px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background .15s}
+.t-row:hover{background:var(--surface-2)}
+.t-row:last-child{border-bottom:none}
+.t-row.hidden{display:none}
+.user-cell{display:flex;align-items:center;gap:10px}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--text)}
+.user-phone{font-size:11px;color:var(--text-3)}
+.ref-cell{font-family:var(--font-d);font-size:12px;color:var(--text-2)}
+.network-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.t-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block}
+.s-pending{background:var(--amber-light);color:var(--amber-dark)}
+.s-approved{background:var(--green-light);color:var(--green-dark)}
+.s-rejected{background:var(--red-light);color:var(--red)}
+.action-btns{display:flex;gap:6px}
+.btn-approve{font-size:11px;font-weight:600;padding:5px 12px;border-radius:var(--r-sm);border:none;background:var(--green);color:#fff;cursor:pointer;font-family:var(--font-b);transition:opacity .2s}
+.btn-approve:hover{opacity:.85}
+.btn-reject{font-size:11px;font-weight:600;padding:5px 12px;border-radius:var(--r-sm);border:1px solid var(--red);background:transparent;color:var(--red);cursor:pointer;font-family:var(--font-b);transition:all .2s}
+.btn-reject:hover{background:var(--red-light)}
+.btn-view{font-size:11px;font-weight:500;padding:5px 10px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b)}
+.btn-view:hover{background:var(--surface-2)}
+
+/* DETAIL DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;justify-content:flex-end}
+.drawer-overlay.show{display:flex}
+.drawer{width:440px;max-width:95vw;background:var(--surface);height:100vh;overflow-y:auto;animation:slideIn .25s ease;display:flex;flex-direction:column}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:none}}
+.drawer-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.drawer-title{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+.drawer-body{padding:22px;flex:1;display:flex;flex-direction:column;gap:16px}
+
+/* SCREENSHOT VIEWER */
+.screenshot-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.screenshot-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.screenshot-img{width:100%;display:block;cursor:zoom-in;transition:transform .2s}
+.screenshot-img:hover{transform:scale(1.01)}
+.screenshot-img.zoomed{transform:scale(1.5);transform-origin:top center;cursor:zoom-out}
+
+/* INFO ROWS */
+.info-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-label{font-size:12px;color:var(--text-3)}
+.info-val{font-size:13px;font-weight:500;color:var(--text)}
+.info-val.green{color:var(--green);font-family:var(--font-d);font-weight:700}
+
+/* REJECT FORM */
+.reject-form{background:var(--red-light);border:1px solid rgba(226,75,74,.2);border-radius:var(--r-sm);padding:14px}
+.reject-form label{font-size:12px;font-weight:600;color:var(--red);display:block;margin-bottom:8px}
+.reject-textarea{width:100%;padding:10px 12px;font-family:var(--font-b);font-size:13px;color:var(--text);background:var(--surface);border:1px solid rgba(226,75,74,.3);border-radius:var(--r-sm);outline:none;resize:vertical;min-height:80px}
+.reject-textarea:focus{border-color:var(--red)}
+.reject-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.rq-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(226,75,74,.3);background:transparent;color:var(--red);cursor:pointer;font-family:var(--font-b)}
+.rq-btn:hover{background:rgba(226,75,74,.1)}
+
+/* DRAWER ACTION BTNS */
+.drawer-actions{display:flex;gap:10px;padding:16px 22px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface)}
+.btn-approve-lg{flex:1;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--font-b);cursor:pointer;transition:opacity .2s}
+.btn-approve-lg:hover{opacity:.88}
+.btn-reject-lg{flex:1;padding:12px;background:var(--red-light);color:var(--red);border:1px solid var(--red);border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--font-b);cursor:pointer}
+
+/* CONFIRM MODAL */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:none;align-items:center;justify-content:center}
+.confirm-overlay.show{display:flex}
+.confirm-modal{background:var(--surface);border-radius:16px;padding:28px;max-width:360px;width:92%;animation:popIn .2s ease;text-align:center}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-icon{font-size:36px;margin-bottom:12px}
+.confirm-title{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px}
+.confirm-sub{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.6;margin-bottom:20px}
+.confirm-btns{display:flex;gap:10px}
+.btn-confirm-yes{flex:1;padding:11px;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--font-b);cursor:pointer}
+.btn-confirm-no{flex:1;padding:11px;border:1px solid var(--border);background:transparent;color:var(--text-2);border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);cursor:pointer}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(14px);animation:fadeUp .4s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.04s}.d2{animation-delay:.09s}.d3{animation-delay:.14s}
+
+@media(max-width:1100px){.t-header,.t-row{grid-template-columns:160px 1fr 90px 100px 120px}}
+@media(max-width:800px){.sidebar{display:none}.stats-row{grid-template-columns:repeat(2,1fr)}.content{padding:16px}.topbar{padding:12px 16px}.t-header,.t-row{grid-template-columns:1fr 80px 100px 120px}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark" style="background:var(--teal)"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">ADMIN</span>
+  </div>
+  <div class="sb-section">Overview</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Users
+    <span class="sb-badge" style="background:var(--teal);color:#060D0B">1,284</span>
+  </a>
+  <div class="sb-section">Trade Reviews</div>
+  <a class="sb-item active" href="nexbit-admin-reviews.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Airtime trades
+    <span class="sb-badge">7</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-giftcards.html">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/></svg>
+    Gift card trades
+    <span class="sb-badge">3</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-crypto.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto trades
+    <span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-fiberx.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+    MTN FiberX orders
+    <span class="sb-badge" style="background:var(--amber)">5</span>
+  </a>
+  <div class="sb-section">Finance</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
+    Withdrawals
+    <span class="sb-badge">2</span>
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    All transactions
+  </a>
+  <div class="sb-section">Compliance</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+    KYC reviews
+    <span class="sb-badge">5</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Exchange rates
+  </a>
+  <div class="sb-section">System</div>
+  <a class="sb-item" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+  <a class="sb-item" href="nexbit-auth.html"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log out</a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="admin-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">AD</div>
+      <div><div class="sb-user-name">Nexbit Admin</div><div class="sb-user-role" style="font-size:11px;color:var(--text-3)">Super Admin</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Airtime Trade Reviews</h1>
+      <p>Review submitted screenshots and approve or reject trades</p>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" style="cursor:pointer;width:34px;height:34px;font-size:12px">AD</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-row fade-up d1">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--amber-light)">⏳</div>
+        <div>
+          <div class="stat-val" id="count-pending">7</div>
+          <div class="stat-label">Pending review</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--green-light)">✅</div>
+        <div>
+          <div class="stat-val">34</div>
+          <div class="stat-label">Approved today</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--red-light)">❌</div>
+        <div>
+          <div class="stat-val">3</div>
+          <div class="stat-label">Rejected today</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--blue-light)">💰</div>
+        <div>
+          <div class="stat-val">₦284K</div>
+          <div class="stat-label">Paid out today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar fade-up d2">
+      <div class="pill-tabs">
+        <button class="pill active all-pill" onclick="filterStatus('all',this)">All (10)</button>
+        <button class="pill active" style="background:var(--amber);border-color:var(--amber);color:#fff" onclick="filterStatus('pending',this)">⏳ Pending (7)</button>
+        <button class="pill" onclick="filterStatus('approved',this)">✅ Approved</button>
+        <button class="pill" onclick="filterStatus('rejected',this)">❌ Rejected</button>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" placeholder="Search by name, ref, phone..." oninput="searchTrades(this.value)"/>
+      </div>
+      <select class="f-select" onchange="filterNetwork(this.value)">
+        <option value="all">All networks</option>
+        <option value="MTN">MTN</option>
+        <option value="Airtel">Airtel</option>
+        <option value="Glo">Glo</option>
+        <option value="9mobile">9mobile</option>
+      </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap fade-up d3">
+      <div class="t-header">
+        <div class="th">User</div>
+        <div class="th">Reference</div>
+        <div class="th">Network</div>
+        <div class="th">Airtime</div>
+        <div class="th">Payout</div>
+        <div class="th">Submitted</div>
+        <div class="th">Actions</div>
+      </div>
+      <div id="trades-body"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Trade review</span>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+    <div class="drawer-actions" id="drawer-actions"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-modal">
+    <div class="confirm-icon" id="confirm-icon">✅</div>
+    <div class="confirm-title" id="confirm-title">Approve trade?</div>
+    <div class="confirm-sub" id="confirm-sub">This will credit the user's wallet immediately.</div>
+    <div class="confirm-btns">
+      <button class="btn-confirm-yes" id="confirm-yes-btn" onclick="executeAction()">Yes, confirm</button>
+      <button class="btn-confirm-no" onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" style="background:var(--green-light)">✅</div>
+  <div><div class="toast-text" id="toast-text">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<script>
+// ── MOCK DATA ──────────────────────────────────────────────────
+const networkColors = {MTN:'#FFCC00',Airtel:'#EE2222',Glo:'#00A651','9mobile':'#4CAF50'};
+
+// Simulated screenshots (colored placeholder canvases)
+const screenshots = {
+  'NX-28501': {color:'#E8F5EE', text:'MTN Transfer Successful\n0901 234 5678\n₦5,000\n✓ Confirmed'},
+  'NX-28499': {color:'#FFF3E0', text:'Airtel Transfer Done\n0802 345 6789\n₦2,000\n✓ Success'},
+  'NX-28497': {color:'#E3F2FD', text:'Glo Credit Transfer\n0805 456 7890\n₦3,500\n✓ Sent'},
+  'NX-28495': {color:'#F3E5F5', text:'9mobile Transfer OK\n0909 567 8901\n₦1,000\n✓ Done'},
+  'NX-28493': {color:'#E8F5EE', text:'MTN Transfer Success\n0901 234 5678\n₦10,000\n✓ Confirmed'},
+  'NX-28491': {color:'#FFF3E0', text:'Airtel Transfer\n0802 345 6789\n₦800\n✓ Sent'},
+  'NX-28489': {color:'#E8F5EE', text:'MTN Credit Share\n0901 234 5678\n₦4,000\n✓ OK'},
+  'NX-28487': {color:'#E8F5EE', text:'MTN Transfer\n0901 234 5678\n₦2,500\n✓ Done'},
+  'NX-28485': {color:'#FFF3E0', text:'Airtel Transfer\n0802 345 6789\n₦6,000\n✓ Sent'},
+  'NX-28483': {color:'#E3F2FD', text:'Glo Transfer\n0805 456 7890\n₦1,500\n✓ OK'},
+};
+
+let trades = [
+  {id:'NX-28501',user:'Omowunmi Kayode',phone:'0803-000-0000',initials:'OK',network:'MTN',airtime:5000,payout:3750,time:'10:42 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28499',user:'Tunde Afolabi',phone:'0802-111-2233',initials:'TA',network:'Airtel',airtime:2000,payout:1440,time:'10:18 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28497',user:'Chisom Eze',phone:'0806-334-5566',initials:'CE',network:'Glo',airtime:3500,payout:2450,time:'09:55 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28495',user:'Fatima Bello',phone:'0909-445-6677',initials:'FB',network:'9mobile',airtime:1000,payout:680,time:'09:30 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28493',user:'Emeka Okafor',phone:'0803-556-7788',initials:'EO',network:'MTN',airtime:10000,payout:7500,time:'09:10 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28491',user:'Blessing Nwosu',phone:'0802-667-8899',initials:'BN',network:'Airtel',airtime:800,payout:576,time:'08:45 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28489',user:'Yusuf Musa',phone:'0803-778-9900',initials:'YM',network:'MTN',airtime:4000,payout:3000,time:'08:20 AM',date:'Today',status:'pending',note:''},
+  {id:'NX-28487',user:'Adaeze Obi',phone:'0803-889-0011',initials:'AO',network:'MTN',airtime:2500,payout:1875,time:'Yesterday',date:'Yesterday',status:'approved',note:''},
+  {id:'NX-28485',user:'Sule Ibrahim',phone:'0802-990-1122',initials:'SI',network:'Airtel',airtime:6000,payout:4320,time:'Yesterday',date:'Yesterday',status:'approved',note:''},
+  {id:'NX-28483',user:'Grace Ikenna',phone:'0806-001-2233',initials:'GI',network:'Glo',airtime:1500,payout:1050,time:'Yesterday',date:'Yesterday',status:'rejected',note:'Screenshot unclear — amount not visible'},
+];
+
+let currentFilter = 'all';
+let currentTradeId = null;
+let pendingAction = null;
+let rejectReason = '';
+
+const fmt = n => '₦'+n.toLocaleString('en-NG');
+
+function renderTrades(){
+  const body = document.getElementById('trades-body');
+  const visible = trades.filter(t => {
+    if(currentFilter === 'pending') return t.status === 'pending';
+    if(currentFilter === 'approved') return t.status === 'approved';
+    if(currentFilter === 'rejected') return t.status === 'rejected';
+    return true;
+  });
+  if(!visible.length){
+    body.innerHTML = `<div style="padding:48px;text-align:center;color:var(--text-3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-size:14px;font-weight:500">No trades found</div></div>`;
+    return;
+  }
+  body.innerHTML = visible.map(t => `
+    <div class="t-row" id="row-${t.id}" onclick="openDrawer('${t.id}')">
+      <div class="user-cell">
+        <div class="user-av" style="background:var(--green)">${t.initials}</div>
+        <div>
+          <div class="user-name">${t.user}</div>
+          <div class="user-phone">${t.phone}</div>
+        </div>
+      </div>
+      <div class="ref-cell">${t.id}</div>
+      <div style="font-size:13px;color:var(--text-2)">
+        <span class="network-dot" style="background:${networkColors[t.network]||'#ccc'}"></span>${t.network}
+      </div>
+      <div style="font-size:13px;font-weight:500;color:var(--text)">${fmt(t.airtime)}</div>
+      <div style="font-size:13px;font-weight:600;color:var(--green);font-family:var(--font-d)">${fmt(t.payout)}</div>
+      <div style="font-size:12px;color:var(--text-2)">${t.date}<br><span style="color:var(--text-3);font-size:10px">${t.time}</span></div>
+      <div class="action-btns" onclick="event.stopPropagation()">
+        ${t.status==='pending' ? `
+          <button class="btn-approve" onclick="confirmAction('approve','${t.id}')">✓</button>
+          <button class="btn-reject" onclick="confirmAction('reject','${t.id}')">✕</button>
+        ` : `<span class="t-status s-${t.status}">${t.status==='approved'?'✅ Approved':'❌ Rejected'}</span>`}
+        <button class="btn-view" onclick="openDrawer('${t.id}')">View</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('count-pending').textContent = trades.filter(t=>t.status==='pending').length;
+}
+
+function filterStatus(status, btn){
+  currentFilter = status;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active','all-pill','green-pill','red-pill'));
+  btn.classList.add('active');
+  if(status==='all') btn.classList.add('all-pill');
+  else if(status==='approved') btn.classList.add('green-pill');
+  else if(status==='rejected') btn.classList.add('red-pill');
+  renderTrades();
+}
+
+function filterNetwork(net){
+  document.querySelectorAll('.t-row').forEach(row=>{
+    if(net==='all') row.classList.remove('hidden');
+    else row.classList.toggle('hidden', !row.querySelector('.network-dot') || !row.innerHTML.includes(net));
+  });
+}
+
+function searchTrades(q){
+  const lower = q.toLowerCase();
+  document.querySelectorAll('.t-row').forEach(row=>{
+    row.classList.toggle('hidden', !row.textContent.toLowerCase().includes(lower));
+  });
+}
+
+// ── SCREENSHOT CANVAS GENERATOR ───────────────────────────────
+function generateScreenshot(id){
+  const data = screenshots[id] || {color:'#F5F5F5', text:'Screenshot uploaded'};
+  const canvas = document.createElement('canvas');
+  canvas.width=360; canvas.height=220;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = data.color;
+  ctx.fillRect(0,0,360,220);
+  ctx.fillStyle = '#2C2C2A';
+  ctx.font = 'bold 14px monospace';
+  ctx.textAlign = 'center';
+  const lines = data.text.split('\n');
+  lines.forEach((line,i) => ctx.fillText(line, 180, 60 + i*32));
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+  ctx.strokeRect(0,0,360,220);
+  return canvas.toDataURL();
+}
+
+// ── DRAWER ─────────────────────────────────────────────────────
+function openDrawer(id){
+  const t = trades.find(x=>x.id===id);
+  if(!t) return;
+  currentTradeId = id;
+  const imgSrc = generateScreenshot(id);
+
+  document.getElementById('drawer-body').innerHTML = `
+    <div class="screenshot-box">
+      <div class="screenshot-header">
+        <span style="font-size:12px;font-weight:600;color:var(--text)">📸 Transfer screenshot</span>
+        <span style="font-size:10px;color:var(--text-3)">Click to zoom</span>
+      </div>
+      <img class="screenshot-img" id="ss-img" src="${imgSrc}" onclick="this.classList.toggle('zoomed')"/>
+    </div>
+
+    <div class="info-card">
+      <div class="info-row"><span class="info-label">Reference</span><span class="info-val" style="font-family:var(--font-d)">${t.id}</span></div>
+      <div class="info-row"><span class="info-label">User</span><span class="info-val">${t.user}</span></div>
+      <div class="info-row"><span class="info-label">Phone number</span><span class="info-val">${t.phone}</span></div>
+      <div class="info-row"><span class="info-label">Network</span><span class="info-val"><span class="network-dot" style="background:${networkColors[t.network]}"></span>${t.network}</span></div>
+      <div class="info-row"><span class="info-label">Airtime amount</span><span class="info-val">${fmt(t.airtime)}</span></div>
+      <div class="info-row"><span class="info-label">Exchange rate</span><span class="info-val">${t.network==='MTN'?'75%':t.network==='Airtel'?'72%':t.network==='Glo'?'70%':'68%'}</span></div>
+      <div class="info-row"><span class="info-label">Payout amount</span><span class="info-val green">${fmt(t.payout)}</span></div>
+      <div class="info-row"><span class="info-label">Submitted</span><span class="info-val">${t.date} at ${t.time}</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="t-status s-${t.status}">${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</span></div>
+      ${t.note ? `<div class="info-row"><span class="info-label">Rejection note</span><span class="info-val" style="color:var(--red)">${t.note}</span></div>` : ''}
+    </div>
+
+    ${t.status==='pending' ? `
+    <div class="reject-form" id="reject-form" style="display:none">
+      <label>Rejection reason</label>
+      <textarea class="reject-textarea" id="reject-reason" placeholder="Describe why this trade is being rejected..."></textarea>
+      <div class="reject-quick">
+        <button class="rq-btn" onclick="setReason('Screenshot unclear or blurry')">Screenshot unclear</button>
+        <button class="rq-btn" onclick="setReason('Amount on screenshot does not match')">Wrong amount</button>
+        <button class="rq-btn" onclick="setReason('Recipient number does not match Nexbit number')">Wrong number</button>
+        <button class="rq-btn" onclick="setReason('Screenshot appears edited or manipulated')">Edited screenshot</button>
+        <button class="rq-btn" onclick="setReason('Transfer shows as failed, not successful')">Transfer failed</button>
+      </div>
+    </div>` : ''}
+  `;
+
+  const actions = document.getElementById('drawer-actions');
+  if(t.status === 'pending'){
+    actions.innerHTML = `
+      <button class="btn-approve-lg" onclick="confirmAction('approve','${id}')">✅ Approve & Pay ${fmt(t.payout)}</button>
+      <button class="btn-reject-lg" onclick="toggleRejectForm()">❌ Reject</button>
+    `;
+  } else {
+    actions.innerHTML = `<div style="font-size:13px;color:var(--text-3);padding:4px 0">This trade has already been ${t.status}.</div>`;
+  }
+
+  document.getElementById('drawer-overlay').classList.add('show');
+}
+
+function toggleRejectForm(){
+  const form = document.getElementById('reject-form');
+  if(!form) return;
+  const showing = form.style.display !== 'none';
+  form.style.display = showing ? 'none' : 'block';
+  if(!showing){
+    const actions = document.getElementById('drawer-actions');
+    actions.innerHTML = `
+      <button class="btn-reject-lg" style="flex:1;background:var(--red);color:#fff;border-color:var(--red)" onclick="confirmReject()">Confirm rejection</button>
+      <button class="btn-confirm-no" onclick="toggleRejectForm()">Cancel</button>
+    `;
+  }
+}
+
+function setReason(text){
+  document.getElementById('reject-reason').value = text;
+}
+
+function confirmReject(){
+  const reason = document.getElementById('reject-reason')?.value?.trim();
+  if(!reason){ showToast('Add a reason','Please provide a rejection reason.','⚠️'); return; }
+  rejectReason = reason;
+  confirmAction('reject', currentTradeId, reason);
+}
+
+function closeDrawer(e){
+  if(!e || e.target===document.getElementById('drawer-overlay')){
+    document.getElementById('drawer-overlay').classList.remove('show');
+  }
+}
+
+// ── CONFIRM MODAL ──────────────────────────────────────────────
+function confirmAction(action, id, reason=''){
+  currentTradeId = id;
+  pendingAction = action;
+  rejectReason = reason;
+  const t = trades.find(x=>x.id===id);
+  const overlay = document.getElementById('confirm-overlay');
+  if(action==='approve'){
+    document.getElementById('confirm-icon').textContent='✅';
+    document.getElementById('confirm-title').textContent='Approve this trade?';
+    document.getElementById('confirm-sub').textContent=`This will immediately credit ${fmt(t.payout)} to ${t.user}'s Nexbit wallet.`;
+    document.getElementById('confirm-yes-btn').style.background='var(--green)';
+    document.getElementById('confirm-yes-btn').style.color='#fff';
+    document.getElementById('confirm-yes-btn').style.border='none';
+  } else {
+    document.getElementById('confirm-icon').textContent='❌';
+    document.getElementById('confirm-title').textContent='Reject this trade?';
+    document.getElementById('confirm-sub').textContent=`The user will be notified with the rejection reason and can re-submit.`;
+    document.getElementById('confirm-yes-btn').style.background='var(--red)';
+    document.getElementById('confirm-yes-btn').style.color='#fff';
+    document.getElementById('confirm-yes-btn').style.border='none';
+  }
+  overlay.classList.add('show');
+}
+
+function executeAction(){
+  const t = trades.find(x=>x.id===currentTradeId);
+  if(!t) return;
+  if(pendingAction==='approve'){
+    t.status='approved';
+    showToast('Trade approved!', `${fmt(t.payout)} credited to ${t.user}'s wallet.`,'✅');
+  } else {
+    t.status='rejected';
+    t.note = rejectReason || 'Trade rejected by admin';
+    showToast('Trade rejected', `${t.user} has been notified.`,'❌');
+  }
+  closeConfirm();
+  closeDrawer();
+  renderTrades();
+}
+
+function closeConfirm(){
+  document.getElementById('confirm-overlay').classList.remove('show');
+  pendingAction=null;
+}
+
+function showToast(text, sub='', icon='✅'){
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  document.querySelector('.toast-icon').textContent=icon;
+  document.querySelector('.toast-icon').style.background = icon==='✅'?'var(--green-light)':icon==='❌'?'var(--red-light)':'var(--amber-light)';
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeToggle').textContent=d?'🌙':'☀️';
+});
+
+// Init
+renderTrades();
+</script>
+</body>
+</html>

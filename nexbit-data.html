@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Buy Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+  --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+  --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+  --red:#E24B4A;--red-light:#FCEBEB;
+  --bg:#F0FAF7;--surface:#FFFFFF;--surface-2:#F4FBF8;
+  --border:rgba(0,0,0,0.08);--border-2:rgba(0,200,160,0.25);
+  --text:#0D1F1A;--text-2:#4A6058;--text-3:#8AA39A;
+  --green:var(--teal);--green-light:var(--teal-light);--green-dark:var(--teal-dark);
+  --sidebar-w:240px;
+  --font-d:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
+  --r:12px;--r-sm:8px;
+}
+[data-theme="dark"]{
+  --bg:#060D0B;--surface:#0C1612;--surface-2:#111F19;
+  --border:rgba(0,200,160,0.1);--border-2:rgba(0,200,160,0.22);
+  --text:#E8FBF5;--text-2:#7AB8A8;--text-3:#3D6055;
+}
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:800}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--teal-light);color:var(--teal-dark);padding:2px 6px;border-radius:20px}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--teal-light);color:var(--teal-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--teal);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-bottom{margin-top:auto}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.back-btn{width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.back-btn:hover{background:var(--surface-2)}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+.page-header{margin-bottom:24px}
+.page-title{font-family:var(--font-d);font-size:26px;font-weight:800;color:var(--text);margin-bottom:6px}
+.page-sub{font-size:14px;color:var(--text-2);font-weight:300}
+
+/* NETWORK TABS */
+.network-tabs{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.net-tab{display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:var(--r);border:2px solid var(--border);background:var(--surface);cursor:pointer;transition:all .2s;flex:1;min-width:120px;max-width:180px}
+.net-tab:hover{border-color:var(--border-2)}
+.net-tab.active{border-color:var(--teal);background:var(--teal-light)}
+.net-logo{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.net-name{font-size:14px;font-weight:600;color:var(--text)}
+.net-sub{font-size:11px;color:var(--text-3)}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+
+/* PLAN CATEGORIES */
+.plan-category{margin-bottom:24px}
+.cat-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.cat-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.plan-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s;position:relative}
+.plan-card:hover{border-color:var(--teal);transform:translateY(-1px)}
+.plan-card.selected{border-color:var(--teal);background:var(--teal-light)}
+.plan-card.popular::before{content:'Popular';position:absolute;top:-1px;right:10px;background:var(--teal);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:0 0 6px 6px;letter-spacing:.05em}
+.plan-size{font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--text);margin-bottom:2px}
+.plan-validity{font-size:11px;color:var(--text-3);margin-bottom:8px}
+.plan-price{font-size:15px;font-weight:700;color:var(--teal);font-family:var(--font-d)}
+.plan-check{position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:50%;background:var(--teal);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;font-weight:700}
+.plan-card.selected .plan-check{display:flex}
+
+/* PURCHASE FORM */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-d);font-size:14px;font-weight:700;color:var(--text)}
+.card-body{padding:20px}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:12px;font-weight:500;letter-spacing:.03em;color:var(--text-2);margin-bottom:6px}
+.form-input{width:100%;padding:11px 14px;font-family:var(--font-b);font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.form-input:focus{border-color:var(--teal)}
+.form-input::placeholder{color:var(--text-3)}
+.phone-wrap{display:flex;gap:8px}
+.phone-code{width:90px;flex-shrink:0;padding:11px 10px;font-family:var(--font-b);font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);outline:none;-webkit-appearance:none}
+.phone-code:focus{border-color:var(--teal)}
+
+/* SUMMARY BOX */
+.summary-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:16px}
+.sum-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)}
+.sum-row:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
+.sum-label{font-size:12px;color:var(--text-3)}
+.sum-val{font-size:13px;font-weight:500;color:var(--text)}
+.sum-val.big{font-family:var(--font-d);font-size:18px;font-weight:800;color:var(--teal)}
+
+/* PAYOUT METHOD */
+.pay-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.pay-method{padding:10px;border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;cursor:pointer;transition:all .2s}
+.pay-method:hover{border-color:var(--border-2)}
+.pay-method.active{border-color:var(--teal);background:var(--teal-light)}
+.pay-method-icon{font-size:20px;margin-bottom:4px}
+.pay-method-label{font-size:11px;font-weight:500;color:var(--text-2)}
+.pay-method.active .pay-method-label{color:var(--teal-dark)}
+
+.btn-submit{width:100%;padding:13px;background:var(--teal);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer;transition:opacity .2s}
+.btn-submit:hover{opacity:.88}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed}
+
+/* WALLET BALANCE */
+.wallet-bar{display:flex;align-items:center;justify-content:space-between;background:var(--teal-light);border:1px solid var(--border-2);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:16px}
+.wb-label{font-size:12px;color:var(--teal-dark)}
+.wb-amount{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--teal-dark)}
+.wb-fund{font-size:12px;font-weight:600;color:var(--teal);text-decoration:none;cursor:pointer}
+
+/* RECENT PURCHASES */
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background .15s}
+.tx-item:hover{background:var(--surface-2)}
+.tx-item:last-child{border-bottom:none}
+.tx-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--teal-light)}
+.tx-info{flex:1}
+.tx-name{font-size:13px;font-weight:500;color:var(--text)}
+.tx-meta{font-size:11px;color:var(--text-3);margin-top:2px}
+.tx-amt{font-size:13px;font-weight:600;color:var(--red);font-family:var(--font-d)}
+.tx-status{font-size:10px;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;font-weight:500;background:var(--teal-light);color:var(--teal-dark)}
+
+/* SUCCESS MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:20px;padding:0;max-width:380px;width:92%;animation:popIn .25s ease;overflow:hidden}
+@keyframes popIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text)}
+.modal-close{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:13px;color:var(--text-2)}
+.modal-body{padding:28px;text-align:center}
+.modal-icon{font-size:48px;margin-bottom:14px}
+.modal-success-title{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px}
+.modal-success-sub{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:16px;font-weight:300}
+.modal-detail{background:var(--surface-2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:20px;text-align:left}
+.md-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.md-row:last-child{border-bottom:none}
+.md-label{color:var(--text-3)}
+.md-val{font-weight:500;color:var(--text)}
+.btn-done{width:100%;padding:12px;background:var(--teal);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(14px);animation:fadeUp .4s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.04s}.d2{animation-delay:.09s}.d3{animation-delay:.14s}
+
+@media(max-width:960px){.main-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.sidebar{display:none}.content{padding:16px}.topbar{padding:12px 16px}.network-tabs{gap:6px}.net-tab{min-width:100px;padding:10px 12px}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item" href="nexbit-dashboard.html"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+  <a class="sb-item" href="nexbit-wallet.html"><svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8L5 7h14l-3-4z"/></svg>Wallet</a>
+  <a class="sb-item" href="nexbit-transactions.html"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>Transactions<span class="sb-badge">3</span></a>
+  <div class="sb-section">Trade</div>
+  <a class="sb-item" href="nexbit-airtime.html"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>Sell airtime</a>
+  <a class="sb-item" href="#"><svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/><path d="M16 1l4 4-4 4"/></svg>Gift cards<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span></a>
+  <a class="sb-item" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Crypto<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span></a>
+  <a class="sb-item" href="nexbit-fiberx.html"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>MTN FiberX</a>
+  <a class="sb-item active" href="nexbit-data.html"><svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/><path d="M13 6l5 5 5-5M13 12l5 5 5-5"/></svg>Buy data</a>
+  <a class="sb-item" href="#"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Smart solutions<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span></a>
+  <div class="sb-section">Account</div>
+  <a class="sb-item" href="nexbit-profile.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Profile</a>
+  <a class="sb-item" href="nexbit-profile.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>Settings</a>
+  <a class="sb-item" href="nexbit-auth.html"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log out</a>
+  <div class="sb-section">Support</div>
+  <a class="sb-item" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="color:#25D366">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    WhatsApp Support
+  </a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar">OK</div>
+      <div><div class="sb-user-name">Omowunmi Kayode</div><div class="sb-user-email">omowunmi@email.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div>
+        <h1>Buy Data</h1>
+        <p>Purchase data bundles for any Nigerian network</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" style="cursor:pointer">OK</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header fade-up d1">
+      <h2 class="page-title">Buy data bundles 📶</h2>
+      <p class="page-sub">Select your network, choose a bundle and pay from your Nexbit wallet. Instant delivery to any phone number.</p>
+    </div>
+
+    <!-- NETWORK TABS -->
+    <div class="network-tabs fade-up d1" id="network-tabs">
+      <div class="net-tab active" onclick="selectNetwork('mtn', this)">
+        <div class="net-logo" style="background:#FFF0B2;color:#CC9900">MTN</div>
+        <div><div class="net-name">MTN</div><div class="net-sub">Best coverage</div></div>
+      </div>
+      <div class="net-tab" onclick="selectNetwork('airtel', this)">
+        <div class="net-logo" style="background:#FFE4E0;color:#CC2200">AIR</div>
+        <div><div class="net-name">Airtel</div><div class="net-sub">Fast 4G</div></div>
+      </div>
+      <div class="net-tab" onclick="selectNetwork('glo', this)">
+        <div class="net-logo" style="background:#E0FFE8;color:#007A1F">GLO</div>
+        <div><div class="net-name">Glo</div><div class="net-sub">Affordable</div></div>
+      </div>
+      <div class="net-tab" onclick="selectNetwork('9mobile', this)">
+        <div class="net-logo" style="background:#E8F5E0;color:#2E6B00" style="font-size:9px">9MOB</div>
+        <div><div class="net-name">9mobile</div><div class="net-sub">Data deals</div></div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+
+      <!-- DATA PLANS -->
+      <div class="fade-up d2">
+        <div id="plans-container">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+      <!-- PURCHASE FORM -->
+      <div class="fade-up d3">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Purchase details</span>
+            <span style="font-size:11px;color:var(--teal);font-weight:600" id="selected-plan-label">No plan selected</span>
+          </div>
+          <div class="card-body">
+
+            <!-- Wallet balance -->
+            <div class="wallet-bar">
+              <div>
+                <div class="wb-label">Wallet balance</div>
+                <div class="wb-amount">₦482,350.00</div>
+              </div>
+              <a class="wb-fund" href="nexbit-wallet.html">+ Add funds</a>
+            </div>
+
+            <div class="form-group">
+              <label>Phone number to receive data</label>
+              <div class="phone-wrap">
+                <select class="phone-code">
+                  <option>🇳🇬 +234</option>
+                </select>
+                <input class="form-input" type="tel" id="phone-number" placeholder="080 0000 0000" style="flex:1"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Payment method</label>
+              <div class="pay-methods">
+                <div class="pay-method active" onclick="selectPayMethod('wallet',this)">
+                  <div class="pay-method-icon">👛</div>
+                  <div class="pay-method-label">Nexbit wallet</div>
+                </div>
+                <div class="pay-method" onclick="selectPayMethod('card',this)">
+                  <div class="pay-method-icon">💳</div>
+                  <div class="pay-method-label">Debit card</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-box" id="summary-box">
+              <div class="sum-row"><span class="sum-label">Network</span><span class="sum-val" id="sum-network">—</span></div>
+              <div class="sum-row"><span class="sum-label">Data bundle</span><span class="sum-val" id="sum-bundle">—</span></div>
+              <div class="sum-row"><span class="sum-label">Validity</span><span class="sum-val" id="sum-validity">—</span></div>
+              <div class="sum-row"><span class="sum-label">Processing fee</span><span class="sum-val">Free</span></div>
+              <div class="sum-row"><span class="sum-label">Total to pay</span><span class="sum-val big" id="sum-total">₦0.00</span></div>
+            </div>
+
+            <button class="btn-submit" id="btn-purchase" onclick="purchaseData()" disabled>
+              📶 Buy data now
+            </button>
+
+            <!-- WhatsApp support -->
+            <div style="margin-top:14px;text-align:center">
+              <a href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20...%20I%20need%20help%20buying%20data." target="_blank"
+                style="font-size:12px;color:#25D366;text-decoration:none;display:inline-flex;align-items:center;gap:5px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Need help? Chat with us on WhatsApp
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RECENT PURCHASES -->
+        <div class="card" style="margin-top:14px">
+          <div class="card-header">
+            <span class="card-title">Recent data purchases</span>
+            <a href="nexbit-transactions.html" style="font-size:12px;color:var(--teal);font-weight:500;text-decoration:none">See all</a>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">📶</div>
+            <div class="tx-info"><div class="tx-name">MTN 5GB — 0803 000 0000</div><div class="tx-meta">Today, 08:12 AM</div></div>
+            <div style="text-align:right"><div class="tx-amt">−₦1,500</div><span class="tx-status">Delivered</span></div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">📶</div>
+            <div class="tx-info"><div class="tx-name">Airtel 10GB — 0802 111 2233</div><div class="tx-meta">Yesterday, 3:40 PM</div></div>
+            <div style="text-align:right"><div class="tx-amt">−₦2,000</div><span class="tx-status">Delivered</span></div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">📶</div>
+            <div class="tx-info"><div class="tx-name">Glo 2GB — 0806 334 5566</div><div class="tx-meta">18 May, 11:00 AM</div></div>
+            <div style="text-align:right"><div class="tx-amt">−₦500</div><span class="tx-status">Delivered</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Purchase complete</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon">🎉</div>
+      <div class="modal-success-title">Data sent!</div>
+      <div class="modal-success-sub">Your data bundle has been sent to the phone number below. It may take up to 2 minutes to activate.</div>
+      <div class="modal-detail" id="modal-detail"></div>
+      <button class="btn-done" onclick="closeModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">⚠️</div>
+  <div><div class="toast-text" id="toast-text">Error</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<script>
+// ── DATA PLANS ─────────────────────────────────────────────────
+const dataBundles = {
+  mtn: [
+    { cat:'Daily', bundles:[
+      {size:'100MB', validity:'1 day',   price:100,  popular:false},
+      {size:'200MB', validity:'1 day',   price:200,  popular:false},
+      {size:'500MB', validity:'1 day',   price:350,  popular:false},
+    ]},
+    { cat:'Weekly', bundles:[
+      {size:'1GB',   validity:'7 days',  price:500,  popular:false},
+      {size:'2GB',   validity:'7 days',  price:750,  popular:false},
+      {size:'3GB',   validity:'7 days',  price:1000, popular:true},
+    ]},
+    { cat:'Monthly', bundles:[
+      {size:'5GB',   validity:'30 days', price:1500, popular:false},
+      {size:'10GB',  validity:'30 days', price:2500, popular:true},
+      {size:'20GB',  validity:'30 days', price:4000, popular:false},
+      {size:'50GB',  validity:'30 days', price:8000, popular:false},
+      {size:'100GB', validity:'30 days', price:15000,popular:false},
+    ]},
+  ],
+  airtel: [
+    { cat:'Daily', bundles:[
+      {size:'100MB', validity:'1 day',   price:100,  popular:false},
+      {size:'300MB', validity:'1 day',   price:250,  popular:false},
+      {size:'750MB', validity:'1 day',   price:400,  popular:false},
+    ]},
+    { cat:'Weekly', bundles:[
+      {size:'1.5GB', validity:'7 days',  price:500,  popular:false},
+      {size:'3GB',   validity:'7 days',  price:900,  popular:true},
+    ]},
+    { cat:'Monthly', bundles:[
+      {size:'6GB',   validity:'30 days', price:1500, popular:false},
+      {size:'10GB',  validity:'30 days', price:2000, popular:true},
+      {size:'25GB',  validity:'30 days', price:4500, popular:false},
+      {size:'75GB',  validity:'30 days', price:12000,popular:false},
+    ]},
+  ],
+  glo: [
+    { cat:'Daily', bundles:[
+      {size:'100MB', validity:'1 day',   price:100,  popular:false},
+      {size:'200MB', validity:'1 day',   price:150,  popular:false},
+    ]},
+    { cat:'Weekly', bundles:[
+      {size:'1GB',   validity:'7 days',  price:400,  popular:false},
+      {size:'2.5GB', validity:'7 days',  price:800,  popular:true},
+    ]},
+    { cat:'Monthly', bundles:[
+      {size:'5GB',   validity:'30 days', price:1500, popular:false},
+      {size:'10GB',  validity:'30 days', price:2500, popular:true},
+      {size:'30GB',  validity:'30 days', price:6000, popular:false},
+    ]},
+  ],
+  '9mobile': [
+    { cat:'Daily', bundles:[
+      {size:'150MB', validity:'1 day',   price:100,  popular:false},
+      {size:'500MB', validity:'1 day',   price:300,  popular:false},
+    ]},
+    { cat:'Weekly', bundles:[
+      {size:'1GB',   validity:'7 days',  price:500,  popular:false},
+      {size:'2GB',   validity:'7 days',  price:800,  popular:true},
+    ]},
+    { cat:'Monthly', bundles:[
+      {size:'4.5GB', validity:'30 days', price:1500, popular:false},
+      {size:'9GB',   validity:'30 days', price:2500, popular:true},
+      {size:'18GB',  validity:'30 days', price:4000, popular:false},
+    ]},
+  ],
+};
+
+const networkNames = {mtn:'MTN', airtel:'Airtel', glo:'Glo', '9mobile':'9mobile'};
+let currentNetwork = 'mtn';
+let selectedBundle = null;
+let payMethod = 'wallet';
+
+function fmt(n){ return '₦' + n.toLocaleString('en-NG'); }
+
+function renderPlans(network){
+  const cats = dataBundles[network] || [];
+  const container = document.getElementById('plans-container');
+  container.innerHTML = cats.map(cat => `
+    <div class="plan-category">
+      <div class="cat-title">${cat.cat} bundles</div>
+      <div class="plans-grid">
+        ${cat.bundles.map((b,i) => `
+          <div class="plan-card ${b.popular ? 'popular' : ''}" 
+               id="plan-${cat.cat}-${i}"
+               onclick="selectPlan('${cat.cat}',${i},'${b.size}','${b.validity}',${b.price})">
+            <div class="plan-check">✓</div>
+            <div class="plan-size">${b.size}</div>
+            <div class="plan-validity">${b.validity}</div>
+            <div class="plan-price">${fmt(b.price)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectNetwork(network, el){
+  document.querySelectorAll('.net-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentNetwork = network;
+  selectedBundle = null;
+  document.getElementById('selected-plan-label').textContent = 'No plan selected';
+  resetSummary();
+  renderPlans(network);
+}
+
+function selectPlan(cat, idx, size, validity, price){
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`plan-${cat}-${idx}`).classList.add('selected');
+  selectedBundle = {size, validity, price};
+  
+  document.getElementById('selected-plan-label').textContent = `${size} — ${fmt(price)}`;
+  document.getElementById('sum-network').textContent = networkNames[currentNetwork];
+  document.getElementById('sum-bundle').textContent = `${size} data`;
+  document.getElementById('sum-validity').textContent = validity;
+  document.getElementById('sum-total').textContent = fmt(price);
+  
+  checkReady();
+}
+
+function resetSummary(){
+  document.getElementById('sum-network').textContent = '—';
+  document.getElementById('sum-bundle').textContent = '—';
+  document.getElementById('sum-validity').textContent = '—';
+  document.getElementById('sum-total').textContent = '₦0.00';
+  checkReady();
+}
+
+function selectPayMethod(method, el){
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+  payMethod = method;
+}
+
+function checkReady(){
+  const phone = document.getElementById('phone-number').value.trim();
+  const btn = document.getElementById('btn-purchase');
+  const ready = selectedBundle && phone.length >= 10;
+  btn.disabled = !ready;
+  btn.style.opacity = ready ? '1' : '0.4';
+  btn.style.cursor = ready ? 'pointer' : 'not-allowed';
+}
+
+document.getElementById('phone-number').addEventListener('input', checkReady);
+
+function purchaseData(){
+  const phone = document.getElementById('phone-number').value.trim();
+  if(!selectedBundle){ showToast('Select a plan','Please choose a data bundle first.','⚠️'); return; }
+  if(phone.length < 10){ showToast('Enter phone number','Please enter a valid phone number.','⚠️'); return; }
+  if(payMethod === 'wallet' && selectedBundle.price > 482350){
+    showToast('Insufficient balance','Please add funds to your wallet.','⚠️'); return;
+  }
+
+  const ref = 'NX-DATA-' + Math.floor(10000+Math.random()*90000);
+  
+  document.getElementById('modal-detail').innerHTML = `
+    <div class="md-row"><span class="md-label">Phone number</span><span class="md-val">${phone}</span></div>
+    <div class="md-row"><span class="md-label">Network</span><span class="md-val">${networkNames[currentNetwork]}</span></div>
+    <div class="md-row"><span class="md-label">Data bundle</span><span class="md-val">${selectedBundle.size}</span></div>
+    <div class="md-row"><span class="md-label">Validity</span><span class="md-val">${selectedBundle.validity}</span></div>
+    <div class="md-row"><span class="md-label">Amount paid</span><span class="md-val" style="color:var(--red);font-weight:700">${fmt(selectedBundle.price)}</span></div>
+    <div class="md-row"><span class="md-label">Reference</span><span class="md-val" style="font-family:var(--font-d)">${ref}</span></div>
+  `;
+  
+  document.getElementById('success-modal').classList.add('show');
+  
+  // Reset selection
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('phone-number').value = '';
+  selectedBundle = null;
+  document.getElementById('selected-plan-label').textContent = 'No plan selected';
+  resetSummary();
+}
+
+function closeModal(){
+  document.getElementById('success-modal').classList.remove('show');
+}
+
+function showToast(text, sub='', icon='✅'){
+  document.getElementById('toast-text').textContent = text;
+  document.getElementById('toast-sub').textContent = sub;
+  document.querySelector('.toast-icon').textContent = icon;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+});
+
+// Init
+renderPlans('mtn');
+</script>
+</body>
+</html>

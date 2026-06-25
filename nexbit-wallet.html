@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Wallet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:700}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--green-light);color:var(--green-dark);padding:2px 6px;border-radius:20px}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--green-light);color:var(--green-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-bottom{margin-top:auto}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+
+/* TOPBAR */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.back-btn{width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.back-btn:hover{background:var(--surface-2)}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+
+/* WALLET HERO */
+.wallet-hero{
+  background:var(--green);border-radius:20px;
+  padding:32px;margin-bottom:20px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;overflow:hidden;
+}
+.wh-pattern{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:24px 24px;pointer-events:none}
+.wh-left{position:relative;z-index:1}
+.wh-label{font-size:12px;color:rgba(255,255,255,.65);font-weight:500;letter-spacing:.04em;margin-bottom:8px}
+.wh-amount{font-family:var(--font-d);font-size:44px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:6px;cursor:pointer;user-select:none}
+.wh-usd{font-size:14px;color:rgba(255,255,255,.65);margin-bottom:16px}
+.wh-change{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;background:rgba(255,255,255,.18);color:#fff;padding:4px 12px;border-radius:20px}
+.wh-right{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.wh-actions{display:flex;gap:10px}
+.wh-btn{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.wh-btn-circle{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;transition:background .2s}
+.wh-btn-circle:hover{background:rgba(255,255,255,.32)}
+.wh-btn-label{font-size:11px;color:rgba(255,255,255,.8);font-weight:500}
+.wh-ref{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* WALLET CARDS ROW */
+.wallet-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.wc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.wc-icon{font-size:22px;margin-bottom:10px}
+.wc-label{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;margin-bottom:6px}
+.wc-val{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text)}
+.wc-sub{font-size:12px;color:var(--text-3);margin-top:3px}
+.wc-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:8px}
+.up{background:var(--green-light);color:var(--green-dark)}
+.down{background:var(--red-light);color:var(--red)}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:16px}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-d);font-size:14px;font-weight:700;color:var(--text)}
+.card-body{padding:20px}
+
+/* FORM */
+.form-group{margin-bottom:16px}
+label{display:block;font-size:12px;font-weight:500;letter-spacing:.03em;color:var(--text-2);margin-bottom:6px}
+.form-input{width:100%;padding:11px 14px;font-family:var(--font-b);font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.form-input:focus{border-color:var(--green)}
+.form-input::placeholder{color:var(--text-3)}
+.amount-wrap{position:relative}
+.amt-prefix{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:500;color:var(--text-3)}
+.amt-input{padding-left:32px!important}
+.quick-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.q-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);transition:all .15s}
+.q-btn:hover,.q-btn.sel{background:var(--green-light);color:var(--green-dark);border-color:var(--green)}
+
+/* METHOD TABS */
+.method-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.m-tab{padding:10px 6px;border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;cursor:pointer;transition:all .2s}
+.m-tab:hover{border-color:var(--border-2)}
+.m-tab.active{border-color:var(--green);background:var(--green-light)}
+.m-tab-icon{font-size:20px;margin-bottom:4px}
+.m-tab-label{font-size:11px;font-weight:500;color:var(--text-2)}
+.m-tab.active .m-tab-label{color:var(--green-dark)}
+
+/* ACCOUNT BOX */
+.account-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 16px;margin-bottom:14px}
+.ab-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.ab-label{font-size:12px;color:var(--text-3)}
+.ab-val{font-size:13px;font-weight:500;color:var(--text);font-family:var(--font-d)}
+.copy-btn{font-size:11px;color:var(--green);cursor:pointer;background:var(--green-light);padding:2px 8px;border-radius:20px;border:none;font-family:var(--font-b)}
+
+/* SUBMIT */
+.btn-submit{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--font-b);cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn-submit:hover{opacity:.88}
+
+/* TRANSACTIONS */
+.tx-filters{display:flex;gap:6px;align-items:center}
+.f-tab{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);transition:all .15s}
+.f-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.tx-search{padding:6px 12px;font-size:12px;border:1px solid var(--border);border-radius:20px;background:var(--surface-2);color:var(--text);font-family:var(--font-b);outline:none;width:140px}
+.tx-search:focus{border-color:var(--green)}
+.tx-item{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer}
+.tx-item:hover{background:var(--surface-2)}
+.tx-item:last-child{border-bottom:none}
+.tx-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tx-info{flex:1;min-width:0}
+.tx-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{font-size:11px;color:var(--text-3);margin-top:2px}
+.tx-right{text-align:right;flex-shrink:0}
+.tx-amt{font-size:13px;font-weight:600;font-family:var(--font-d)}
+.tx-amt.cr{color:var(--green)}
+.tx-amt.dr{color:var(--text)}
+.tx-status{font-size:10px;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;font-weight:500}
+.s-done{background:var(--green-light);color:var(--green-dark)}
+.s-pending{background:var(--amber-light);color:var(--amber-dark)}
+.s-fail{background:var(--red-light);color:var(--red)}
+
+/* MINI CHART BARS */
+.chart-bars{display:flex;align-items:flex-end;gap:4px;height:56px;padding:0 2px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{border-radius:3px 3px 0 0;width:100%;transition:height .4s ease;min-height:4px}
+.bar-label{font-size:9px;color:var(--text-3)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:20px;padding:0;max-width:420px;width:92%;animation:popIn .25s ease;overflow:hidden}
+@keyframes popIn{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.modal-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+.modal-body{padding:24px}
+.modal-success{text-align:center;padding:32px 24px}
+.modal-success-icon{width:64px;height:64px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+.modal-success-title{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px}
+.modal-success-sub{font-size:13px;color:var(--text-2);font-weight:300;line-height:1.6}
+.modal-success-amount{font-family:var(--font-d);font-size:36px;font-weight:800;color:var(--green);margin:16px 0 6px}
+.modal-success-ref{font-size:11px;color:var(--text-3);margin-bottom:24px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(14px);animation:fadeUp .4s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.04s}.d2{animation-delay:.09s}.d3{animation-delay:.14s}.d4{animation-delay:.19s}
+
+@media(max-width:960px){.two-col{grid-template-columns:1fr}.wallet-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.sidebar{display:none}.content{padding:16px}.topbar{padding:12px 16px}.wallet-hero{flex-direction:column;gap:20px;align-items:flex-start}.wallet-cards{grid-template-columns:1fr}.wh-amount{font-size:32px}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item" href="nexbit-dashboard.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item active" href="nexbit-wallet.html">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8L5 7h14l-3-4z"/></svg>
+    Wallet
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    Transactions<span class="sb-badge">3</span>
+  </a>
+  <div class="sb-section">Trade</div>
+  <a class="sb-item" href="nexbit-airtime.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Sell airtime
+  </a>
+  <a class="sb-item" href="nexbit-data.html">
+    <svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/><path d="M13 6l5 5 5-5M13 12l5 5 5-5"/></svg>
+    Buy data
+  </a>
+  <a class="sb-item" href="nexbit-fiberx.html">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    MTN FiberX
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/><path d="M16 1l4 4-4 4"/></svg>
+    Gift cards<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Smart solutions<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <div class="sb-section">Account</div>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profile
+  </a>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    Settings
+  </a>
+  <a class="sb-item" href="nexbit-auth.html">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Log out
+  </a>
+  <div class="sb-section">Support</div>
+  <a class="sb-item" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="color:#25D366">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    WhatsApp Support
+  </a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar">OK</div>
+      <div><div class="sb-user-name">Omowunmi Kayode</div><div class="sb-user-email">omowunmi@email.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div>
+        <h1>Wallet</h1>
+        <p>Manage your funds and transactions</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" style="cursor:pointer">OK</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- WALLET HERO -->
+    <div class="wallet-hero fade-up d1">
+      <div class="wh-pattern"></div>
+      <div class="wh-left">
+        <div class="wh-label">TOTAL BALANCE</div>
+        <div class="wh-amount" id="balance-display" onclick="toggleBalance()" title="Click to hide/show">₦482,350.00</div>
+        <div class="wh-usd" id="usd-display">≈ $298.40 USD</div>
+        <span class="wh-change">↑ +₦12,400 this week</span>
+      </div>
+      <div class="wh-right">
+        <div class="wh-actions">
+          <div class="wh-btn" onclick="openModal('fund')">
+            <div class="wh-btn-circle">➕</div>
+            <span class="wh-btn-label">Add funds</span>
+          </div>
+          <div class="wh-btn" onclick="openModal('withdraw')">
+            <div class="wh-btn-circle">💸</div>
+            <span class="wh-btn-label">Withdraw</span>
+          </div>
+          <div class="wh-btn" onclick="openModal('transfer')">
+            <div class="wh-btn-circle">🔄</div>
+            <span class="wh-btn-label">Transfer</span>
+          </div>
+          <div class="wh-btn" onclick="showToast('Swap','Currency swap coming soon.')">
+            <div class="wh-btn-circle">💱</div>
+            <span class="wh-btn-label">Swap</span>
+          </div>
+        </div>
+        <div class="wh-ref">Wallet ID: NX-OK-88210</div>
+      </div>
+    </div>
+
+    <!-- WALLET STATS -->
+    <div class="wallet-cards fade-up d2">
+      <div class="wc">
+        <div class="wc-icon">📥</div>
+        <div class="wc-label">Total received</div>
+        <div class="wc-val">₦1,284,500</div>
+        <div class="wc-sub">Last 30 days</div>
+        <span class="wc-badge up">↑ +22%</span>
+      </div>
+      <div class="wc">
+        <div class="wc-icon">📤</div>
+        <div class="wc-label">Total withdrawn</div>
+        <div class="wc-val">₦802,150</div>
+        <div class="wc-sub">Last 30 days</div>
+        <span class="wc-badge down">↑ +8%</span>
+      </div>
+      <div class="wc">
+        <div class="wc-icon">₿</div>
+        <div class="wc-label">Crypto balance</div>
+        <div class="wc-val">$124.80</div>
+        <div class="wc-sub">0.00127 BTC · 42 USDT</div>
+        <span class="wc-badge up">↑ +4.2%</span>
+      </div>
+    </div>
+
+    <!-- TWO COL -->
+    <div class="two-col fade-up d3">
+
+      <!-- TRANSACTIONS -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Transaction history</span>
+          <div class="tx-filters">
+            <button class="f-tab active" onclick="filterTx('all',this)">All</button>
+            <button class="f-tab" onclick="filterTx('credit',this)">In</button>
+            <button class="f-tab" onclick="filterTx('debit',this)">Out</button>
+            <input class="tx-search" placeholder="Search..." oninput="searchTx(this.value)"/>
+          </div>
+        </div>
+
+        <!-- MINI CHART -->
+        <div style="padding:16px 20px 8px;border-bottom:1px solid var(--border)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:8px">Activity — last 7 days</div>
+          <div class="chart-bars" id="chart-bars"></div>
+        </div>
+
+        <div id="tx-list">
+          <div class="tx-item" data-type="credit" data-name="airtime mtn">
+            <div class="tx-icon" style="background:var(--green-light)">📱</div>
+            <div class="tx-info"><div class="tx-name">Airtime sale — MTN ₦5,000</div><div class="tx-meta">Today, 10:42 AM · Ref: NX-28471</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦3,750</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="credit" data-name="amazon gift card">
+            <div class="tx-icon" style="background:var(--blue-light)">🎁</div>
+            <div class="tx-info"><div class="tx-name">Amazon gift card — $50 USD</div><div class="tx-meta">Today, 08:15 AM · Ref: NX-28468</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦78,000</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="debit" data-name="withdrawal gtbank">
+            <div class="tx-icon" style="background:var(--surface-2)">🏦</div>
+            <div class="tx-info"><div class="tx-name">Withdrawal — GTBank</div><div class="tx-meta">Today, 07:00 AM · Ref: NX-28460</div></div>
+            <div class="tx-right"><div class="tx-amt dr">−₦50,000</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="credit" data-name="usdt tether crypto">
+            <div class="tx-icon" style="background:var(--purple-light)">💵</div>
+            <div class="tx-info"><div class="tx-name">USDT sale — 30 USDT</div><div class="tx-meta">Yesterday, 2:10 PM · Ref: NX-28390</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦47,160</div><span class="tx-status s-pending">Pending</span></div>
+          </div>
+          <div class="tx-item" data-type="credit" data-name="fund deposit bank">
+            <div class="tx-icon" style="background:var(--green-light)">📥</div>
+            <div class="tx-info"><div class="tx-name">Wallet funding — Bank transfer</div><div class="tx-meta">Yesterday, 11:30 AM · Ref: NX-28361</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦100,000</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="debit" data-name="bitcoin btc crypto">
+            <div class="tx-icon" style="background:var(--amber-light)">₿</div>
+            <div class="tx-info"><div class="tx-name">BTC purchase — 0.0005 BTC</div><div class="tx-meta">18 May, 6:30 PM · Ref: NX-28401</div></div>
+            <div class="tx-right"><div class="tx-amt dr">−₦49,200</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="debit" data-name="withdrawal access bank">
+            <div class="tx-icon" style="background:var(--surface-2)">🏦</div>
+            <div class="tx-info"><div class="tx-name">Withdrawal — Access Bank</div><div class="tx-meta">18 May, 9:00 AM · Ref: NX-28310</div></div>
+            <div class="tx-right"><div class="tx-amt dr">−₦100,000</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="credit" data-name="airtime airtel">
+            <div class="tx-icon" style="background:var(--green-light)">📱</div>
+            <div class="tx-info"><div class="tx-name">Airtime sale — Airtel ₦2,000</div><div class="tx-meta">17 May, 4:22 PM · Ref: NX-28290</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦1,440</div><span class="tx-status s-fail">Failed</span></div>
+          </div>
+          <div class="tx-item" data-type="credit" data-name="itunes gift card apple">
+            <div class="tx-icon" style="background:var(--blue-light)">🎁</div>
+            <div class="tx-info"><div class="tx-name">iTunes gift card — $25 USD</div><div class="tx-meta">16 May, 3:15 PM · Ref: NX-28201</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦37,250</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+          <div class="tx-item" data-type="credit" data-name="fund deposit ussd">
+            <div class="tx-icon" style="background:var(--green-light)">📥</div>
+            <div class="tx-info"><div class="tx-name">Wallet funding — USSD</div><div class="tx-meta">15 May, 10:00 AM · Ref: NX-28100</div></div>
+            <div class="tx-right"><div class="tx-amt cr">+₦50,000</div><span class="tx-status s-done">Completed</span></div>
+          </div>
+        </div>
+
+        <div style="padding:14px 20px;border-top:1px solid var(--border);text-align:center">
+          <button style="font-size:13px;color:var(--green);background:transparent;border:none;cursor:pointer;font-family:var(--font-b);font-weight:500" onclick="showToast('Loading more...','Fetching older transactions.')">Load more transactions ↓</button>
+        </div>
+      </div>
+
+      <!-- RIGHT COL -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- FUND CARD -->
+        <div class="card fade-up d4">
+          <div class="card-header">
+            <span class="card-title">Add funds</span>
+            <span style="font-size:11px;color:var(--green);font-weight:500">Instant</span>
+          </div>
+          <div class="card-body">
+            <div class="method-tabs" id="fund-methods">
+              <div class="m-tab active" onclick="selectFundMethod('bank',this)">
+                <div class="m-tab-icon">🏦</div>
+                <div class="m-tab-label">Bank</div>
+              </div>
+              <div class="m-tab" onclick="selectFundMethod('ussd',this)">
+                <div class="m-tab-icon">📟</div>
+                <div class="m-tab-label">USSD</div>
+              </div>
+              <div class="m-tab" onclick="selectFundMethod('card',this)">
+                <div class="m-tab-icon">💳</div>
+                <div class="m-tab-label">Card</div>
+              </div>
+              <div class="m-tab" onclick="selectFundMethod('crypto',this)">
+                <div class="m-tab-icon">₿</div>
+                <div class="m-tab-label">Crypto</div>
+              </div>
+            </div>
+
+            <!-- BANK TRANSFER DETAILS -->
+            <div id="method-bank">
+              <div class="account-box">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;margin-bottom:10px">Transfer to this account</div>
+                <div class="ab-row"><span class="ab-label">Bank</span><span class="ab-val">Wema Bank</span></div>
+                <div class="ab-row"><span class="ab-label">Account number</span><span style="display:flex;align-items:center;gap:8px"><span class="ab-val">0123456789</span><button class="copy-btn" onclick="copyText('0123456789')">Copy</button></span></div>
+                <div class="ab-row"><span class="ab-label">Account name</span><span class="ab-val">Nexbit / Omowunmi</span></div>
+              </div>
+              <p style="font-size:11px;color:var(--text-3);line-height:1.6">Transfer any amount to the account above. Your wallet will be credited automatically within 2 minutes.</p>
+            </div>
+
+            <!-- USSD -->
+            <div id="method-ussd" style="display:none">
+              <div class="form-group">
+                <label>Select your bank</label>
+                <select class="form-input">
+                  <option>GTBank — *737#</option>
+                  <option>Access Bank — *901#</option>
+                  <option>First Bank — *894#</option>
+                  <option>Zenith Bank — *966#</option>
+                  <option>UBA — *919#</option>
+                </select>
+              </div>
+              <div class="account-box">
+                <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Dial this code on your phone</div>
+                <div style="font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--green)">*737*52*Amount*[Account]#</div>
+              </div>
+            </div>
+
+            <!-- CARD -->
+            <div id="method-card" style="display:none">
+              <div class="form-group">
+                <label>Amount (₦)</label>
+                <div class="amount-wrap">
+                  <span class="amt-prefix">₦</span>
+                  <input class="form-input amt-input" type="number" placeholder="0" id="card-amount" oninput="calcFees(this.value)"/>
+                </div>
+                <div class="quick-row">
+                  <button class="q-btn" onclick="setAmt('card-amount',5000,this)">₦5K</button>
+                  <button class="q-btn" onclick="setAmt('card-amount',10000,this)">₦10K</button>
+                  <button class="q-btn" onclick="setAmt('card-amount',20000,this)">₦20K</button>
+                  <button class="q-btn" onclick="setAmt('card-amount',50000,this)">₦50K</button>
+                </div>
+              </div>
+              <div class="account-box" id="card-fee-box">
+                <div class="ab-row"><span class="ab-label">Amount</span><span class="ab-val" id="card-amt-display">₦0.00</span></div>
+                <div class="ab-row"><span class="ab-label">Card fee (1.5%)</span><span class="ab-val" id="card-fee-display">₦0.00</span></div>
+                <div class="ab-row"><span class="ab-label">You will pay</span><span class="ab-val" style="color:var(--green);font-weight:700" id="card-total-display">₦0.00</span></div>
+              </div>
+              <button class="btn-submit" onclick="showToast('Redirecting','Opening secure card payment page...')">Pay with card</button>
+            </div>
+
+            <!-- CRYPTO -->
+            <div id="method-crypto" style="display:none">
+              <div class="account-box">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;margin-bottom:10px">Send USDT (TRC-20) to</div>
+                <div style="font-family:var(--font-d);font-size:11px;font-weight:600;color:var(--text);word-break:break-all;line-height:1.6">TQn8i2Jd7kLm9xRvYp4wBcNqHsAeUfG3</div>
+                <button class="copy-btn" style="margin-top:8px" onclick="copyText('TQn8i2Jd7kLm9xRvYp4wBcNqHsAeUfG3')">Copy address</button>
+              </div>
+              <p style="font-size:11px;color:var(--text-3);line-height:1.6">Only send USDT (TRC-20) to this address. Sending other tokens may result in permanent loss.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- WITHDRAW CARD -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Withdraw funds</span>
+            <span style="font-size:11px;color:var(--text-3)">Balance: <strong style="color:var(--green)">₦482,350</strong></span>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label>Bank account</label>
+              <select class="form-input">
+                <option>GTBank — 0123 •••• 4567 (Default)</option>
+                <option>Access Bank — 0987 •••• 6543</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount (₦)</label>
+              <div class="amount-wrap">
+                <span class="amt-prefix">₦</span>
+                <input class="form-input amt-input" type="number" placeholder="0" id="withdraw-amount" oninput="calcWithdraw(this.value)"/>
+              </div>
+              <div class="quick-row">
+                <button class="q-btn" onclick="setAmt('withdraw-amount',10000,this)">₦10K</button>
+                <button class="q-btn" onclick="setAmt('withdraw-amount',25000,this)">₦25K</button>
+                <button class="q-btn" onclick="setAmt('withdraw-amount',50000,this)">₦50K</button>
+                <button class="q-btn" onclick="setAmt('withdraw-amount',100000,this)">₦100K</button>
+              </div>
+            </div>
+            <div class="account-box">
+              <div class="ab-row"><span class="ab-label">Amount</span><span class="ab-val" id="wd-amt">₦0.00</span></div>
+              <div class="ab-row"><span class="ab-label">Processing fee</span><span class="ab-val">Free</span></div>
+              <div class="ab-row"><span class="ab-label">You will receive</span><span class="ab-val" style="color:var(--green);font-weight:700" id="wd-receive">₦0.00</span></div>
+              <div class="ab-row"><span class="ab-label">Arrival time</span><span class="ab-val">Instant</span></div>
+            </div>
+            <button class="btn-submit" onclick="submitWithdraw()">Withdraw now</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Withdrawal submitted</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-success">
+      <div class="modal-success-icon">✅</div>
+      <div class="modal-success-title" id="modal-success-title">Withdrawal successful!</div>
+      <div class="modal-success-sub" id="modal-success-sub">Your funds are on the way to your GTBank account.</div>
+      <div class="modal-success-amount" id="modal-success-amount">₦0.00</div>
+      <div class="modal-success-ref" id="modal-success-ref">Ref: NX-00000 · Processing: Instant</div>
+      <button class="btn-submit" onclick="closeModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div><div class="toast-text" id="toast-text">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<script>
+// Theme
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeToggle').textContent=d?'🌙':'☀️';
+  drawChart();
+});
+
+// Balance toggle
+let balanceVisible=true;
+function toggleBalance(){
+  balanceVisible=!balanceVisible;
+  document.getElementById('balance-display').textContent=balanceVisible?'₦482,350.00':'₦••••••';
+  document.getElementById('usd-display').textContent=balanceVisible?'≈ $298.40 USD':'≈ $••••• USD';
+}
+
+// Mini chart
+function drawChart(){
+  const days=['M','T','W','T','F','S','S'];
+  const vals=[42,78,55,91,63,110,87];
+  const max=Math.max(...vals);
+  const container=document.getElementById('chart-bars');
+  container.innerHTML='';
+  const isDark=document.body.getAttribute('data-theme')==='dark';
+  days.forEach((d,i)=>{
+    const pct=Math.round((vals[i]/max)*100);
+    const wrap=document.createElement('div');
+    wrap.className='bar-wrap';
+    const bar=document.createElement('div');
+    bar.className='bar';
+    bar.style.height=pct+'%';
+    bar.style.background=i===5?'#00C8A0':'rgba(29,158,117,0.25)';
+    const lbl=document.createElement('div');
+    lbl.className='bar-label';
+    lbl.textContent=d;
+    wrap.appendChild(bar);
+    wrap.appendChild(lbl);
+    container.appendChild(wrap);
+  });
+}
+drawChart();
+
+// Fund method tabs
+function selectFundMethod(method,el){
+  document.querySelectorAll('#fund-methods .m-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['bank','ussd','card','crypto'].forEach(m=>{
+    document.getElementById('method-'+m).style.display=m===method?'block':'none';
+  });
+}
+
+// Quick amount buttons
+function setAmt(inputId,val,btn){
+  document.getElementById(inputId).value=val;
+  btn.closest('.quick-row').querySelectorAll('.q-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  if(inputId==='card-amount') calcFees(val);
+  if(inputId==='withdraw-amount') calcWithdraw(val);
+}
+
+function calcFees(val){
+  const amt=parseFloat(val)||0;
+  const fee=amt*0.015;
+  const total=amt+fee;
+  document.getElementById('card-amt-display').textContent='₦'+fmt(amt);
+  document.getElementById('card-fee-display').textContent='₦'+fmt(fee);
+  document.getElementById('card-total-display').textContent='₦'+fmt(total);
+}
+
+function calcWithdraw(val){
+  const amt=parseFloat(val)||0;
+  document.getElementById('wd-amt').textContent='₦'+fmt(amt);
+  document.getElementById('wd-receive').textContent='₦'+fmt(amt);
+}
+
+function fmt(n){return n.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function submitWithdraw(){
+  const amt=parseFloat(document.getElementById('withdraw-amount').value)||0;
+  if(!amt||amt<500){showToast('Invalid amount','Minimum withdrawal is ₦500.','⚠️');return;}
+  if(amt>482350){showToast('Insufficient balance','Amount exceeds your wallet balance.','⚠️');return;}
+  const ref='NX-'+Math.floor(10000+Math.random()*90000);
+  document.getElementById('modal-success-amount').textContent='₦'+fmt(amt);
+  document.getElementById('modal-success-ref').textContent='Ref: '+ref+' · Processing: Instant';
+  document.getElementById('success-modal').classList.add('show');
+}
+
+function openModal(type){
+  if(type==='fund'){document.querySelector('.card:last-child .card-title').scrollIntoView({behavior:'smooth'});}
+  else if(type==='withdraw'){showToast('Withdraw','Scroll down to the withdraw form.');}
+  else if(type==='transfer'){showToast('Transfer','Wallet-to-wallet transfer coming soon.');}
+}
+
+function closeModal(){document.getElementById('success-modal').classList.remove('show');}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).catch(()=>{});
+  showToast('Copied!','Copied to clipboard.','📋');
+}
+
+// TX filters
+function filterTx(type,btn){
+  document.querySelectorAll('.f-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tx-item').forEach(item=>{
+    item.style.display=(type==='all'||item.dataset.type===type)?'flex':'none';
+  });
+}
+
+function searchTx(q){
+  const lower=q.toLowerCase();
+  document.querySelectorAll('.tx-item').forEach(item=>{
+    const name=item.dataset.name||'';
+    item.style.display=name.includes(lower)?'flex':'none';
+  });
+}
+
+function showToast(text,sub='',icon='✅'){
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  document.querySelector('.toast-icon').textContent=icon;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>

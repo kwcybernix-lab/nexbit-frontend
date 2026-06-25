@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Profile & Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:700}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--green-light);color:var(--green-dark);padding:2px 6px;border-radius:20px}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--green-light);color:var(--green-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-bottom{margin-top:auto}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.back-btn{width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.back-btn:hover{background:var(--surface-2)}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT LAYOUT */
+.content{padding:28px;flex:1;display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+
+/* SETTINGS NAV */
+.settings-nav{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:sticky;top:84px}
+.sn-header{padding:16px 18px;border-bottom:1px solid var(--border)}
+.sn-title{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--text-3);text-transform:uppercase}
+.sn-item{display:flex;align-items:center;gap:10px;padding:11px 18px;cursor:pointer;transition:background .15s;color:var(--text-2);font-size:13px;border-left:2px solid transparent;}
+.sn-item:hover{background:var(--surface-2);color:var(--text)}
+.sn-item.active{background:var(--green-light);color:var(--green-dark);border-left-color:var(--green);font-weight:500}
+.sn-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sn-divider{height:1px;background:var(--border);margin:4px 0}
+
+/* SETTINGS PANELS */
+.settings-main{display:flex;flex-direction:column;gap:16px}
+.settings-panel{display:none}
+.settings-panel.active{display:flex;flex-direction:column;gap:16px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.card-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text)}
+.card-sub{font-size:12px;color:var(--text-3);margin-top:2px}
+.card-body{padding:22px}
+
+/* PROFILE HERO */
+.profile-hero{display:flex;align-items:center;gap:20px;padding:24px 22px;border-bottom:1px solid var(--border)}
+.avatar-lg{width:72px;height:72px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:24px;font-weight:700;color:#fff;flex-shrink:0;position:relative;cursor:pointer}
+.avatar-edit{position:absolute;bottom:0;right:0;width:22px;height:22px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px}
+.profile-info{}
+.profile-name{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px}
+.profile-email{font-size:13px;color:var(--text-2);margin-bottom:8px}
+.profile-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px}
+.badge-verified{background:var(--green-light);color:var(--green-dark)}
+.badge-tier{background:var(--amber-light);color:var(--amber-dark)}
+.badge-country{background:var(--blue-light);color:var(--blue-dark)}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+label{font-size:12px;font-weight:500;letter-spacing:.03em;color:var(--text-2)}
+.form-input{width:100%;padding:11px 14px;font-family:var(--font-b);font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.form-input:focus{border-color:var(--green);background:var(--surface)}
+.form-input::placeholder{color:var(--text-3)}
+.form-input:disabled{opacity:.5;cursor:not-allowed}
+.input-hint{font-size:11px;color:var(--text-3)}
+
+/* KYC */
+.kyc-steps{display:flex;flex-direction:column;gap:0}
+.kyc-item{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.kyc-item:last-child{border-bottom:none}
+.kyc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.kyc-info{flex:1}
+.kyc-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.kyc-desc{font-size:11px;color:var(--text-3)}
+.kyc-action{flex-shrink:0}
+.kyc-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.kyc-done{background:var(--green-light);color:var(--green-dark)}
+.kyc-pending{background:var(--amber-light);color:var(--amber-dark)}
+.kyc-required{background:var(--red-light);color:var(--red)}
+.btn-kyc{font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--r-sm);border:1px solid var(--green);color:var(--green);background:transparent;cursor:pointer;font-family:var(--font-b);transition:all .2s}
+.btn-kyc:hover{background:var(--green);color:#fff}
+
+/* LIMITS BAR */
+.limit-item{margin-bottom:18px}
+.limit-item:last-child{margin-bottom:0}
+.limit-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.limit-label{font-size:13px;color:var(--text-2)}
+.limit-val{font-size:13px;font-weight:500;color:var(--text)}
+.limit-bar{height:6px;background:var(--border-2);border-radius:3px;overflow:hidden}
+.limit-fill{height:100%;border-radius:3px;background:var(--green);transition:width .6s ease}
+.limit-sub{font-size:11px;color:var(--text-3);margin-top:4px}
+
+/* SECURITY */
+.security-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)}
+.security-row:last-child{border-bottom:none}
+.security-left{display:flex;align-items:center;gap:12px}
+.security-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.security-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.security-desc{font-size:11px;color:var(--text-3)}
+.security-right{}
+.btn-sec{font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--r-sm);border:1px solid var(--border);color:var(--text-2);background:transparent;cursor:pointer;font-family:var(--font-b);transition:all .2s}
+.btn-sec:hover{background:var(--surface-2);border-color:var(--border-2)}
+.btn-sec.danger{border-color:var(--red);color:var(--red)}
+.btn-sec.danger:hover{background:var(--red-light)}
+
+/* TOGGLE SWITCH */
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.toggle-wrap:last-child{border-bottom:none}
+.toggle-left{}
+.toggle-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.toggle-desc{font-size:11px;color:var(--text-3)}
+.toggle{width:40px;height:22px;background:var(--border-2);border-radius:20px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;border:none;outline:none}
+.toggle.on{background:var(--green)}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{left:21px}
+
+/* BANK ACCOUNTS */
+.bank-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+.bank-item:last-child{border-bottom:none}
+.bank-logo{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.bank-info{flex:1}
+.bank-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.bank-num{font-size:11px;color:var(--text-3);font-family:var(--font-d)}
+.bank-default{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--green-light);color:var(--green-dark)}
+.bank-remove{font-size:12px;color:var(--text-3);cursor:pointer;padding:4px 8px;border-radius:var(--r-sm);border:none;background:transparent;font-family:var(--font-b)}
+.bank-remove:hover{color:var(--red);background:var(--red-light)}
+.btn-add-bank{width:100%;margin-top:14px;padding:11px;border:1.5px dashed var(--border-2);border-radius:var(--r-sm);background:transparent;color:var(--text-2);font-size:13px;font-family:var(--font-b);cursor:pointer;transition:all .2s}
+.btn-add-bank:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+
+/* SAVE BTN */
+.btn-save{padding:11px 28px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);cursor:pointer;transition:opacity .2s}
+.btn-save:hover{opacity:.88}
+.btn-cancel{padding:11px 20px;background:transparent;color:var(--text-2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);cursor:pointer;margin-right:8px}
+.btn-cancel:hover{background:var(--surface-2)}
+
+/* DANGER ZONE */
+.danger-item{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)}
+.danger-item:last-child{border-bottom:none}
+.danger-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.danger-desc{font-size:11px;color:var(--text-3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(14px);animation:fadeUp .4s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}
+
+@media(max-width:960px){.content{grid-template-columns:1fr}.settings-nav{position:static;display:flex;flex-wrap:wrap;padding:8px}.sn-item{border-left:none;border-bottom:2px solid transparent;padding:8px 12px}.sn-item.active{border-bottom-color:var(--green);border-left:none}.sn-divider{display:none}.sn-header{display:none}}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}.content{padding:16px}.topbar{padding:12px 16px}.sidebar{display:none}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item" href="nexbit-dashboard.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="nexbit-wallet.html">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8L5 7h14l-3-4z"/></svg>
+    Wallet
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    Transactions<span class="sb-badge">3</span>
+  </a>
+  <div class="sb-section">Trade</div>
+  <a class="sb-item" href="nexbit-airtime.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Sell airtime
+  </a>
+  <a class="sb-item" href="nexbit-data.html">
+    <svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/><path d="M13 6l5 5 5-5M13 12l5 5 5-5"/></svg>
+    Buy data
+  </a>
+  <a class="sb-item" href="nexbit-fiberx.html">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    MTN FiberX
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/><path d="M16 1l4 4-4 4"/></svg>
+    Gift cards<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Smart solutions<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <div class="sb-section">Account</div>
+  <a class="sb-item active" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profile
+  </a>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    Settings
+  </a>
+  <a class="sb-item" href="nexbit-auth.html">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Log out
+  </a>
+  <div class="sb-section">Support</div>
+  <a class="sb-item" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="color:#25D366">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    WhatsApp Support
+  </a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar">OK</div>
+      <div><div class="sb-user-name">Omowunmi Kayode</div><div class="sb-user-email">omowunmi@email.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div>
+        <h1>Profile & Settings</h1>
+        <p>Manage your account details and preferences</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" style="cursor:pointer">OK</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SETTINGS NAV -->
+    <nav class="settings-nav fade-up d1">
+      <div class="sn-header"><div class="sn-title">Settings</div></div>
+      <div class="sn-item active" onclick="showPanel('profile',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile
+      </div>
+      <div class="sn-item" onclick="showPanel('kyc',this)">
+        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        Verification (KYC)
+      </div>
+      <div class="sn-divider"></div>
+      <div class="sn-item" onclick="showPanel('security',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Security
+      </div>
+      <div class="sn-item" onclick="showPanel('notifications',this)">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Notifications
+      </div>
+      <div class="sn-divider"></div>
+      <div class="sn-item" onclick="showPanel('banks',this)">
+        <svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 10v11M12 10v11M16 10v11"/></svg>
+        Bank accounts
+      </div>
+      <div class="sn-item" onclick="showPanel('limits',this)">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Limits & Tiers
+      </div>
+      <div class="sn-divider"></div>
+      <div class="sn-item" onclick="showPanel('danger',this)">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Danger zone
+      </div>
+    </nav>
+
+    <!-- SETTINGS PANELS -->
+    <div class="settings-main fade-up d2">
+
+      <!-- PROFILE PANEL -->
+      <div class="settings-panel active" id="panel-profile">
+        <div class="card">
+          <div class="profile-hero">
+            <div class="avatar-lg">
+              OK
+              <div class="avatar-edit">✏️</div>
+            </div>
+            <div class="profile-info">
+              <div class="profile-name">Omowunmi Kayode</div>
+              <div class="profile-email">omowunmi@email.com</div>
+              <div class="profile-badges">
+                <span class="badge badge-verified">✅ Verified</span>
+                <span class="badge badge-tier">🥈 Silver tier</span>
+                <span class="badge badge-country">🇳🇬 Nigeria</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>First name</label>
+                <input class="form-input" type="text" value="Omowunmi"/>
+              </div>
+              <div class="form-group">
+                <label>Last name</label>
+                <input class="form-input" type="text" value="Kayode"/>
+              </div>
+              <div class="form-group">
+                <label>Email address</label>
+                <input class="form-input" type="email" value="omowunmi@email.com"/>
+              </div>
+              <div class="form-group">
+                <label>Phone number</label>
+                <input class="form-input" type="tel" value="+234 803 000 0000"/>
+              </div>
+              <div class="form-group">
+                <label>Date of birth</label>
+                <input class="form-input" type="date" value="1995-06-14"/>
+              </div>
+              <div class="form-group">
+                <label>Gender</label>
+                <select class="form-input">
+                  <option selected>Female</option>
+                  <option>Male</option>
+                  <option>Prefer not to say</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label>Home address</label>
+                <input class="form-input" type="text" value="14 Abeokuta Road, Ijebu-Ode"/>
+              </div>
+              <div class="form-group">
+                <label>State</label>
+                <select class="form-input">
+                  <option selected>Ogun</option>
+                  <option>Lagos</option>
+                  <option>Abuja (FCT)</option>
+                  <option>Kano</option>
+                  <option>Rivers</option>
+                  <option>Oyo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Country</label>
+                <input class="form-input" type="text" value="Nigeria" disabled/>
+                <span class="input-hint">Contact support to change country</span>
+              </div>
+              <div class="form-group full">
+                <label>Referral code</label>
+                <input class="form-input" type="text" value="NEXOK-8821" disabled/>
+                <span class="input-hint">Share this code to earn ₦500 per referral</span>
+              </div>
+            </div>
+            <div style="margin-top:20px">
+              <button class="btn-cancel">Cancel</button>
+              <button class="btn-save" onclick="showToast('Profile updated successfully!','Your changes have been saved.')">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KYC PANEL -->
+      <div class="settings-panel" id="panel-kyc">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Identity verification (KYC)</div>
+              <div class="card-sub">Complete verification to unlock higher trading limits</div>
+            </div>
+            <span class="badge badge-tier">🥈 Silver tier</span>
+          </div>
+          <div class="card-body" style="padding:8px 22px">
+            <div class="kyc-steps">
+              <div class="kyc-item">
+                <div class="kyc-icon" style="background:var(--green-light)">📧</div>
+                <div class="kyc-info">
+                  <div class="kyc-title">Email verification</div>
+                  <div class="kyc-desc">Verify your email address</div>
+                </div>
+                <div class="kyc-action"><span class="kyc-badge kyc-done">✅ Verified</span></div>
+              </div>
+              <div class="kyc-item">
+                <div class="kyc-icon" style="background:var(--green-light)">📱</div>
+                <div class="kyc-info">
+                  <div class="kyc-title">Phone verification</div>
+                  <div class="kyc-desc">Verify your phone number via OTP</div>
+                </div>
+                <div class="kyc-action"><span class="kyc-badge kyc-done">✅ Verified</span></div>
+              </div>
+              <div class="kyc-item">
+                <div class="kyc-icon" style="background:var(--green-light)">🪪</div>
+                <div class="kyc-info">
+                  <div class="kyc-title">Government ID</div>
+                  <div class="kyc-desc">NIN, Voter's card, Driver's license or International passport</div>
+                </div>
+                <div class="kyc-action"><span class="kyc-badge kyc-done">✅ Approved</span></div>
+              </div>
+              <div class="kyc-item">
+                <div class="kyc-icon" style="background:var(--amber-light)">🤳</div>
+                <div class="kyc-info">
+                  <div class="kyc-title">Selfie verification</div>
+                  <div class="kyc-desc">Take a live selfie to match your ID</div>
+                </div>
+                <div class="kyc-action"><span class="kyc-badge kyc-pending">⏳ Under review</span></div>
+              </div>
+              <div class="kyc-item">
+                <div class="kyc-icon" style="background:var(--red-light)">🏠</div>
+                <div class="kyc-info">
+                  <div class="kyc-title">Proof of address</div>
+                  <div class="kyc-desc">Utility bill or bank statement (not older than 3 months)</div>
+                </div>
+                <div class="kyc-action"><button class="btn-kyc" onclick="showToast('Upload feature','Document upload will be available soon.')">Upload</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIER CARD -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Trading tiers</div></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="border:1.5px solid var(--border);border-radius:var(--r-sm);padding:14px;text-align:center;opacity:.6">
+                <div style="font-size:20px;margin-bottom:6px">🥉</div>
+                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Bronze</div>
+                <div style="font-size:11px;color:var(--text-3)">₦0 – ₦50,000/day</div>
+              </div>
+              <div style="border:2px solid var(--green);border-radius:var(--r-sm);padding:14px;text-align:center;background:var(--green-light)">
+                <div style="font-size:20px;margin-bottom:6px">🥈</div>
+                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:4px">Silver ← You</div>
+                <div style="font-size:11px;color:var(--green-dark)">Up to ₦200,000/day</div>
+              </div>
+              <div style="border:1.5px dashed var(--border-2);border-radius:var(--r-sm);padding:14px;text-align:center">
+                <div style="font-size:20px;margin-bottom:6px">🥇</div>
+                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Gold</div>
+                <div style="font-size:11px;color:var(--text-3)">Up to ₦1,000,000/day</div>
+                <div style="font-size:10px;color:var(--green);margin-top:6px;font-weight:500">Complete KYC →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY PANEL -->
+      <div class="settings-panel" id="panel-security">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Security settings</div></div>
+          <div class="card-body" style="padding:4px 22px">
+            <div class="security-row">
+              <div class="security-left">
+                <div class="security-icon" style="background:var(--blue-light)">🔑</div>
+                <div>
+                  <div class="security-title">Change password</div>
+                  <div class="security-desc">Last changed 45 days ago</div>
+                </div>
+              </div>
+              <button class="btn-sec" onclick="showToast('Password reset','A reset link has been sent to your email.')">Change</button>
+            </div>
+            <div class="security-row">
+              <div class="security-left">
+                <div class="security-icon" style="background:var(--green-light)">🛡️</div>
+                <div>
+                  <div class="security-title">Two-factor authentication (2FA)</div>
+                  <div class="security-desc">Protect your account with Google Authenticator or SMS</div>
+                </div>
+              </div>
+              <button class="btn-sec" style="color:var(--green);border-color:var(--green)" onclick="showToast('2FA enabled','Two-factor authentication is already active.')">Enabled ✓</button>
+            </div>
+            <div class="security-row">
+              <div class="security-left">
+                <div class="security-icon" style="background:var(--amber-light)">📍</div>
+                <div>
+                  <div class="security-title">Login activity</div>
+                  <div class="security-desc">Last login: Today at 9:14 AM · Ogun, Nigeria</div>
+                </div>
+              </div>
+              <button class="btn-sec" onclick="showToast('Viewing sessions','Session management coming soon.')">View all</button>
+            </div>
+            <div class="security-row">
+              <div class="security-left">
+                <div class="security-icon" style="background:var(--purple-light)">🔔</div>
+                <div>
+                  <div class="security-title">Login alerts</div>
+                  <div class="security-desc">Get notified of new logins via email</div>
+                </div>
+              </div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="security-row">
+              <div class="security-left">
+                <div class="security-icon" style="background:var(--red-light)">🚫</div>
+                <div>
+                  <div class="security-title">Active sessions</div>
+                  <div class="security-desc">2 devices currently logged in</div>
+                </div>
+              </div>
+              <button class="btn-sec danger" onclick="showToast('Sessions revoked','All other sessions have been signed out.','🔒')">Sign out all</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Transaction PIN</div></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;font-weight:300;line-height:1.6">Your 4-digit PIN is required to authorise every transaction. Keep it safe and never share it.</p>
+            <button class="btn-save" onclick="showToast('PIN change','PIN update flow will open here.')">Change transaction PIN</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS PANEL -->
+      <div class="settings-panel" id="panel-notifications">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Notification preferences</div></div>
+          <div class="card-body" style="padding:4px 22px">
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Trade confirmations</div><div class="toggle-desc">Get notified when a trade is completed</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Rate alerts</div><div class="toggle-desc">Notify when rates change by more than 5%</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Wallet credits</div><div class="toggle-desc">Notify when funds are added to your wallet</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Login alerts</div><div class="toggle-desc">Notify on new device sign-ins</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Promotional emails</div><div class="toggle-desc">Offers, bonuses and new features</div></div>
+              <button class="toggle" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Weekly summary</div><div class="toggle-desc">A weekly digest of your trading activity</div></div>
+              <button class="toggle" onclick="this.classList.toggle('on')"></button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Notification channels</div></div>
+          <div class="card-body" style="padding:4px 22px">
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Email notifications</div><div class="toggle-desc">omowunmi@email.com</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">SMS notifications</div><div class="toggle-desc">+234 803 000 0000</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-wrap">
+              <div class="toggle-left"><div class="toggle-title">Push notifications</div><div class="toggle-desc">Browser & mobile app alerts</div></div>
+              <button class="toggle" onclick="this.classList.toggle('on')"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANKS PANEL -->
+      <div class="settings-panel" id="panel-banks">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Linked bank accounts</div><div class="card-sub">Accounts used for withdrawals and payouts</div></div>
+          </div>
+          <div class="card-body" style="padding:4px 22px">
+            <div class="bank-item">
+              <div class="bank-logo" style="background:#EE3434">GT</div>
+              <div class="bank-info">
+                <div class="bank-name">GTBank <span class="bank-default">Default</span></div>
+                <div class="bank-num">0123 •••• •••• 4567 · Omowunmi Kayode</div>
+              </div>
+              <button class="bank-remove" onclick="showToast('Cannot remove','Default account cannot be removed.')">Remove</button>
+            </div>
+            <div class="bank-item">
+              <div class="bank-logo" style="background:#003087">AC</div>
+              <div class="bank-info">
+                <div class="bank-name">Access Bank</div>
+                <div class="bank-num">0987 •••• •••• 6543 · Omowunmi Kayode</div>
+              </div>
+              <button class="bank-remove" onclick="showToast('Account removed','Access Bank account has been removed.','🗑️')">Remove</button>
+            </div>
+            <button class="btn-add-bank" onclick="showToast('Add bank','Bank account linking flow coming soon.')">+ Add new bank account</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIMITS PANEL -->
+      <div class="settings-panel" id="panel-limits">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Trading limits — Silver tier 🥈</div></div>
+          <div class="card-body">
+            <div class="limit-item">
+              <div class="limit-header"><span class="limit-label">Daily trading limit</span><span class="limit-val">₦148,500 / ₦200,000</span></div>
+              <div class="limit-bar"><div class="limit-fill" style="width:74%"></div></div>
+              <div class="limit-sub">₦51,500 remaining today</div>
+            </div>
+            <div class="limit-item">
+              <div class="limit-header"><span class="limit-label">Monthly trading limit</span><span class="limit-val">₦2,340,000 / ₦4,000,000</span></div>
+              <div class="limit-bar"><div class="limit-fill" style="width:58%"></div></div>
+              <div class="limit-sub">₦1,660,000 remaining this month</div>
+            </div>
+            <div class="limit-item">
+              <div class="limit-header"><span class="limit-label">Single transaction max</span><span class="limit-val">₦50,000</span></div>
+              <div class="limit-bar"><div class="limit-fill" style="width:100%;background:var(--green-dark)"></div></div>
+              <div class="limit-sub">Per trade limit for Silver tier</div>
+            </div>
+            <div class="limit-item">
+              <div class="limit-header"><span class="limit-label">Withdrawal limit (daily)</span><span class="limit-val">₦80,000 / ₦150,000</span></div>
+              <div class="limit-bar"><div class="limit-fill" style="width:53%"></div></div>
+              <div class="limit-sub">₦70,000 remaining today</div>
+            </div>
+            <div style="margin-top:20px;padding:14px;background:var(--green-light);border-radius:var(--r-sm)">
+              <div style="font-size:13px;font-weight:500;color:var(--green-dark);margin-bottom:4px">🥇 Upgrade to Gold tier</div>
+              <div style="font-size:12px;color:var(--green-dark);font-weight:300;margin-bottom:10px">Complete proof of address upload to unlock ₦1,000,000/day trading limit.</div>
+              <button class="btn-save" style="padding:8px 18px;font-size:13px" onclick="showPanel('kyc', document.querySelector('.sn-item:nth-child(3)'))">Complete KYC →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DANGER PANEL -->
+      <div class="settings-panel" id="panel-danger">
+        <div class="card">
+          <div class="card-header"><div class="card-title" style="color:var(--red)">⚠️ Danger zone</div></div>
+          <div class="card-body" style="padding:4px 22px">
+            <div class="danger-item">
+              <div><div class="danger-title">Freeze account</div><div class="danger-desc">Temporarily disable all trading and withdrawals. You can unfreeze anytime.</div></div>
+              <button class="btn-sec" onclick="showToast('Account frozen','Your account has been temporarily frozen.','🧊')">Freeze</button>
+            </div>
+            <div class="danger-item">
+              <div><div class="danger-title">Download my data</div><div class="danger-desc">Export all your account data, transactions and trade history as a CSV file.</div></div>
+              <button class="btn-sec" onclick="showToast('Export requested','Your data export will be emailed within 24 hours.')">Export data</button>
+            </div>
+            <div class="danger-item">
+              <div><div class="danger-title">Close account</div><div class="danger-desc">Permanently delete your Nexbit account. This action cannot be undone.</div></div>
+              <button class="btn-sec danger" onclick="showToast('Account deletion','Please contact support to close your account.','⚠️')">Delete account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end settings-main -->
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div>
+    <div class="toast-text" id="toast-text">Changes saved</div>
+    <div class="toast-sub" id="toast-sub">Your settings have been updated.</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeToggle').textContent=d?'🌙':'☀️';
+});
+
+function showPanel(id, el){
+  document.querySelectorAll('.settings-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sn-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+function showToast(text,sub='Your changes have been saved.',icon='✅'){
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  document.querySelector('.toast-icon').textContent=icon;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>

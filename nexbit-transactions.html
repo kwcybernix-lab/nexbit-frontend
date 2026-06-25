@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Transactions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:700}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--green-light);color:var(--green-dark);padding:2px 6px;border-radius:20px}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--green-light);color:var(--green-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-bottom{margin-top:auto}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.back-btn{width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.back-btn:hover{background:var(--surface-2)}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+
+/* SUMMARY CARDS */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.s-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.s-card-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.s-card-change{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.ch-up{background:var(--green-light);color:var(--green-dark)}
+.ch-down{background:var(--red-light);color:var(--red)}
+.s-card-val{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);margin-bottom:3px}
+.s-card-label{font-size:11px;color:var(--text-3)}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-3)}
+.search-input{width:100%;padding:9px 12px 9px 34px;font-family:var(--font-b);font-size:13px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--green)}
+.search-input::placeholder{color:var(--text-3)}
+.filter-group{display:flex;gap:6px}
+.f-select{padding:8px 12px;font-family:var(--font-b);font-size:12px;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);outline:none;cursor:pointer;-webkit-appearance:none;min-width:110px}
+.f-select:focus{border-color:var(--green)}
+.btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);font-size:12px;font-weight:500;color:var(--text-2);cursor:pointer;font-family:var(--font-b);white-space:nowrap;transition:all .2s}
+.btn-export:hover{border-color:var(--green);color:var(--green)}
+
+/* TYPE PILLS */
+.type-pills{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.pill{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);transition:all .15s;white-space:nowrap}
+.pill:hover{border-color:var(--border-2);color:var(--text)}
+.pill.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* TABLE */
+.tx-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tx-table-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px 80px;gap:0;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.th{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--text-3);text-transform:uppercase;display:flex;align-items:center;gap:4px;cursor:pointer;user-select:none}
+.th:hover{color:var(--text-2)}
+.th .sort-arrow{font-size:9px;color:var(--text-3)}
+.tx-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px 80px;gap:0;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;align-items:center}
+.tx-row:last-child{border-bottom:none}
+.tx-row:hover{background:var(--surface-2)}
+.tx-row.hidden{display:none}
+.tr-main{display:flex;align-items:center;gap:12px}
+.tr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tr-name{font-size:13px;font-weight:500;color:var(--text)}
+.tr-ref{font-size:11px;color:var(--text-3);margin-top:1px;font-family:var(--font-d)}
+.tr-type{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;display:inline-block}
+.type-airtime{background:var(--green-light);color:var(--green-dark)}
+.type-giftcard{background:var(--blue-light);color:var(--blue-dark)}
+.type-crypto{background:var(--amber-light);color:var(--amber-dark)}
+.type-fund{background:var(--green-light);color:var(--green-dark)}
+.type-withdraw{background:var(--surface-2);color:var(--text-2)}
+.tr-date{font-size:12px;color:var(--text-2)}
+.tr-amount{font-size:13px;font-weight:600;font-family:var(--font-d)}
+.tr-amount.cr{color:var(--green)}
+.tr-amount.dr{color:var(--text)}
+.tr-status{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-block}
+.s-done{background:var(--green-light);color:var(--green-dark)}
+.s-pending{background:var(--amber-light);color:var(--amber-dark)}
+.s-fail{background:var(--red-light);color:var(--red)}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);background:var(--surface)}
+.pg-info{font-size:12px;color:var(--text-3)}
+.pg-btns{display:flex;gap:6px}
+.pg-btn{width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:var(--font-b);transition:all .15s}
+.pg-btn:hover{background:var(--surface-2)}
+.pg-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* DETAIL DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;display:none;justify-content:flex-end}
+.drawer-overlay.show{display:flex}
+.drawer{width:380px;max-width:92vw;background:var(--surface);height:100vh;overflow-y:auto;animation:slideIn .25s ease;display:flex;flex-direction:column}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:none}}
+.drawer-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.drawer-title{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+.drawer-body{padding:24px;flex:1}
+.d-icon-wrap{text-align:center;margin-bottom:24px}
+.d-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+.d-amount{font-family:var(--font-d);font-size:32px;font-weight:800;margin-bottom:4px}
+.d-name{font-size:14px;color:var(--text-2);font-weight:300}
+.d-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.d-row:last-child{border-bottom:none}
+.d-label{font-size:12px;color:var(--text-3)}
+.d-val{font-size:13px;font-weight:500;color:var(--text);text-align:right;max-width:200px;word-break:break-all}
+.d-actions{display:flex;gap:10px;margin-top:20px}
+.d-btn{flex:1;padding:11px;border-radius:var(--r-sm);font-size:13px;font-weight:500;font-family:var(--font-b);cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-2);transition:all .2s}
+.d-btn:hover{background:var(--surface-2)}
+.d-btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
+.d-btn.primary:hover{opacity:.88}
+
+/* EMPTY STATE */
+.empty-state{padding:56px 20px;text-align:center}
+.empty-icon{font-size:40px;margin-bottom:14px}
+.empty-title{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.empty-sub{font-size:13px;color:var(--text-3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(14px);animation:fadeUp .4s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.04s}.d2{animation-delay:.09s}.d3{animation-delay:.14s}
+
+@media(max-width:960px){.summary-grid{grid-template-columns:repeat(2,1fr)}.tx-table-header,.tx-row{grid-template-columns:2fr 1fr 1fr 80px}.th:nth-child(3),.tx-row>*:nth-child(3){display:none}}
+@media(max-width:640px){.sidebar{display:none}.content{padding:16px}.topbar{padding:12px 16px}.summary-grid{grid-template-columns:1fr 1fr}.tx-table-header,.tx-row{grid-template-columns:1fr 1fr 80px}.th:nth-child(2),.th:nth-child(3),.th:nth-child(4),.tx-row>*:nth-child(2),.tx-row>*:nth-child(3),.tx-row>*:nth-child(4){display:none}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item" href="nexbit-dashboard.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="nexbit-wallet.html">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8L5 7h14l-3-4z"/></svg>
+    Wallet
+  </a>
+  <a class="sb-item active" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    Transactions<span class="sb-badge">3</span>
+  </a>
+  <div class="sb-section">Trade</div>
+  <a class="sb-item" href="nexbit-airtime.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Sell airtime
+  </a>
+  <a class="sb-item" href="nexbit-data.html">
+    <svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/><path d="M13 6l5 5 5-5M13 12l5 5 5-5"/></svg>
+    Buy data
+  </a>
+  <a class="sb-item" href="nexbit-fiberx.html">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    MTN FiberX
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/><path d="M16 1l4 4-4 4"/></svg>
+    Gift cards<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Smart solutions<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <div class="sb-section">Account</div>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profile
+  </a>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    Settings
+  </a>
+  <a class="sb-item" href="nexbit-auth.html">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Log out
+  </a>
+  <div class="sb-section">Support</div>
+  <a class="sb-item" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="color:#25D366">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    WhatsApp Support
+  </a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar">OK</div>
+      <div><div class="sb-user-name">Omowunmi Kayode</div><div class="sb-user-email">omowunmi@email.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div>
+        <h1>Transactions</h1>
+        <p>Your full trading and payment history</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" style="cursor:pointer">OK</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-grid fade-up d1">
+      <div class="s-card">
+        <div class="s-card-top">
+          <div class="s-card-icon" style="background:var(--green-light)">📊</div>
+          <span class="s-card-change ch-up">+18%</span>
+        </div>
+        <div class="s-card-val">38</div>
+        <div class="s-card-label">Total trades this month</div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-top">
+          <div class="s-card-icon" style="background:var(--green-light)">📥</div>
+          <span class="s-card-change ch-up">+22%</span>
+        </div>
+        <div class="s-card-val">₦1.28M</div>
+        <div class="s-card-label">Total received (30 days)</div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-top">
+          <div class="s-card-icon" style="background:var(--red-light)">📤</div>
+          <span class="s-card-change ch-down">+8%</span>
+        </div>
+        <div class="s-card-val">₦802K</div>
+        <div class="s-card-label">Total withdrawn (30 days)</div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-top">
+          <div class="s-card-icon" style="background:var(--amber-light)">⏳</div>
+          <span class="s-card-change" style="background:var(--amber-light);color:var(--amber-dark)">3 pending</span>
+        </div>
+        <div class="s-card-val">₦125.3K</div>
+        <div class="s-card-label">Pending settlements</div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar fade-up d2">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search-input" placeholder="Search by name, ref, amount..." oninput="applyFilters()"/>
+      </div>
+      <div class="filter-group">
+        <select class="f-select" id="filter-status" onchange="applyFilters()">
+          <option value="all">All statuses</option>
+          <option value="completed">Completed</option>
+          <option value="pending">Pending</option>
+          <option value="failed">Failed</option>
+        </select>
+        <select class="f-select" id="filter-date" onchange="applyFilters()">
+          <option value="all">All time</option>
+          <option value="today">Today</option>
+          <option value="week">This week</option>
+          <option value="month">This month</option>
+        </select>
+      </div>
+      <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+
+    <!-- TYPE PILLS -->
+    <div class="type-pills fade-up d2">
+      <button class="pill active" onclick="filterType('all',this)">All</button>
+      <button class="pill" onclick="filterType('airtime',this)">📱 Airtime</button>
+      <button class="pill" onclick="filterType('giftcard',this)">🎁 Gift cards</button>
+      <button class="pill" onclick="filterType('crypto',this)">₿ Crypto</button>
+      <button class="pill" onclick="filterType('fund',this)">📥 Funding</button>
+      <button class="pill" onclick="filterType('withdraw',this)">📤 Withdrawals</button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="tx-table-wrap fade-up d3">
+      <div class="tx-table-header">
+        <div class="th" onclick="sortBy('name')">Transaction <span class="sort-arrow">↕</span></div>
+        <div class="th" onclick="sortBy('type')">Type <span class="sort-arrow">↕</span></div>
+        <div class="th" onclick="sortBy('date')">Date <span class="sort-arrow">↕</span></div>
+        <div class="th" onclick="sortBy('amount')">Amount <span class="sort-arrow">↕</span></div>
+        <div class="th">Status</div>
+        <div class="th"></div>
+      </div>
+
+      <div id="tx-table-body">
+        <!-- Rows rendered by JS -->
+      </div>
+
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">No transactions found</div>
+        <div class="empty-sub">Try adjusting your filters or search term</div>
+      </div>
+
+      <div class="pagination" id="pagination">
+        <div class="pg-info" id="pg-info">Showing 1–10 of 20</div>
+        <div class="pg-btns">
+          <button class="pg-btn" onclick="changePage(-1)">‹</button>
+          <button class="pg-btn active" id="pg-1" onclick="goPage(1)">1</button>
+          <button class="pg-btn" id="pg-2" onclick="goPage(2)">2</button>
+          <button class="pg-btn" onclick="changePage(1)">›</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Transaction details</span>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div><div class="toast-text" id="toast-text">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<script>
+// DATA
+const transactions = [
+  {id:'NX-28471',name:'Airtime sale — MTN',desc:'₦5,000 airtime sold',type:'airtime',dir:'cr',amount:3750,date:'2026-05-21',time:'10:42 AM',status:'completed',icon:'📱',iconBg:'var(--green-light)',network:'MTN',rate:'75%',fee:'₦0'},
+  {id:'NX-28468',name:'Amazon gift card',desc:'$50 USD gift card',type:'giftcard',dir:'cr',amount:78000,date:'2026-05-21',time:'08:15 AM',status:'completed',icon:'🎁',iconBg:'var(--blue-light)',network:'Amazon',rate:'₦1,560/USD',fee:'₦0'},
+  {id:'NX-28460',name:'Withdrawal — GTBank',desc:'Bank withdrawal',type:'withdraw',dir:'dr',amount:50000,date:'2026-05-21',time:'07:00 AM',status:'completed',icon:'🏦',iconBg:'var(--surface-2)',network:'GTBank',rate:'—',fee:'Free'},
+  {id:'NX-28390',name:'USDT sale',desc:'30 USDT sold',type:'crypto',dir:'cr',amount:47160,date:'2026-05-20',time:'02:10 PM',status:'pending',icon:'💵',iconBg:'var(--purple-light)',network:'USDT',rate:'₦1,572/USDT',fee:'₦0'},
+  {id:'NX-28361',name:'Wallet funding',desc:'Bank transfer deposit',type:'fund',dir:'cr',amount:100000,date:'2026-05-20',time:'11:30 AM',status:'completed',icon:'📥',iconBg:'var(--green-light)',network:'Bank transfer',rate:'—',fee:'Free'},
+  {id:'NX-28401',name:'Bitcoin purchase',desc:'0.0005 BTC bought',type:'crypto',dir:'dr',amount:49200,date:'2026-05-20',time:'06:30 PM',status:'completed',icon:'₿',iconBg:'var(--amber-light)',network:'Bitcoin',rate:'₦98,400,000/BTC',fee:'₦500'},
+  {id:'NX-28310',name:'Withdrawal — Access Bank',desc:'Bank withdrawal',type:'withdraw',dir:'dr',amount:100000,date:'2026-05-18',time:'09:00 AM',status:'completed',icon:'🏦',iconBg:'var(--surface-2)',network:'Access Bank',rate:'—',fee:'Free'},
+  {id:'NX-28290',name:'Airtime sale — Airtel',desc:'₦2,000 airtime sold',type:'airtime',dir:'cr',amount:1440,date:'2026-05-17',time:'04:22 PM',status:'failed',icon:'📱',iconBg:'var(--green-light)',network:'Airtel',rate:'72%',fee:'₦0'},
+  {id:'NX-28201',name:'iTunes gift card',desc:'$25 USD gift card',type:'giftcard',dir:'cr',amount:37250,date:'2026-05-16',time:'03:15 PM',status:'completed',icon:'🎁',iconBg:'var(--blue-light)',network:'iTunes',rate:'₦1,490/USD',fee:'₦0'},
+  {id:'NX-28100',name:'Wallet funding — USSD',desc:'USSD deposit',type:'fund',dir:'cr',amount:50000,date:'2026-05-15',time:'10:00 AM',status:'completed',icon:'📥',iconBg:'var(--green-light)',network:'GTBank USSD',rate:'—',fee:'Free'},
+  {id:'NX-28050',name:'Airtime sale — Glo',desc:'₦3,000 airtime sold',type:'airtime',dir:'cr',amount:2100,date:'2026-05-14',time:'02:00 PM',status:'completed',icon:'📱',iconBg:'var(--green-light)',network:'Glo',rate:'70%',fee:'₦0'},
+  {id:'NX-27990',name:'Steam gift card',desc:'$20 USD gift card',type:'giftcard',dir:'cr',amount:28400,date:'2026-05-13',time:'11:45 AM',status:'completed',icon:'🎁',iconBg:'var(--blue-light)',network:'Steam',rate:'₦1,420/USD',fee:'₦0'},
+  {id:'NX-27940',name:'USDT sale',desc:'50 USDT sold',type:'crypto',dir:'cr',amount:78600,date:'2026-05-12',time:'09:20 AM',status:'pending',icon:'💵',iconBg:'var(--purple-light)',network:'USDT',rate:'₦1,572/USDT',fee:'₦0'},
+  {id:'NX-27880',name:'Withdrawal — GTBank',desc:'Bank withdrawal',type:'withdraw',dir:'dr',amount:75000,date:'2026-05-11',time:'08:00 AM',status:'completed',icon:'🏦',iconBg:'var(--surface-2)',network:'GTBank',rate:'—',fee:'Free'},
+  {id:'NX-27810',name:'Wallet funding',desc:'Card payment deposit',type:'fund',dir:'cr',amount:200000,date:'2026-05-10',time:'03:30 PM',status:'completed',icon:'📥',iconBg:'var(--green-light)',network:'Card payment',rate:'—',fee:'₦3,000'},
+  {id:'NX-27760',name:'Airtime sale — MTN',desc:'₦10,000 airtime sold',type:'airtime',dir:'cr',amount:7500,date:'2026-05-09',time:'01:15 PM',status:'completed',icon:'📱',iconBg:'var(--green-light)',network:'MTN',rate:'75%',fee:'₦0'},
+  {id:'NX-27700',name:'Amazon gift card',desc:'$100 USD gift card',type:'giftcard',dir:'cr',amount:156000,date:'2026-05-08',time:'10:00 AM',status:'completed',icon:'🎁',iconBg:'var(--blue-light)',network:'Amazon',rate:'₦1,560/USD',fee:'₦0'},
+  {id:'NX-27640',name:'Bitcoin sale',desc:'0.001 BTC sold',type:'crypto',dir:'cr',amount:98400,date:'2026-05-07',time:'06:00 PM',status:'pending',icon:'₿',iconBg:'var(--amber-light)',network:'Bitcoin',rate:'₦98,400,000/BTC',fee:'₦0'},
+  {id:'NX-27580',name:'Withdrawal — Access Bank',desc:'Bank withdrawal',type:'withdraw',dir:'dr',amount:150000,date:'2026-05-06',time:'09:00 AM',status:'completed',icon:'🏦',iconBg:'var(--surface-2)',network:'Access Bank',rate:'—',fee:'Free'},
+  {id:'NX-27510',name:'Airtime sale — 9mobile',desc:'₦5,000 airtime sold',type:'airtime',dir:'cr',amount:3400,date:'2026-05-05',time:'04:00 PM',status:'completed',icon:'📱',iconBg:'var(--green-light)',network:'9mobile',rate:'68%',fee:'₦0'},
+];
+
+const PAGE_SIZE = 10;
+let currentPage = 1;
+let activeType = 'all';
+let filtered = [...transactions];
+let sortKey = null;
+let sortAsc = true;
+
+function fmt(n){return'₦'+n.toLocaleString('en-NG')}
+function statusClass(s){return s==='completed'?'s-done':s==='pending'?'s-pending':'s-fail'}
+function statusLabel(s){return s==='completed'?'Completed':s==='pending'?'Pending':'Failed'}
+function typeClass(t){return'type-'+t}
+function typeLabel(t){return{airtime:'📱 Airtime',giftcard:'🎁 Gift card',crypto:'₿ Crypto',fund:'📥 Funding',withdraw:'📤 Withdraw'}[t]||t}
+
+function renderTable(){
+  const body = document.getElementById('tx-table-body');
+  const empty = document.getElementById('empty-state');
+  const pgInfo = document.getElementById('pg-info');
+  const start = (currentPage-1)*PAGE_SIZE;
+  const page = filtered.slice(start, start+PAGE_SIZE);
+  const totalPages = Math.ceil(filtered.length/PAGE_SIZE);
+
+  if(filtered.length===0){
+    body.innerHTML=''; empty.style.display='block';
+    document.getElementById('pagination').style.display='none'; return;
+  }
+  empty.style.display='none';
+  document.getElementById('pagination').style.display='flex';
+  pgInfo.textContent=`Showing ${start+1}–${Math.min(start+PAGE_SIZE,filtered.length)} of ${filtered.length}`;
+
+  // Update page buttons
+  document.getElementById('pg-1').classList.toggle('active',currentPage===1);
+  document.getElementById('pg-2').classList.toggle('active',currentPage===2);
+  document.getElementById('pg-2').style.display=totalPages>1?'flex':'none';
+
+  body.innerHTML = page.map(tx=>`
+    <div class="tx-row" onclick="openDrawer('${tx.id}')">
+      <div class="tr-main">
+        <div class="tr-icon" style="background:${tx.iconBg}">${tx.icon}</div>
+        <div>
+          <div class="tr-name">${tx.name}</div>
+          <div class="tr-ref">${tx.id}</div>
+        </div>
+      </div>
+      <div><span class="tr-type ${typeClass(tx.type)}">${typeLabel(tx.type)}</span></div>
+      <div class="tr-date">${tx.date}<br><span style="color:var(--text-3);font-size:10px">${tx.time}</span></div>
+      <div class="tr-amount ${tx.dir}">${tx.dir==='cr'?'+':'-'}${fmt(tx.amount)}</div>
+      <div><span class="tr-status ${statusClass(tx.status)}">${statusLabel(tx.status)}</span></div>
+      <div><button style="font-size:11px;color:var(--green);background:transparent;border:none;cursor:pointer;font-family:var(--font-b);font-weight:500" onclick="event.stopPropagation();openDrawer('${tx.id}')">View →</button></div>
+    </div>
+  `).join('');
+}
+
+function applyFilters(){
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const status = document.getElementById('filter-status').value;
+  const date = document.getElementById('filter-date').value;
+  const today = '2026-05-21';
+  filtered = transactions.filter(tx=>{
+    const matchType = activeType==='all'||tx.type===activeType;
+    const matchSearch = tx.name.toLowerCase().includes(q)||tx.id.toLowerCase().includes(q)||String(tx.amount).includes(q);
+    const matchStatus = status==='all'||tx.status===status;
+    let matchDate = true;
+    if(date==='today') matchDate=tx.date===today;
+    else if(date==='week') matchDate=tx.date>='2026-05-15';
+    else if(date==='month') matchDate=tx.date>='2026-05-01';
+    return matchType&&matchSearch&&matchStatus&&matchDate;
+  });
+  currentPage=1;
+  renderTable();
+}
+
+function filterType(type,btn){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  activeType=type;
+  applyFilters();
+}
+
+function sortBy(key){
+  if(sortKey===key) sortAsc=!sortAsc; else {sortKey=key;sortAsc=true;}
+  filtered.sort((a,b)=>{
+    let va=a[key],vb=b[key];
+    if(key==='amount'){return sortAsc?va-vb:vb-va;}
+    return sortAsc?(va>vb?1:-1):(va<vb?1:-1);
+  });
+  renderTable();
+}
+
+function changePage(dir){
+  const total=Math.ceil(filtered.length/PAGE_SIZE);
+  currentPage=Math.max(1,Math.min(total,currentPage+dir));
+  renderTable();
+}
+function goPage(p){currentPage=p;renderTable();}
+
+function openDrawer(id){
+  const tx=transactions.find(t=>t.id===id);
+  if(!tx) return;
+  const body=document.getElementById('drawer-body');
+  body.innerHTML=`
+    <div class="d-icon-wrap">
+      <div class="d-icon" style="background:${tx.iconBg}">${tx.icon}</div>
+      <div class="d-amount ${tx.dir==='cr'?'cr':'dr'}" style="color:${tx.dir==='cr'?'var(--green)':'var(--text)'}">${tx.dir==='cr'?'+':'-'}${fmt(tx.amount)}</div>
+      <div class="d-name">${tx.name}</div>
+    </div>
+    <div>
+      <div class="d-row"><span class="d-label">Reference</span><span class="d-val" style="font-family:var(--font-d)">${tx.id}</span></div>
+      <div class="d-row"><span class="d-label">Description</span><span class="d-val">${tx.desc}</span></div>
+      <div class="d-row"><span class="d-label">Type</span><span class="d-val">${typeLabel(tx.type)}</span></div>
+      <div class="d-row"><span class="d-label">Network / Provider</span><span class="d-val">${tx.network}</span></div>
+      <div class="d-row"><span class="d-label">Rate applied</span><span class="d-val">${tx.rate}</span></div>
+      <div class="d-row"><span class="d-label">Processing fee</span><span class="d-val">${tx.fee}</span></div>
+      <div class="d-row"><span class="d-label">Date & time</span><span class="d-val">${tx.date} at ${tx.time}</span></div>
+      <div class="d-row"><span class="d-label">Status</span><span class="d-val"><span class="tr-status ${statusClass(tx.status)}">${statusLabel(tx.status)}</span></span></div>
+    </div>
+    <div class="d-actions">
+      <button class="d-btn" onclick="copyRef('${tx.id}')">📋 Copy ref</button>
+      <button class="d-btn" onclick="showToast('Receipt','PDF receipt generation coming soon.')">🧾 Receipt</button>
+      ${tx.status==='failed'?`<button class="d-btn primary" onclick="showToast('Retry','Retrying transaction...')">↺ Retry</button>`:''}
+    </div>
+  `;
+  document.getElementById('drawer-overlay').classList.add('show');
+}
+
+function closeDrawer(e){
+  if(!e||e.target===document.getElementById('drawer-overlay')){
+    document.getElementById('drawer-overlay').classList.remove('show');
+  }
+}
+
+function copyRef(ref){
+  navigator.clipboard.writeText(ref).catch(()=>{});
+  showToast('Copied!','Reference '+ref+' copied.','📋');
+}
+
+function exportCSV(){
+  const headers=['ID','Name','Type','Direction','Amount','Date','Time','Status','Network','Rate','Fee'];
+  const rows=filtered.map(tx=>[tx.id,tx.name,tx.type,tx.dir,tx.amount,tx.date,tx.time,tx.status,tx.network,tx.rate,tx.fee]);
+  const csv=[headers,...rows].map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='nexbit-transactions.csv';
+  a.click();
+  showToast('Exported!','Your CSV file is downloading.','⬇');
+}
+
+function showToast(text,sub='',icon='✅'){
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  document.querySelector('.toast-icon').textContent=icon;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeToggle').textContent=d?'🌙':'☀️';
+});
+
+// Init
+renderTable();
+</script>
+</body>
+</html>

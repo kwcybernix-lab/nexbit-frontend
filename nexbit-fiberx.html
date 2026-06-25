@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — MTN FiberX Subscription</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(6,13,11,.9);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#060D0B;font-family:var(--font-d);font-size:13px;font-weight:800}
+.logo-name{font-family:var(--font-d);font-size:17px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:700;letter-spacing:.09em;background:rgba(0,200,160,.15);color:var(--teal);padding:2px 7px;border-radius:20px;border:1px solid rgba(0,200,160,.2)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-size:13px;color:var(--text-2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--teal)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn-nav-ghost{font-size:13px;padding:7px 16px;border-radius:var(--r-sm);border:1px solid var(--border-2);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);text-decoration:none}
+.btn-nav-primary{font-size:13px;padding:7px 16px;border-radius:var(--r-sm);border:none;background:var(--teal);color:#060D0B;cursor:pointer;font-family:var(--font-b);font-weight:600;text-decoration:none}
+
+/* HERO */
+.hero{padding:64px 40px 48px;max-width:1100px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.04em;background:rgba(245,197,24,.1);color:var(--yellow);border:1px solid rgba(245,197,24,.2);padding:5px 14px;border-radius:20px;margin-bottom:20px}
+.mtn-logo{display:inline-flex;align-items:center;gap:6px;background:#FFD100;color:#000;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:.05em}
+.hero h1{font-family:var(--font-d);font-size:48px;font-weight:800;line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}
+.hero h1 em{font-style:normal;color:var(--teal)}
+.hero p{font-size:16px;color:var(--text-2);line-height:1.7;max-width:520px;margin:0 auto 32px;font-weight:300}
+.hero-cta{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+.btn-hero{padding:13px 28px;background:var(--teal);color:#060D0B;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:700;font-family:var(--font-b);cursor:pointer;transition:opacity .2s}
+.btn-hero:hover{opacity:.88}
+.btn-hero-ghost{padding:13px 28px;background:transparent;color:var(--text);border:1px solid var(--border-2);border-radius:var(--r-sm);font-size:15px;font-weight:500;font-family:var(--font-b);cursor:pointer}
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+.hs{text-align:center}
+.hs-val{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--teal)}
+.hs-label{font-size:11px;color:var(--text-3);margin-top:2px}
+
+/* WARNING BANNER */
+.warning-banner{max-width:800px;margin:0 auto 48px;background:rgba(226,75,74,.06);border:1px solid rgba(226,75,74,.2);border-radius:var(--r);padding:16px 20px;display:flex;align-items:flex-start;gap:12px}
+.wb-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.wb-title{font-size:13px;font-weight:700;color:#ff8a89;margin-bottom:5px}
+.wb-text{font-size:12px;color:rgba(255,255,255,.6);line-height:1.75}
+.wb-text strong{color:#ff8a89}
+
+/* PLANS SECTION */
+.plans-section{max-width:1100px;margin:0 auto;padding:0 40px 64px}
+.section-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-bottom:10px;text-align:center}
+.section-title{font-family:var(--font-d);font-size:32px;font-weight:700;color:var(--text);text-align:center;margin-bottom:8px;letter-spacing:-.02em}
+.section-sub{font-size:14px;color:var(--text-2);text-align:center;margin-bottom:36px;font-weight:300}
+
+/* PLANS GRID */
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:48px}
+.plan-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:22px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.plan-card:hover{border-color:var(--border-2);transform:translateY(-2px)}
+.plan-card.selected{border-color:var(--teal);background:linear-gradient(145deg,rgba(0,200,160,.08),var(--surface))}
+.plan-card.popular{border-color:var(--yellow)}
+.plan-card.popular.selected{border-color:var(--teal)}
+.popular-tag{position:absolute;top:0;right:0;background:var(--yellow);color:#000;font-size:9px;font-weight:800;padding:3px 10px;border-radius:0 var(--r) 0 var(--r-sm);letter-spacing:.06em}
+.plan-speed{font-family:var(--font-d);font-size:28px;font-weight:800;color:var(--teal);margin-bottom:2px}
+.plan-unit{font-size:13px;color:var(--text-2);margin-bottom:12px}
+.plan-validity{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-3);background:rgba(255,255,255,.04);padding:3px 9px;border-radius:20px;margin-bottom:14px;border:1px solid var(--border)}
+.plan-price{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px}
+.plan-price-sub{font-size:11px;color:var(--text-3)}
+.plan-select-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;margin-top:14px;transition:all .2s}
+.plan-card.selected .plan-select-dot{background:var(--teal);border-color:var(--teal)}
+.plan-card.selected .plan-select-dot::after{content:'✓';font-size:10px;color:#060D0B;font-weight:700}
+.plan-features{margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.plan-feature{font-size:11px;color:var(--text-2);display:flex;align-items:center;gap:5px}
+.plan-feature::before{content:'✓';color:var(--teal);font-size:10px;font-weight:700}
+
+/* ORDER FORM */
+.order-form-wrap{max-width:640px;margin:0 auto;background:var(--surface);border:1px solid var(--border-2);border-radius:20px;overflow:hidden}
+.of-header{padding:20px 28px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(0,200,160,.06),transparent);display:flex;align-items:center;justify-content:space-between}
+.of-title{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.of-selected-plan{font-size:12px;color:var(--teal);font-weight:600;background:rgba(0,200,160,.1);padding:4px 12px;border-radius:20px;border:1px solid rgba(0,200,160,.2)}
+.of-body{padding:28px}
+
+/* FORM ELEMENTS */
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--text-2);margin-bottom:7px;text-transform:uppercase}
+.form-input{width:100%;padding:13px 16px;font-family:var(--font-b);font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--teal)}
+.form-input::placeholder{color:var(--text-3)}
+.form-hint{font-size:11px;color:var(--text-3);margin-top:5px;line-height:1.5}
+.form-hint.warn{color:#f5c518}
+
+/* PAYMENT BOX */
+.payment-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:18px;margin-bottom:20px}
+.pb-title{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--text-3);text-transform:uppercase;margin-bottom:14px}
+.pb-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.pb-row:last-child{border-bottom:none;padding-top:12px;margin-top:4px}
+.pb-label{font-size:12px;color:var(--text-3)}
+.pb-val{font-size:13px;font-weight:600;color:var(--text)}
+.pb-val.amount{font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--teal)}
+.copy-btn{font-size:11px;font-weight:600;color:var(--teal);background:rgba(0,200,160,.1);border:1px solid rgba(0,200,160,.2);border-radius:20px;padding:3px 10px;cursor:pointer;font-family:var(--font-b)}
+.copy-btn:hover{background:rgba(0,200,160,.2)}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border-2);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:20px}
+.upload-zone:hover{border-color:var(--teal);background:rgba(0,200,160,.03)}
+.upload-zone.has-file{border-color:var(--teal);background:rgba(0,200,160,.05)}
+.uz-icon{font-size:28px;margin-bottom:8px}
+.uz-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.uz-sub{font-size:11px;color:var(--text-3)}
+.preview-img{max-width:100%;max-height:160px;border-radius:var(--r-sm);margin-bottom:6px}
+
+/* SUBMIT */
+.btn-submit{width:100%;padding:15px;background:var(--teal);color:#060D0B;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:700;font-family:var(--font-b);cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit:hover{opacity:.88}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed}
+
+/* SUCCESS STATE */
+.success-state{text-align:center;padding:40px 28px}
+.ss-icon{font-size:52px;margin-bottom:16px}
+.ss-title{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.ss-sub{font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:20px;font-weight:300}
+.ss-ref{display:inline-block;background:rgba(0,200,160,.1);border:1px solid rgba(0,200,160,.2);border-radius:20px;padding:6px 16px;font-family:var(--font-d);font-size:13px;color:var(--teal);margin-bottom:24px}
+.ss-info{background:var(--surface-2);border-radius:var(--r-sm);padding:14px;margin-bottom:24px;text-align:left}
+.ss-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ss-row:last-child{border-bottom:none}
+.ss-row-label{color:var(--text-3)}
+.ss-row-val{font-weight:500;color:var(--text)}
+.btn-new{padding:12px 28px;background:transparent;border:1px solid var(--border-2);border-radius:var(--r-sm);font-size:14px;color:var(--text-2);cursor:pointer;font-family:var(--font-b);margin-right:10px}
+.btn-track{padding:12px 28px;background:var(--teal);border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;color:#060D0B;cursor:pointer;font-family:var(--font-b)}
+
+/* WHATSAPP */
+.wa-banner{max-width:640px;margin:24px auto 0;display:flex;align-items:center;justify-content:space-between;background:rgba(37,211,102,.07);border:1px solid rgba(37,211,102,.2);border-radius:var(--r-sm);padding:14px 18px;gap:14px;flex-wrap:wrap}
+.wa-text{font-size:13px;color:var(--text-2)}
+.wa-text strong{color:var(--text)}
+.wa-btn{display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;text-decoration:none;padding:9px 16px;border-radius:25px;font-size:13px;font-weight:600;font-family:var(--font-b);white-space:nowrap;transition:opacity .2s;flex-shrink:0}
+.wa-btn:hover{opacity:.88}
+
+/* FEATURES */
+.features-section{max-width:1100px;margin:0 auto;padding:48px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.feat-icon{font-size:24px;margin-bottom:10px}
+.feat-title{font-family:var(--font-d);font-size:15px;font-weight:600;color:var(--text);margin-bottom:5px}
+.feat-desc{font-size:12px;color:var(--text-2);line-height:1.6;font-weight:300}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:32px 40px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.footer-links a{font-size:13px;color:var(--text-2);text-decoration:none;margin-left:20px}
+.footer-copy{font-size:12px;color:var(--text-3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.3);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,200,160,.15);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(18px);animation:fadeUp .5s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}
+
+@media(max-width:768px){
+  nav{padding:0 16px}.nav-links{display:none}
+  .hero{padding:48px 20px 32px}.hero h1{font-size:32px}
+  .plans-section{padding:0 16px 48px}
+  .of-body{padding:20px}
+  footer{padding:24px 20px}
+  .features-section{padding:32px 20px}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="nexbit-trade.html">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">FIBERX</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="nexbit-trade.html">Home</a></li>
+    <li><a href="nexbit-airtime.html">Sell Airtime</a></li>
+    <li><a href="#" class="active">MTN FiberX</a></li>
+    <li><a href="#">Support</a></li>
+  </ul>
+  <div class="nav-right">
+    <button id="themeToggle" onclick="toggleTheme()" style="width:36px;height:36px;border-radius:8px;border:1px solid var(--border-2);background:transparent;color:var(--text-2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">🌙</button>
+    <div id="nav-auth-area">
+      <a class="btn-nav-ghost" href="nexbit-auth.html">Log in</a>
+      <a class="btn-nav-primary" href="nexbit-auth.html">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero fade-up d1">
+  <div class="hero-badge">
+    <span class="mtn-logo">MTN</span>
+    FiberX — Superfast Home Internet
+  </div>
+  <h1>Superfast Internet.<br><em>Unmatched Experience.</em></h1>
+  <p>Subscribe to MTN FiberX through Nexbit. Choose your speed, make payment, and get connected — fast, reliable, and affordable.</p>
+  <div class="hero-cta">
+    <button class="btn-hero" onclick="document.getElementById('plans-section').scrollIntoView({behavior:'smooth'})">Choose a plan</button>
+    <a class="btn-hero-ghost" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank">Talk to us on WhatsApp</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-val">1 Gbps</div><div class="hs-label">Max speed</div></div>
+    <div class="hs"><div class="hs-val">24/7</div><div class="hs-label">Support</div></div>
+    <div class="hs"><div class="hs-val">1 month</div><div class="hs-label">Validity</div></div>
+    <div class="hs"><div class="hs-val">5 plans</div><div class="hs-label">Available</div></div>
+  </div>
+</div>
+
+<!-- WARNING BANNER -->
+<div class="warning-banner fade-up d2">
+  <div class="wb-icon">⚠️</div>
+  <div>
+    <div class="wb-title">Important — Double-check your FN number before submitting</div>
+    <div class="wb-text">
+      Your <strong>FN (Fixed Network) number</strong> is your MTN FiberX account identifier. Please verify it carefully before submitting. <strong>Nexbit will not be responsible for subscriptions processed to a wrong FN number</strong> — once payment is submitted and processed, it cannot be reversed. If you are unsure of your FN number, check your MTN FiberX router or contact MTN support before proceeding.
+    </div>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div class="plans-section fade-up d2" id="plans-section">
+  <div class="section-eyebrow">FiberX Bundle — Monthly Data Only</div>
+  <h2 class="section-title">Select your plan</h2>
+  <p class="section-sub">All plans include 1 month validity. Tap a plan to select it, then fill in the form below.</p>
+
+  <div class="plans-grid" id="plans-grid">
+    <!-- rendered by JS -->
+  </div>
+
+  <!-- ORDER FORM -->
+  <div class="order-form-wrap fade-up d3" id="order-form-wrap">
+    <div class="of-header">
+      <div class="of-title">Complete your subscription</div>
+      <div class="of-selected-plan" id="selected-plan-label">No plan selected</div>
+    </div>
+
+    <div class="of-body" id="order-form">
+      <!-- STEP 1: Details -->
+      <div id="step-details">
+        <div class="form-group">
+          <label class="form-label">Your full name</label>
+          <input class="form-input" type="text" id="subscriber-name" placeholder="e.g. Omowunmi Kayode"/>
+          <div class="form-hint">Enter the name on your MTN FiberX account</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">FN Number (Fixed Network Number)</label>
+          <input class="form-input" type="text" id="fn-number" placeholder="e.g. FN-1234567890" oninput="validateFN(this.value)"/>
+          <div class="form-hint warn" id="fn-hint">⚠️ Cross-check this number very carefully. We are <strong>not responsible</strong> for subscriptions to the wrong FN number.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm FN number</label>
+          <input class="form-input" type="text" id="fn-confirm" placeholder="Re-enter FN number"/>
+          <div class="form-hint" id="fn-match-hint">Both FN numbers must match exactly before you can proceed.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone number (for notification)</label>
+          <input class="form-input" type="tel" id="subscriber-phone" placeholder="e.g. 08012345678"/>
+          <div class="form-hint">We'll send a confirmation SMS to this number</div>
+        </div>
+
+        <button class="btn-submit" id="btn-proceed" onclick="proceedToPayment()" disabled style="opacity:.4;cursor:not-allowed">
+          Continue to payment →
+        </button>
+      </div>
+
+      <!-- STEP 2: Payment & upload -->
+      <div id="step-payment" style="display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;cursor:pointer;font-size:13px;color:var(--text-2)" onclick="goBack()">← Back to details</div>
+
+        <div class="payment-box">
+          <div class="pb-title">Make payment to this account</div>
+          <div class="pb-row"><span class="pb-label">Bank</span><span class="pb-val">Opay</span></div>
+          <div class="pb-row">
+            <span class="pb-label">Account number</span>
+            <span style="display:flex;align-items:center;gap:8px">
+              <span class="pb-val" style="font-family:var(--font-d);font-size:18px;letter-spacing:.06em">6504939725</span>
+              <button class="copy-btn" onclick="copyText('6504939725')">Copy</button>
+            </span>
+          </div>
+          <div class="pb-row"><span class="pb-label">Account name</span><span class="pb-val">Victor Sodimu</span></div>
+          <div class="pb-row"><span class="pb-label">Amount to pay</span><span class="pb-val amount" id="payment-amount">₦0</span></div>
+        </div>
+
+        <div style="background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:20px">
+          <div style="font-size:12px;color:#f5c518;font-weight:600;margin-bottom:4px">💡 Payment instructions</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.7">
+            Transfer the <strong style="color:#f5c518">exact amount</strong> shown above to the account details provided. After payment, take a clear screenshot of your transfer confirmation and upload it below.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Upload payment receipt / screenshot</label>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('receipt-input').click()"
+            ondragover="event.preventDefault();this.style.borderColor='var(--teal)'"
+            ondragleave="this.style.borderColor='var(--border-2)'"
+            ondrop="handleDrop(event)">
+            <div id="upload-placeholder">
+              <div class="uz-icon">🧾</div>
+              <div class="uz-title">Click to upload receipt screenshot</div>
+              <div class="uz-sub">PNG, JPG, JPEG · Max 5MB · Drag & drop supported</div>
+            </div>
+            <div id="upload-preview" style="display:none">
+              <img id="preview-img" class="preview-img"/>
+              <div style="font-size:12px;color:var(--teal);font-weight:500" id="preview-filename"></div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:4px">Click to change</div>
+            </div>
+          </div>
+          <input type="file" id="receipt-input" accept="image/png,image/jpg,image/jpeg" style="display:none" onchange="handleFile(this)"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Additional notes (optional)</label>
+          <textarea class="form-input" id="order-notes" placeholder="Any extra information for our team..." style="resize:vertical;min-height:70px"></textarea>
+        </div>
+
+        <button class="btn-submit" id="btn-submit" onclick="submitOrder()" disabled style="opacity:.4;cursor:not-allowed">
+          🚀 Submit subscription order
+        </button>
+      </div>
+
+      <!-- STEP 3: Success -->
+      <div id="step-success" class="success-state" style="display:none">
+        <div class="ss-icon">🎉</div>
+        <div class="ss-title">Order submitted!</div>
+        <div class="ss-sub">Your MTN FiberX subscription request has been received. Our team will review your payment receipt and activate your subscription within <strong>2–4 hours</strong>.</div>
+        <div class="ss-ref" id="ss-ref-display">REF: NX-FBX-00000</div>
+        <div class="ss-info" id="ss-info"></div>
+        <div>
+          <button class="btn-new" onclick="resetForm()">New subscription</button>
+          <a class="btn-track" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20...%20I%20want%20to%20track%20my%20FiberX%20order." target="_blank">Track on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHATSAPP SUPPORT -->
+  <div class="wa-banner fade-up d4">
+    <div class="wa-text"><strong>Need help choosing a plan?</strong> Our team is available on WhatsApp to guide you.</div>
+    <a class="wa-btn" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20...%20I%20need%20help%20with%20MTN%20FiberX%20subscription." target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp Support
+    </a>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features-section fade-up d3">
+  <div class="feat-card">
+    <div class="feat-icon">⚡</div>
+    <div class="feat-title">Lightning-fast speeds</div>
+    <div class="feat-desc">From 50Mbps to 1Gbps — enough for streaming, gaming, remote work and smart home devices simultaneously.</div>
+  </div>
+  <div class="feat-card">
+    <div class="feat-icon">📅</div>
+    <div class="feat-title">1 month validity</div>
+    <div class="feat-desc">All FiberX bundles are valid for a full calendar month from activation date.</div>
+  </div>
+  <div class="feat-card">
+    <div class="feat-icon">🛡️</div>
+    <div class="feat-title">Secure payment</div>
+    <div class="feat-desc">Your payment goes directly to our verified business account. Receipt uploaded as proof for every transaction.</div>
+  </div>
+  <div class="feat-card">
+    <div class="feat-icon">🕐</div>
+    <div class="feat-title">2–4 hour activation</div>
+    <div class="feat-desc">Once your receipt is verified by our team, your subscription is activated within 2–4 hours.</div>
+  </div>
+  <div class="feat-card">
+    <div class="feat-icon">💬</div>
+    <div class="feat-title">WhatsApp support</div>
+    <div class="feat-desc">Got questions? Chat with us on WhatsApp. Available daily from 8am to 10pm.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="logo-mark"><span>Nx</span></div>
+      <span style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text)">Nexbit</span>
+    </div>
+    <div>
+      <a href="nexbit-trade.html" class="footer-links" style="font-size:13px;color:var(--text-2);text-decoration:none;margin-left:0">Home</a>
+      <a href="nexbit-airtime.html" style="font-size:13px;color:var(--text-2);text-decoration:none;margin-left:20px">Sell Airtime</a>
+      <a href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="font-size:13px;color:var(--text-2);text-decoration:none;margin-left:20px">Support</a>
+    </div>
+    <span class="footer-copy">© 2026 Nexbit. All rights reserved.</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div><div class="toast-text" id="toast-text">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<script>
+// ── Theme toggle ──────────────────────────────────────────────
+function toggleTheme(){
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ── Session-aware nav ─────────────────────────────────────────
+// If user is logged in (Supabase session in localStorage), show dashboard link instead
+const checkNavSession = () => {
+  try {
+    const session = localStorage.getItem('nexbit_session');
+    if(session){
+      document.getElementById('nav-auth-area').innerHTML = `
+        <a href="nexbit-dashboard.html" style="display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:8px;background:var(--teal);color:#060D0B;font-size:13px;font-weight:600;text-decoration:none">
+          <span>⚡</span> My dashboard
+        </a>
+      `;
+    }
+  } catch(e){}
+};
+checkNavSession();
+
+const plans = [
+  { speed:'50', unit:'Mbps', price:29500, popular:false,
+    features:['Up to 50Mbps download','Ideal for 1–2 users','HD streaming','1 month validity'] },
+  { speed:'100', unit:'Mbps', price:44500, popular:false,
+    features:['Up to 100Mbps download','Ideal for 3–4 users','4K streaming','1 month validity'] },
+  { speed:'200', unit:'Mbps', price:69500, popular:true,
+    features:['Up to 200Mbps download','Ideal for 5–6 users','Multi-device streaming','1 month validity'] },
+  { speed:'300', unit:'Mbps', price:99500, popular:false,
+    features:['Up to 300Mbps download','Ideal for 6–8 users','Gaming + streaming','1 month validity'] },
+  { speed:'1', unit:'Gbps', price:199500, popular:false,
+    features:['Up to 1Gbps download','Unlimited devices','Enterprise-grade speed','1 month validity'] },
+];
+
+const fmtPrice = n => '₦'+n.toLocaleString('en-NG');
+let selectedPlanIdx = null;
+let uploadedFile = null;
+
+// Render plan cards
+const grid = document.getElementById('plans-grid');
+plans.forEach((p,i) => {
+  const card = document.createElement('div');
+  card.className = 'plan-card' + (p.popular ? ' popular' : '');
+  card.id = `plan-${i}`;
+  card.onclick = () => selectPlan(i);
+  card.innerHTML = `
+    ${p.popular ? '<div class="popular-tag">POPULAR</div>' : ''}
+    <div class="plan-speed">${p.speed}</div>
+    <div class="plan-unit">${p.unit} · FiberX</div>
+    <div class="plan-validity">📅 1 month validity</div>
+    <div class="plan-price">${fmtPrice(p.price)}</div>
+    <div class="plan-price-sub">per month</div>
+    <div class="plan-features">
+      ${p.features.map(f=>`<div class="plan-feature">${f}</div>`).join('')}
+    </div>
+    <div class="plan-select-dot" id="dot-${i}"></div>
+  `;
+  grid.appendChild(card);
+});
+
+function selectPlan(i){
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`plan-${i}`).classList.add('selected');
+  selectedPlanIdx = i;
+  const p = plans[i];
+  document.getElementById('selected-plan-label').textContent = `${p.speed}${p.unit} — ${fmtPrice(p.price)}/mo`;
+  document.getElementById('payment-amount').textContent = fmtPrice(p.price);
+  checkFormReady();
+  document.getElementById('order-form-wrap').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// FN number validation
+function validateFN(val){
+  const hint = document.getElementById('fn-match-hint');
+  const confirm = document.getElementById('fn-confirm').value;
+  if(confirm && val !== confirm){
+    hint.textContent = '❌ FN numbers do not match.';
+    hint.style.color = 'var(--red)';
+  } else if(confirm && val === confirm){
+    hint.textContent = '✅ FN numbers match.';
+    hint.style.color = 'var(--teal)';
+  }
+  checkFormReady();
+}
+
+document.getElementById('fn-confirm').addEventListener('input', function(){
+  validateFN(document.getElementById('fn-number').value);
+  checkFormReady();
+});
+document.getElementById('subscriber-name').addEventListener('input', checkFormReady);
+document.getElementById('subscriber-phone').addEventListener('input', checkFormReady);
+
+function checkFormReady(){
+  const name  = document.getElementById('subscriber-name').value.trim();
+  const fn    = document.getElementById('fn-number').value.trim();
+  const fnc   = document.getElementById('fn-confirm').value.trim();
+  const phone = document.getElementById('subscriber-phone').value.trim();
+  const btn   = document.getElementById('btn-proceed');
+  const ready = name && fn && fnc && fn === fnc && phone && selectedPlanIdx !== null;
+  btn.disabled = !ready;
+  btn.style.opacity = ready ? '1' : '.4';
+  btn.style.cursor  = ready ? 'pointer' : 'not-allowed';
+}
+
+function proceedToPayment(){
+  const fn  = document.getElementById('fn-number').value.trim();
+  const fnc = document.getElementById('fn-confirm').value.trim();
+  if(fn !== fnc){ showToast('FN numbers do not match','Please re-check your FN number.','⚠️'); return; }
+  document.getElementById('step-details').style.display='none';
+  document.getElementById('step-payment').style.display='block';
+}
+
+function goBack(){
+  document.getElementById('step-payment').style.display='none';
+  document.getElementById('step-details').style.display='block';
+}
+
+function handleFile(input){
+  if(input.files?.[0]) loadFile(input.files[0]);
+}
+function handleDrop(e){
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if(file?.type.startsWith('image/')) loadFile(file);
+  else showToast('Invalid file','Please upload a PNG or JPG image.','⚠️');
+}
+function loadFile(file){
+  if(file.size > 5*1024*1024){ showToast('File too large','Max 5MB.','⚠️'); return; }
+  uploadedFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('preview-img').src = e.target.result;
+    document.getElementById('preview-filename').textContent = file.name;
+    document.getElementById('upload-placeholder').style.display='none';
+    document.getElementById('upload-preview').style.display='block';
+    document.getElementById('upload-zone').classList.add('has-file');
+    const btn = document.getElementById('btn-submit');
+    btn.disabled=false; btn.style.opacity='1'; btn.style.cursor='pointer';
+  };
+  reader.readAsDataURL(file);
+}
+
+function submitOrder(){
+  if(!uploadedFile){ showToast('Upload receipt','Please upload your payment receipt.','⚠️'); return; }
+  const p    = plans[selectedPlanIdx];
+  const name = document.getElementById('subscriber-name').value.trim();
+  const fn   = document.getElementById('fn-number').value.trim();
+  const ref  = 'NX-FBX-' + Math.floor(10000+Math.random()*90000);
+
+  document.getElementById('ss-ref-display').textContent = 'REF: ' + ref;
+  document.getElementById('ss-info').innerHTML = `
+    <div class="ss-row"><span class="ss-row-label">Subscriber name</span><span class="ss-row-val">${name}</span></div>
+    <div class="ss-row"><span class="ss-row-label">FN number</span><span class="ss-row-val" style="font-family:var(--font-d)">${fn}</span></div>
+    <div class="ss-row"><span class="ss-row-label">Plan selected</span><span class="ss-row-val">${p.speed}${p.unit} FiberX</span></div>
+    <div class="ss-row"><span class="ss-row-label">Amount paid</span><span class="ss-row-val" style="color:var(--teal)">${fmtPrice(p.price)}</span></div>
+    <div class="ss-row"><span class="ss-row-label">Status</span><span class="ss-row-val" style="background:rgba(245,197,24,.1);color:#f5c518;padding:2px 10px;border-radius:20px;font-size:12px">⏳ Under review</span></div>
+    <div class="ss-row"><span class="ss-row-label">Activation time</span><span class="ss-row-val">2–4 hours</span></div>
+  `;
+  document.getElementById('step-payment').style.display='none';
+  document.getElementById('step-success').style.display='block';
+}
+
+function resetForm(){
+  uploadedFile = null;
+  selectedPlanIdx = null;
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('subscriber-name').value='';
+  document.getElementById('fn-number').value='';
+  document.getElementById('fn-confirm').value='';
+  document.getElementById('subscriber-phone').value='';
+  document.getElementById('order-notes').value='';
+  document.getElementById('upload-placeholder').style.display='block';
+  document.getElementById('upload-preview').style.display='none';
+  document.getElementById('upload-zone').classList.remove('has-file');
+  document.getElementById('selected-plan-label').textContent='No plan selected';
+  document.getElementById('step-success').style.display='none';
+  document.getElementById('step-details').style.display='block';
+  document.getElementById('step-payment').style.display='none';
+  const btn=document.getElementById('btn-proceed');
+  btn.disabled=true; btn.style.opacity='.4'; btn.style.cursor='not-allowed';
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).catch(()=>{});
+  showToast('Copied!','Account number copied.','📋');
+}
+
+function showToast(text,sub='',icon='✅'){
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  document.querySelector('.toast-icon').textContent=icon;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>

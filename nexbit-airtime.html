@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Sell Airtime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR — same as dashboard */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:700}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--green-light);color:var(--green-dark);padding:2px 6px;border-radius:20px}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--green-light);color:var(--green-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-bottom{margin-top:auto}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.back-btn{width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.back-btn:hover{background:var(--surface-2)}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+.page-header{margin-bottom:28px}
+.page-title{font-family:var(--font-d);font-size:26px;font-weight:800;color:var(--text);margin-bottom:6px}
+.page-sub{font-size:14px;color:var(--text-2);font-weight:300}
+
+/* NETWORK SELECTOR */
+.network-label{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--text-3);text-transform:uppercase;margin-bottom:12px}
+.network-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.network-card{
+  background:var(--surface);border:2px solid var(--border);border-radius:var(--r);
+  padding:16px 10px;cursor:pointer;text-align:center;transition:all .2s;
+}
+.network-card:hover{border-color:var(--green);transform:translateY(-1px)}
+.network-card.selected{border-color:var(--green);background:var(--green-light)}
+.network-logo{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:22px;font-weight:700;font-family:var(--font-d)}
+.network-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.network-rate{font-size:11px;color:var(--text-3)}
+.network-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:5px;font-weight:500;background:var(--green-light);color:var(--green-dark)}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:1fr 380px;gap:20px}
+
+/* TRADE FORM CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.card-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text)}
+.card-body{padding:22px}
+
+/* FORM ELEMENTS */
+.form-group{margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:500;letter-spacing:.03em;color:var(--text-2);margin-bottom:7px}
+.form-input{width:100%;padding:12px 16px;font-family:var(--font-b);font-size:15px;font-weight:400;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--green);background:var(--surface)}
+.form-input::placeholder{color:var(--text-3)}
+select.form-input{-webkit-appearance:none;cursor:pointer}
+
+.amount-wrap{position:relative}
+.amount-prefix{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:15px;font-weight:500;color:var(--text-3)}
+.amount-input{padding-left:36px!important}
+.amount-max{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--green);cursor:pointer;background:var(--green-light);padding:3px 9px;border-radius:20px}
+
+.quick-amounts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.qa-btn{font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);transition:all .15s}
+.qa-btn:hover,.qa-btn.active{background:var(--green-light);color:var(--green-dark);border-color:var(--green)}
+
+/* RATE BOX */
+.rate-box{background:var(--surface-2);border-radius:var(--r-sm);padding:16px;margin-bottom:18px;border:1px solid var(--border)}
+.rate-box-title{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;margin-bottom:12px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.rate-row:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
+.rr-label{font-size:12px;color:var(--text-2)}
+.rr-val{font-size:13px;font-weight:500;color:var(--text)}
+.rr-val.big{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--green)}
+
+/* PAYOUT METHOD */
+.payout-tabs{display:flex;gap:8px;margin-bottom:16px}
+.pt-tab{flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:transparent;color:var(--text-2);font-size:12px;font-weight:500;font-family:var(--font-b);cursor:pointer;text-align:center;transition:all .2s}
+.pt-tab.active{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+.pt-tab .pt-icon{font-size:18px;display:block;margin-bottom:4px}
+
+/* SUBMIT */
+.btn-submit{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:600;font-family:var(--font-b);cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit:hover{opacity:.88}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* STEPS */
+.steps-list{display:flex;flex-direction:column;gap:0}
+.step-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);position:relative}
+.step-item:last-child{border-bottom:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;font-family:var(--font-d);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-content{}
+.step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.step-desc{font-size:12px;color:var(--text-2);line-height:1.6;font-weight:300}
+
+/* RATES TABLE */
+.rates-table{width:100%;border-collapse:collapse}
+.rates-table th{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.rates-table td{padding:12px 14px;font-size:13px;color:var(--text-2);border-bottom:1px solid var(--border)}
+.rates-table tr:last-child td{border-bottom:none}
+.rates-table tr:hover td{background:var(--surface-2)}
+.network-pill{display:inline-flex;align-items:center;gap:7px;font-weight:500;color:var(--text)}
+.pill-dot{width:8px;height:8px;border-radius:50%}
+.rate-highlight{font-weight:600;color:var(--green);font-family:var(--font-d)}
+
+/* HISTORY */
+.tx-item{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--border);transition:background .15s}
+.tx-item:last-child{border-bottom:none}
+.tx-item:hover{background:var(--surface-2)}
+.tx-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--green-light)}
+.tx-info{flex:1}
+.tx-name{font-size:13px;font-weight:500;color:var(--text)}
+.tx-meta{font-size:11px;color:var(--text-3);margin-top:2px}
+.tx-right{text-align:right}
+.tx-amount{font-size:13px;font-weight:600;color:var(--green);font-family:var(--font-d)}
+.tx-status{font-size:10px;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;font-weight:500}
+.s-done{background:var(--green-light);color:var(--green-dark)}
+.s-pending{background:var(--amber-light);color:var(--amber-dark)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+/* SUCCESS OVERLAY */
+.success-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center}
+.success-overlay.show{display:flex}
+.success-modal{background:var(--surface);border-radius:20px;padding:36px 32px;text-align:center;max-width:360px;width:90%;animation:popIn .3s ease}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.success-icon{width:64px;height:64px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 18px}
+.success-title{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.success-sub{font-size:14px;color:var(--text-2);font-weight:300;line-height:1.6;margin-bottom:6px}
+.success-amount{font-family:var(--font-d);font-size:32px;font-weight:800;color:var(--green);margin:16px 0}
+.success-ref{font-size:11px;color:var(--text-3);margin-bottom:24px}
+.success-btns{display:flex;gap:10px}
+.btn-success-main{flex:1;padding:12px;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);cursor:pointer}
+.btn-success-ghost{flex:1;padding:12px;background:transparent;color:var(--text-2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);cursor:pointer}
+
+.fade-up{opacity:0;transform:translateY(16px);animation:fadeUp .45s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}
+
+@media(max-width:900px){.sidebar{display:none}.main-grid{grid-template-columns:1fr}.network-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.content{padding:16px}.topbar{padding:12px 16px}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item" href="nexbit-dashboard.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="nexbit-wallet.html">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8L5 7h14l-3-4z"/></svg>
+    Wallet
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    Transactions<span class="sb-badge">3</span>
+  </a>
+  <div class="sb-section">Trade</div>
+  <a class="sb-item active" href="nexbit-airtime.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Sell airtime
+  </a>
+  <a class="sb-item" href="nexbit-data.html">
+    <svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/><path d="M13 6l5 5 5-5M13 12l5 5 5-5"/></svg>
+    Buy data
+  </a>
+  <a class="sb-item" href="nexbit-fiberx.html">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    MTN FiberX
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/><path d="M16 1l4 4-4 4"/></svg>
+    Gift cards<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Smart solutions<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <div class="sb-section">Account</div>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profile
+  </a>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    Settings
+  </a>
+  <a class="sb-item" href="nexbit-auth.html">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Log out
+  </a>
+  <div class="sb-section">Support</div>
+  <a class="sb-item" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="color:#25D366">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    WhatsApp Support
+  </a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar">OK</div>
+      <div><div class="sb-user-name">Omowunmi Kayode</div><div class="sb-user-email">omowunmi@email.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div>
+        <h1>Sell Airtime</h1>
+        <p>Convert airtime to cash instantly</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" style="cursor:pointer">OK</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header fade-up d1">
+      <h2 class="page-title">Sell your airtime 📱</h2>
+      <p class="page-sub">Select your network, enter the amount, transfer the airtime manually, upload your screenshot and get paid within 30 minutes.</p>
+
+      <!-- WARNING BANNER -->
+      <div style="margin-top:16px;background:linear-gradient(135deg,#0a1a15,#0d2218);border:1px solid rgba(0,200,160,.25);border-radius:12px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px">🚫</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#00C8A0;margin-bottom:4px">Important — Please read before trading</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.7">
+            The number provided for airtime transfer is a <strong style="color:#fff">dedicated Nexbit business line</strong> — it is <strong style="color:#ff6b6b">not a personal number and cannot receive calls</strong>. Do not attempt to call it. Transfers only. Any attempt to call will not connect and will not affect your transaction. For support, use the WhatsApp button below. 👇
+          </div>
+        </div>
+      </div>
+
+      <!-- WHATSAPP SUPPORT -->
+      <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <a href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank"
+          style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;text-decoration:none;padding:10px 18px;border-radius:25px;font-size:13px;font-weight:600;font-family:var(--font-b);transition:opacity .2s"
+          onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Chat with Support on WhatsApp
+        </a>
+        <span style="font-size:12px;color:var(--text-3)">Available 8am – 10pm daily</span>
+      </div>
+    </div>
+
+    <!-- NETWORK SELECT -->
+    <div class="fade-up d2">
+      <div class="network-label">Select network</div>
+      <div class="network-grid">
+        <div class="network-card selected" id="net-mtn" onclick="selectNetwork('mtn',this)">
+          <div class="network-logo" style="background:#FFF0B2;color:#CC9900;font-size:13px;">MTN</div>
+          <div class="network-name">MTN</div>
+          <div class="network-rate">Rate: 75%</div>
+          <span class="network-badge">Best rate</span>
+        </div>
+        <div class="network-card" id="net-airtel" onclick="selectNetwork('airtel',this)">
+          <div class="network-logo" style="background:#FFE4E0;color:#CC2200;font-size:13px;">AIR</div>
+          <div class="network-name">Airtel</div>
+          <div class="network-rate">Rate: 72%</div>
+          <span class="network-badge" style="background:var(--blue-light);color:var(--blue)">Popular</span>
+        </div>
+        <div class="network-card" id="net-glo" onclick="selectNetwork('glo',this)">
+          <div class="network-logo" style="background:#E0FFE8;color:#007A1F;font-size:13px;">GLO</div>
+          <div class="network-name">Glo</div>
+          <div class="network-rate">Rate: 70%</div>
+          <span class="network-badge" style="background:var(--green-light);color:var(--green-dark)">Available</span>
+        </div>
+        <div class="network-card" id="net-9mobile" onclick="selectNetwork('9mobile',this)">
+          <div class="network-logo" style="background:#E8F5E0;color:#2E6B00;font-size:11px;">9MOB</div>
+          <div class="network-name">9mobile</div>
+          <div class="network-rate">Rate: 68%</div>
+          <span class="network-badge" style="background:var(--green-light);color:var(--green-dark)">Available</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid fade-up d3">
+
+      <!-- LEFT: TRADE FORM -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- FORM CARD -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Trade details</span>
+            <span style="font-size:12px;color:var(--green);font-weight:500" id="selected-network-label">MTN · 75%</span>
+          </div>
+          <div class="card-body">
+
+            <div class="form-group">
+              <label>Airtime amount (₦)</label>
+              <div class="amount-wrap">
+                <span class="amount-prefix">₦</span>
+                <input class="form-input amount-input" type="number" id="airtime-amount" placeholder="0" min="100" oninput="calcPayout()"/>
+                <span class="amount-max" onclick="setMax()">MAX</span>
+              </div>
+              <div class="quick-amounts">
+                <button class="qa-btn" onclick="setAmount(500)">₦500</button>
+                <button class="qa-btn" onclick="setAmount(1000)">₦1,000</button>
+                <button class="qa-btn" onclick="setAmount(2000)">₦2,000</button>
+                <button class="qa-btn" onclick="setAmount(5000)">₦5,000</button>
+                <button class="qa-btn" onclick="setAmount(10000)">₦10,000</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Phone number (airtime source)</label>
+              <input class="form-input" type="tel" id="phone-number" placeholder="e.g. 0803 000 0000"/>
+            </div>
+
+            <!-- RATE BOX -->
+            <div class="rate-box">
+              <div class="rate-box-title">Transaction summary</div>
+              <div class="rate-row">
+                <span class="rr-label">Network</span>
+                <span class="rr-val" id="summary-network">MTN</span>
+              </div>
+              <div class="rate-row">
+                <span class="rr-label">Airtime amount</span>
+                <span class="rr-val" id="summary-airtime">₦0.00</span>
+              </div>
+              <div class="rate-row">
+                <span class="rr-label">Exchange rate</span>
+                <span class="rr-val" id="summary-rate">75%</span>
+              </div>
+              <div class="rate-row">
+                <span class="rr-label">Processing fee</span>
+                <span class="rr-val">Free</span>
+              </div>
+              <div class="rate-row">
+                <span class="rr-label">You will receive</span>
+                <span class="rr-val big" id="summary-payout">₦0.00</span>
+              </div>
+            </div>
+
+            <!-- PAYOUT METHOD -->
+            <div class="form-group">
+              <label>Receive payment to</label>
+              <div class="payout-tabs">
+                <button class="pt-tab active" id="pt-wallet" onclick="selectPayout('wallet',this)">
+                  <span class="pt-icon">👛</span>
+                  Nexbit wallet
+                </button>
+                <button class="pt-tab" id="pt-bank" onclick="selectPayout('bank',this)">
+                  <span class="pt-icon">🏦</span>
+                  Bank account
+                </button>
+              </div>
+              <div id="bank-details" style="display:none">
+                <select class="form-input" style="margin-bottom:10px">
+                  <option value="">Select bank</option>
+                  <option>GTBank</option>
+                  <option>Access Bank</option>
+                  <option>First Bank</option>
+                  <option>Zenith Bank</option>
+                  <option>UBA</option>
+                  <option>Opay</option>
+                  <option>Kuda Bank</option>
+                  <option>Moniepoint</option>
+                  <option>Palmpay</option>
+                </select>
+                <input class="form-input" type="text" placeholder="Account number" maxlength="10"/>
+              </div>
+            </div>
+
+            <button class="btn-submit" id="submit-btn" onclick="submitTrade()">
+              <span>💸</span> Sell airtime now
+            </button>
+
+          </div>
+        </div>
+
+        <!-- HOW IT WORKS -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">How it works</span>
+          </div>
+          <div class="card-body" style="padding:6px 22px">
+            <div class="steps-list">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <div class="step-title">Select network, enter amount & phone</div>
+                  <div class="step-desc">Choose your network, the phone number the airtime is on, and the amount you want to sell. Minimum is ₦100.</div>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <div class="step-title">Receive your Nexbit transfer number</div>
+                  <div class="step-desc">After clicking "Sell airtime", a dedicated Nexbit number appears. This is the number you will send the airtime to.</div>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <div class="step-title">Transfer the airtime via USSD</div>
+                  <div class="step-desc">Use your network's transfer code (e.g. MTN: *321*[number]*[amount]*[pin]#) to send the airtime to the Nexbit number.</div>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <div class="step-title">Take a screenshot & upload it</div>
+                  <div class="step-desc">Take a clear screenshot of the successful transfer confirmation from your phone and upload it as proof.</div>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                  <div class="step-title">Get paid within 30 minutes</div>
+                  <div class="step-desc">Our team reviews your screenshot and credits your Nexbit wallet or bank account within 15–30 minutes.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- RATES TABLE -->
+        <div class="card fade-up d4">
+          <div class="card-header">
+            <span class="card-title">Current rates</span>
+            <span style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px">
+              <span style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+              Live
+            </span>
+          </div>
+          <table class="rates-table">
+            <thead>
+              <tr>
+                <th>Network</th>
+                <th>Rate</th>
+                <th>Min</th>
+                <th>Max</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="network-pill"><span class="pill-dot" style="background:#FFCC00"></span>MTN</span></td>
+                <td><span class="rate-highlight">75%</span></td>
+                <td>₦100</td>
+                <td>₦10,000</td>
+              </tr>
+              <tr>
+                <td><span class="network-pill"><span class="pill-dot" style="background:#EE2222"></span>Airtel</span></td>
+                <td><span class="rate-highlight">72%</span></td>
+                <td>₦100</td>
+                <td>₦10,000</td>
+              </tr>
+              <tr>
+                <td><span class="network-pill"><span class="pill-dot" style="background:#00A651"></span>Glo</span></td>
+                <td><span class="rate-highlight">70%</span></td>
+                <td>₦200</td>
+                <td>₦10,000</td>
+              </tr>
+              <tr>
+                <td><span class="network-pill"><span class="pill-dot" style="background:#4CAF50"></span>9mobile</span></td>
+                <td><span class="rate-highlight">68%</span></td>
+                <td>₦200</td>
+                <td>₦10,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TRANSFER CODES -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Airtime transfer codes</span>
+          </div>
+          <div class="card-body" style="padding:14px 22px">
+            <table class="rates-table">
+              <thead><tr><th>Network</th><th>USSD code</th></tr></thead>
+              <tbody>
+                <tr><td><span class="network-pill"><span class="pill-dot" style="background:#FFCC00"></span>MTN</span></td><td style="font-family:var(--font-d);font-size:13px;color:var(--text)">*321*[number]*[amount]*[pin]#</td></tr>
+                <tr><td><span class="network-pill"><span class="pill-dot" style="background:#EE2222"></span>Airtel</span></td><td style="font-family:var(--font-d);font-size:13px;color:var(--text)">*432*8*[number]*[amount]#</td></tr>
+                <tr><td><span class="network-pill"><span class="pill-dot" style="background:#00A651"></span>Glo</span></td><td style="font-family:var(--font-d);font-size:13px;color:var(--text)">*127*1*[number]*[amount]*[pin]#</td></tr>
+                <tr><td><span class="network-pill"><span class="pill-dot" style="background:#4CAF50"></span>9mobile</span></td><td style="font-family:var(--font-d);font-size:13px;color:var(--text)">*223*[pin]*[number]*[amount]#</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RECENT AIRTIME TRADES -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent airtime trades</span>
+            <a href="#" style="font-size:12px;color:var(--green);font-weight:500">See all</a>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">📱</div>
+            <div class="tx-info">
+              <div class="tx-name">MTN ₦5,000 → Cash</div>
+              <div class="tx-meta">Today, 10:42 AM</div>
+            </div>
+            <div class="tx-right">
+              <div class="tx-amount">+₦3,750</div>
+              <span class="tx-status s-done">Done</span>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">📱</div>
+            <div class="tx-info">
+              <div class="tx-name">Airtel ₦2,000 → Cash</div>
+              <div class="tx-meta">17 May, 4:22 PM</div>
+            </div>
+            <div class="tx-right">
+              <div class="tx-amount">+₦1,440</div>
+              <span class="tx-status s-done">Done</span>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon">📱</div>
+            <div class="tx-info">
+              <div class="tx-name">MTN ₦10,000 → Bank</div>
+              <div class="tx-meta">15 May, 11:00 AM</div>
+            </div>
+            <div class="tx-right">
+              <div class="tx-amount">+₦7,500</div>
+              <span class="tx-status s-pending">Pending</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MULTI-STEP MODAL -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-modal" style="max-width:420px;padding:0;overflow:hidden;text-align:left">
+
+    <!-- STEP INDICATOR -->
+    <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border)">
+      <div class="modal-step-tab active" id="stab-1">1. Transfer number</div>
+      <div class="modal-step-tab" id="stab-2">2. Upload proof</div>
+      <div class="modal-step-tab" id="stab-3">3. Submitted</div>
+    </div>
+
+    <!-- STEP 1: Transfer number -->
+    <div id="modal-step-1" style="padding:28px">
+      <div style="text-align:center;margin-bottom:20px">
+        <div class="success-icon">📱</div>
+        <div class="success-title" style="font-size:18px">Transfer your airtime</div>
+        <div class="success-sub">Send the airtime to the Nexbit number below using USSD or any method you prefer.</div>
+      </div>
+
+      <!-- Transfer number box -->
+      <div style="background:var(--green-light);border-radius:var(--r-sm);padding:16px;margin-bottom:16px;text-align:center">
+        <div style="font-size:11px;color:var(--green-dark);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Transfer airtime to this number</div>
+        <div style="font-family:var(--font-d);font-size:28px;font-weight:800;color:var(--green);letter-spacing:.08em;margin-bottom:6px" id="transfer-number">08144340189</div>
+        <button onclick="copyNumber()" style="font-size:11px;font-weight:600;color:var(--green-dark);background:rgba(29,158,117,.15);border:none;border-radius:20px;padding:4px 14px;cursor:pointer;font-family:var(--font-b)">📋 Copy number</button>
+      </div>
+
+      <!-- USSD code -->
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">USSD transfer code</div>
+        <div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text)" id="modal-network-code">MTN: *321*08144340189*[amount]*0000#</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:4px">Replace [amount] with your actual airtime amount</div>
+      </div>
+
+      <!-- Trade summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+        <div style="background:var(--surface-2);border-radius:var(--r-sm);padding:10px">
+          <div style="font-size:10px;color:var(--text-3);margin-bottom:3px">Airtime to send</div>
+          <div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text)" id="modal-airtime-amt">₦0.00</div>
+        </div>
+        <div style="background:var(--surface-2);border-radius:var(--r-sm);padding:10px">
+          <div style="font-size:10px;color:var(--text-3);margin-bottom:3px">You will receive</div>
+          <div style="font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--green)" id="modal-amount">₦0.00</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--text-3);margin-bottom:20px;text-align:center" id="modal-ref">Ref: NX-00000</div>
+
+      <button class="btn-submit" onclick="goStep(2)">
+        ✅ I have sent the airtime — Upload proof
+      </button>
+      <button onclick="closeModal()" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;color:var(--text-2);cursor:pointer;font-family:var(--font-b)">Cancel trade</button>
+    </div>
+
+    <!-- STEP 2: Upload screenshot -->
+    <div id="modal-step-2" style="padding:28px;display:none">
+      <div style="text-align:center;margin-bottom:20px">
+        <div class="success-icon" style="background:var(--blue-light);font-size:26px">📸</div>
+        <div class="success-title" style="font-size:18px">Upload your proof</div>
+        <div class="success-sub">Take a screenshot of the successful airtime transfer confirmation and upload it below.</div>
+      </div>
+
+      <!-- Upload zone -->
+      <div id="upload-zone" onclick="document.getElementById('screenshot-input').click()"
+        style="border:2px dashed var(--border-2);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;margin-bottom:16px;transition:all .2s"
+        ondragover="event.preventDefault();this.style.borderColor='var(--green)'"
+        ondragleave="this.style.borderColor='var(--border-2)'"
+        ondrop="handleDrop(event)">
+        <div id="upload-placeholder">
+          <div style="font-size:32px;margin-bottom:8px">🖼️</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px">Click to upload screenshot</div>
+          <div style="font-size:11px;color:var(--text-3)">or drag & drop · PNG, JPG, JPEG · Max 5MB</div>
+        </div>
+        <div id="upload-preview" style="display:none">
+          <img id="preview-img" style="max-width:100%;max-height:180px;border-radius:var(--r-sm);margin-bottom:8px"/>
+          <div style="font-size:12px;color:var(--green);font-weight:500" id="preview-name"></div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px">Click to change image</div>
+        </div>
+      </div>
+      <input type="file" id="screenshot-input" accept="image/png,image/jpg,image/jpeg" style="display:none" onchange="handleFileSelect(this)"/>
+
+      <!-- Tips -->
+      <div style="background:var(--amber-light);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:20px">
+        <div style="font-size:11px;font-weight:600;color:var(--amber-dark);margin-bottom:6px">⚠️ Screenshot tips</div>
+        <div style="font-size:11px;color:var(--amber-dark);line-height:1.7">
+          • Make sure the screenshot shows the transfer was <strong>successful</strong><br>
+          • The recipient number and amount must be clearly visible<br>
+          • Do not crop or edit the screenshot<br>
+          • Blurry or edited screenshots will be rejected
+        </div>
+      </div>
+
+      <button class="btn-submit" id="upload-submit-btn" onclick="submitWithScreenshot()" style="opacity:.5;cursor:not-allowed" disabled>
+        📤 Submit for review
+      </button>
+      <button onclick="goStep(1)" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;color:var(--text-2);cursor:pointer;font-family:var(--font-b)">← Back</button>
+    </div>
+
+    <!-- STEP 3: Submitted confirmation -->
+    <div id="modal-step-3" style="padding:28px;text-align:center;display:none">
+      <div class="success-icon" style="background:var(--green-light);font-size:28px">🎉</div>
+      <div class="success-title">Trade submitted!</div>
+      <div class="success-sub" style="margin-bottom:16px">Your screenshot has been received. Our team will review it and credit your account within 15–30 minutes.</div>
+
+      <div style="background:var(--surface-2);border-radius:var(--r-sm);padding:14px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text-3)">Reference</span>
+          <span style="font-size:12px;font-weight:600;font-family:var(--font-d);color:var(--text)" id="confirm-ref">NX-00000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text-3)">Amount to receive</span>
+          <span style="font-size:12px;font-weight:600;color:var(--green)" id="confirm-amount">₦0.00</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text-3)">Status</span>
+          <span style="font-size:11px;font-weight:600;background:var(--amber-light);color:var(--amber-dark);padding:2px 9px;border-radius:20px">⏳ Under review</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0">
+          <span style="font-size:12px;color:var(--text-3)">Processing time</span>
+          <span style="font-size:12px;font-weight:500;color:var(--text)">15 – 30 minutes</span>
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:var(--text-3);margin-bottom:20px;line-height:1.6">
+        You will receive an SMS and email notification once your trade is approved. Track your trade in <strong style="color:var(--text)">Transactions</strong>.
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button class="btn-submit" style="flex:1" onclick="closeModal()">Done</button>
+        <button onclick="closeModal()" style="flex:1;padding:12px;background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);font-size:14px;color:var(--text-2);cursor:pointer;font-family:var(--font-b)">New trade</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">⚠️</div>
+  <div>
+    <div class="toast-text" id="toast-text">Please fill in all fields</div>
+    <div class="toast-sub" id="toast-sub">Enter an amount and phone number.</div>
+  </div>
+</div>
+
+<style>
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.modal-step-tab{flex:1;padding:12px 6px;text-align:center;font-size:11px;font-weight:500;color:var(--text-3);border-right:1px solid var(--border);cursor:default;transition:all .2s}
+.modal-step-tab:last-child{border-right:none}
+.modal-step-tab.active{color:var(--green-dark);background:var(--green-light);font-weight:600}
+.modal-step-tab.done{color:var(--green);background:transparent}
+</style>
+
+<script>
+const networks = {
+  mtn:    {name:'MTN',    rate:.75, code:'MTN: *321*08144340189*[amount]*0000#', num:'08144340189', label:'MTN · 75%'},
+  airtel: {name:'Airtel', rate:.72, code:'Airtel: *432*8*[number]*[amount]#', num:'0802 345 6789', label:'Airtel · 72%'},
+  glo:    {name:'Glo',    rate:.70, code:'Glo: *127*1*[number]*[amount]*[pin]#', num:'0805 456 7890', label:'Glo · 70%'},
+  '9mobile':{name:'9mobile',rate:.68,code:'9mobile: *223*[pin]*[number]*[amount]#',num:'0909 567 8901',label:'9mobile · 68%'},
+};
+
+let currentNet = 'mtn';
+let payoutMode = 'wallet';
+let currentRef = '';
+let selectedFile = null;
+
+function selectNetwork(id, el){
+  document.querySelectorAll('.network-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentNet = id;
+  document.getElementById('selected-network-label').textContent = networks[id].label;
+  document.getElementById('summary-network').textContent = networks[id].name;
+  document.getElementById('summary-rate').textContent = (networks[id].rate*100)+'%';
+  calcPayout();
+}
+
+function calcPayout(){
+  const amt = parseFloat(document.getElementById('airtime-amount').value)||0;
+  const payout = amt * networks[currentNet].rate;
+  document.getElementById('summary-airtime').textContent = '₦'+amt.toLocaleString('en-NG',{minimumFractionDigits:2});
+  document.getElementById('summary-payout').textContent = '₦'+payout.toLocaleString('en-NG',{minimumFractionDigits:2});
+}
+
+function setAmount(val){
+  document.getElementById('airtime-amount').value = val;
+  document.querySelectorAll('.qa-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  calcPayout();
+}
+
+function setMax(){ document.getElementById('airtime-amount').value=10000; calcPayout(); }
+
+function selectPayout(mode, el){
+  document.querySelectorAll('.pt-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  payoutMode = mode;
+  document.getElementById('bank-details').style.display = mode==='bank'?'block':'none';
+}
+
+function submitTrade(){
+  const amt = parseFloat(document.getElementById('airtime-amount').value)||0;
+  const phone = document.getElementById('phone-number').value.trim();
+  if(!amt || amt < 100){ showToast('Invalid amount','Minimum airtime amount is ₦100.','⚠️'); return; }
+  if(!phone){ showToast('Phone number required','Enter the phone number with the airtime.','⚠️'); return; }
+
+  const net = networks[currentNet];
+  const payout = amt * net.rate;
+  currentRef = 'NX-' + Math.floor(10000+Math.random()*90000);
+
+  document.getElementById('modal-airtime-amt').textContent = '₦'+amt.toLocaleString('en-NG',{minimumFractionDigits:2});
+  document.getElementById('modal-amount').textContent = '₦'+payout.toLocaleString('en-NG',{minimumFractionDigits:2});
+  document.getElementById('modal-ref').textContent = 'Ref: '+currentRef;
+  document.getElementById('transfer-number').textContent = net.num;
+  document.getElementById('modal-network-code').textContent = net.code;
+  document.getElementById('confirm-ref').textContent = currentRef;
+  document.getElementById('confirm-amount').textContent = '₦'+payout.toLocaleString('en-NG',{minimumFractionDigits:2});
+
+  goStep(1);
+  document.getElementById('success-overlay').classList.add('show');
+}
+
+function goStep(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('modal-step-'+i).style.display = i===n?'block':'none';
+    const tab = document.getElementById('stab-'+i);
+    tab.classList.remove('active','done');
+    if(i===n) tab.classList.add('active');
+    else if(i<n) tab.classList.add('done');
+  });
+}
+
+function copyNumber(){
+  const num = document.getElementById('transfer-number').textContent.replace(/\s/g,'');
+  navigator.clipboard.writeText(num).catch(()=>{});
+  showToast('Copied!','Transfer number copied to clipboard.','📋');
+}
+
+function handleFileSelect(input){
+  if(input.files && input.files[0]) loadFile(input.files[0]);
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('upload-zone').style.borderColor='var(--border-2)';
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) loadFile(file);
+  else showToast('Invalid file','Please upload a PNG or JPG image.','⚠️');
+}
+
+function loadFile(file){
+  if(file.size > 5*1024*1024){ showToast('File too large','Maximum file size is 5MB.','⚠️'); return; }
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    document.getElementById('preview-img').src = e.target.result;
+    document.getElementById('preview-name').textContent = file.name;
+    document.getElementById('upload-placeholder').style.display='none';
+    document.getElementById('upload-preview').style.display='block';
+    document.getElementById('upload-zone').style.borderColor='var(--green)';
+    const btn = document.getElementById('upload-submit-btn');
+    btn.disabled=false; btn.style.opacity='1'; btn.style.cursor='pointer';
+  };
+  reader.readAsDataURL(file);
+}
+
+function submitWithScreenshot(){
+  if(!selectedFile){ showToast('No screenshot','Please upload your transfer screenshot.','⚠️'); return; }
+  goStep(3);
+}
+
+function closeModal(){
+  document.getElementById('success-overlay').classList.remove('show');
+  document.getElementById('airtime-amount').value='';
+  document.getElementById('phone-number').value='';
+  selectedFile=null;
+  document.getElementById('upload-placeholder').style.display='block';
+  document.getElementById('upload-preview').style.display='none';
+  document.getElementById('upload-zone').style.borderColor='var(--border-2)';
+  const btn=document.getElementById('upload-submit-btn');
+  btn.disabled=true; btn.style.opacity='.5'; btn.style.cursor='not-allowed';
+  calcPayout();
+}
+
+function showToast(text,sub,icon='✅'){
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  document.querySelector('.toast-icon').textContent=icon;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const d = document.body.getAttribute('data-theme')==='dark';
+  document.body.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeToggle').textContent=d?'🌙':'☀️';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit Admin — FiberX Orders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#060D0B;font-family:var(--font-d);font-size:13px;font-weight:800}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:700;letter-spacing:.08em;background:rgba(226,75,74,.15);color:var(--red);padding:2px 6px;border-radius:20px;border:1px solid rgba(226,75,74,.2)}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:rgba(0,200,160,.1);color:var(--teal);font-weight:500;border:1px solid rgba(0,200,160,.15)}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--red);color:#fff;padding:1px 7px;border-radius:20px}
+.sb-badge.teal{background:var(--teal);color:#060D0B}
+.sb-badge.amber{background:var(--amber);color:#fff}
+.sb-bottom{margin-top:auto}
+.admin-avatar{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-role{font-size:11px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* CONTENT */
+.content{padding:28px;flex:1}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;display:flex;align-items:center;gap:14px}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.stat-val{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--text)}
+.stat-label{font-size:11px;color:var(--text-3);margin-top:2px}
+.stat-change{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:5px;display:inline-block}
+.ch-up{background:rgba(0,200,160,.1);color:var(--teal)}
+.ch-amber{background:var(--amber-light);color:var(--amber-dark)}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-3)}
+.search-input{width:100%;padding:9px 12px 9px 32px;font-family:var(--font-b);font-size:13px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);outline:none}
+.search-input:focus{border-color:var(--teal)}
+.search-input::placeholder{color:var(--text-3)}
+.f-select{padding:8px 12px;font-family:var(--font-b);font-size:12px;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);outline:none;-webkit-appearance:none;min-width:120px}
+.f-select:focus{border-color:var(--teal)}
+.pill-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);white-space:nowrap;transition:all .15s}
+.pill:hover{border-color:var(--border-2);color:var(--text)}
+.pill.active{background:var(--teal);color:#060D0B;border-color:var(--teal);font-weight:600}
+.pill.red-pill.active{background:var(--red);border-color:var(--red);color:#fff}
+.pill.amber-pill.active{background:var(--amber);border-color:var(--amber);color:#fff}
+
+/* TABLE */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.t-header{display:grid;grid-template-columns:180px 1fr 120px 100px 120px 130px 130px;gap:0;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.th{font-size:10px;font-weight:600;letter-spacing:.07em;color:var(--text-3);text-transform:uppercase}
+.t-row{display:grid;grid-template-columns:180px 1fr 120px 100px 120px 130px 130px;gap:0;padding:14px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background .15s}
+.t-row:hover{background:var(--surface-2)}
+.t-row:last-child{border-bottom:none}
+.t-row.hidden{display:none}
+.user-cell{display:flex;align-items:center;gap:10px}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--teal);color:#060D0B;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--text)}
+.user-phone{font-size:11px;color:var(--text-3)}
+.ref-cell{font-family:var(--font-d);font-size:11px;color:var(--text-2)}
+.speed-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(0,200,160,.1);color:var(--teal);border:1px solid rgba(0,200,160,.15)}
+.t-status{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block}
+.s-pending{background:var(--yellow-light);color:var(--yellow);border:1px solid rgba(245,197,24,.2)}
+.s-activated{background:rgba(0,200,160,.1);color:var(--teal);border:1px solid rgba(0,200,160,.2)}
+.s-rejected{background:rgba(226,75,74,.1);color:var(--red);border:1px solid rgba(226,75,74,.2)}
+.action-btns{display:flex;gap:6px;align-items:center}
+.btn-activate{font-size:11px;font-weight:600;padding:5px 11px;border-radius:var(--r-sm);border:none;background:var(--teal);color:#060D0B;cursor:pointer;font-family:var(--font-b);transition:opacity .2s}
+.btn-activate:hover{opacity:.85}
+.btn-reject{font-size:11px;font-weight:600;padding:5px 11px;border-radius:var(--r-sm);border:1px solid rgba(226,75,74,.3);background:transparent;color:var(--red);cursor:pointer;font-family:var(--font-b)}
+.btn-reject:hover{background:rgba(226,75,74,.08)}
+.btn-view{font-size:11px;padding:5px 10px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b)}
+.btn-view:hover{background:var(--surface-2);color:var(--text)}
+
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;justify-content:flex-end}
+.drawer-overlay.show{display:flex}
+.drawer{width:460px;max-width:95vw;background:var(--surface);height:100vh;overflow-y:auto;animation:slideIn .25s ease;display:flex;flex-direction:column;border-left:1px solid var(--border)}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:none}}
+.drawer-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.drawer-title{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+.drawer-body{padding:22px;flex:1;display:flex;flex-direction:column;gap:16px}
+.drawer-actions{display:flex;gap:10px;padding:16px 22px;border-top:1px solid var(--border);position:sticky;bottom:0;background:var(--surface)}
+
+/* RECEIPT VIEWER */
+.receipt-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.receipt-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.receipt-header span{font-size:12px;font-weight:600;color:var(--text)}
+.receipt-img{width:100%;display:block;cursor:zoom-in;transition:transform .2s}
+.receipt-img:hover{opacity:.92}
+.receipt-img.zoomed{transform:scale(1.5);transform-origin:top center;cursor:zoom-out}
+.receipt-no-img{padding:32px;text-align:center;color:var(--text-3);font-size:13px}
+
+/* INFO CARD */
+.info-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-label{font-size:12px;color:var(--text-3)}
+.info-val{font-size:13px;font-weight:500;color:var(--text);text-align:right}
+.info-val.teal{color:var(--teal);font-family:var(--font-d);font-weight:700}
+.info-val.fn{font-family:var(--font-d);font-size:14px;font-weight:700;color:var(--text)}
+
+/* FN VERIFICATION */
+.fn-verify-box{background:rgba(245,197,24,.05);border:1px solid rgba(245,197,24,.2);border-radius:var(--r-sm);padding:14px}
+.fvb-title{font-size:12px;font-weight:700;color:var(--yellow);margin-bottom:8px}
+.fvb-fn{font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--text);letter-spacing:.06em;margin-bottom:6px}
+.fvb-warn{font-size:11px;color:rgba(255,255,255,.5);line-height:1.6}
+
+/* REJECT FORM */
+.reject-form{background:rgba(226,75,74,.05);border:1px solid rgba(226,75,74,.2);border-radius:var(--r-sm);padding:14px}
+.reject-label{font-size:12px;font-weight:700;color:var(--red);display:block;margin-bottom:8px}
+.reject-textarea{width:100%;padding:10px 12px;font-family:var(--font-b);font-size:13px;color:var(--text);background:var(--surface);border:1px solid rgba(226,75,74,.3);border-radius:var(--r-sm);outline:none;resize:vertical;min-height:80px}
+.reject-textarea:focus{border-color:var(--red)}
+.reject-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.rq-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(226,75,74,.25);background:transparent;color:var(--red);cursor:pointer;font-family:var(--font-b);transition:background .15s}
+.rq-btn:hover{background:rgba(226,75,74,.1)}
+
+/* DRAWER ACTION BTNS */
+.btn-activate-lg{flex:1;padding:12px;background:var(--teal);color:#060D0B;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer;transition:opacity .2s}
+.btn-activate-lg:hover{opacity:.88}
+.btn-reject-lg{flex:1;padding:12px;background:rgba(226,75,74,.08);color:var(--red);border:1px solid rgba(226,75,74,.25);border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--font-b);cursor:pointer}
+.btn-wa{display:flex;align-items:center;gap:6px;padding:10px 14px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.2);border-radius:var(--r-sm);font-size:13px;font-weight:500;font-family:var(--font-b);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn-wa:hover{background:rgba(37,211,102,.18)}
+
+/* CONFIRM MODAL */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;align-items:center;justify-content:center}
+.confirm-overlay.show{display:flex}
+.confirm-modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:360px;width:92%;animation:popIn .2s ease;text-align:center}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-icon{font-size:38px;margin-bottom:12px}
+.confirm-title{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px}
+.confirm-sub{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:20px;font-weight:300}
+.confirm-btns{display:flex;gap:10px}
+.btn-yes{flex:1;padding:11px;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:700;font-family:var(--font-b);cursor:pointer}
+.btn-no{flex:1;padding:11px;border:1px solid var(--border);background:transparent;color:var(--text-2);border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);cursor:pointer}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,.4);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;font-weight:500;color:var(--text)}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+.fade-up{opacity:0;transform:translateY(14px);animation:fadeUp .4s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.04s}.d2{animation-delay:.09s}.d3{animation-delay:.14s}
+
+@media(max-width:1100px){.t-header,.t-row{grid-template-columns:160px 1fr 110px 100px 120px}}
+@media(max-width:800px){.sidebar{display:none}.stats-row{grid-template-columns:repeat(2,1fr)}.content{padding:16px}.topbar{padding:12px 16px}.t-header,.t-row{grid-template-columns:1fr 100px 120px}}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark" style="background:var(--teal)"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">ADMIN</span>
+  </div>
+  <div class="sb-section">Overview</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Users
+    <span class="sb-badge" style="background:var(--teal);color:#060D0B">1,284</span>
+  </a>
+  <div class="sb-section">Trade Reviews</div>
+  <a class="sb-item" href="nexbit-admin-reviews.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Airtime trades
+    <span class="sb-badge">7</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-giftcards.html">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/></svg>
+    Gift card trades
+    <span class="sb-badge">3</span>
+  </a>
+  <a class="sb-item" href="nexbit-admin-crypto.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto trades
+    <span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item active" href="nexbit-admin-fiberx.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+    MTN FiberX orders
+    <span class="sb-badge" style="background:var(--amber)">5</span>
+  </a>
+  <div class="sb-section">Finance</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
+    Withdrawals
+    <span class="sb-badge">2</span>
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    All transactions
+  </a>
+  <div class="sb-section">Compliance</div>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+    KYC reviews
+    <span class="sb-badge">5</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Exchange rates
+  </a>
+  <div class="sb-section">System</div>
+  <a class="sb-item" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>Settings</a>
+  <a class="sb-item" href="nexbit-auth.html"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log out</a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="admin-avatar" style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">AD</div>
+      <div><div class="sb-user-name">Nexbit Admin</div><div class="sb-user-role" style="font-size:11px;color:var(--text-3)">Super Admin</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>MTN FiberX Orders</h1>
+      <p>Review payment receipts and activate or reject subscriptions</p>
+    </div>
+    <div class="topbar-right">
+      <a href="https://wa.me/2348144340189" target="_blank" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#25D366;text-decoration:none;padding:6px 12px;border:1px solid rgba(37,211,102,.2);border-radius:20px;background:rgba(37,211,102,.06)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Support line
+      </a>
+      <button class="tb-btn" id="themeToggle">🌙</button>
+      <button class="tb-btn">🔔<span class="notif-dot"></span></button>
+      <div class="admin-avatar" style="width:34px;height:34px;font-size:12px;cursor:pointer">AD</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-row fade-up d1">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--yellow-light)">⏳</div>
+        <div>
+          <div class="stat-val" id="count-pending">5</div>
+          <div class="stat-label">Pending review</div>
+          <span class="stat-change ch-amber">Needs attention</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,200,160,.1)">✅</div>
+        <div>
+          <div class="stat-val">12</div>
+          <div class="stat-label">Activated today</div>
+          <span class="stat-change ch-up">+3 vs yesterday</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(226,75,74,.1)">❌</div>
+        <div>
+          <div class="stat-val">1</div>
+          <div class="stat-label">Rejected today</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,200,160,.1)">💰</div>
+        <div>
+          <div class="stat-val">₦1.08M</div>
+          <div class="stat-label">Revenue today</div>
+          <span class="stat-change ch-up">↑ +14%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar fade-up d2">
+      <div class="pill-tabs">
+        <button class="pill active" onclick="filterStatus('all',this)">All (8)</button>
+        <button class="pill" onclick="filterStatus('pending',this)" style="border-color:rgba(245,197,24,.3);color:var(--yellow)">⏳ Pending (5)</button>
+        <button class="pill" onclick="filterStatus('activated',this)">✅ Activated</button>
+        <button class="pill red-pill" onclick="filterStatus('rejected',this)">❌ Rejected</button>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" placeholder="Search name, ref, FN number..." oninput="searchOrders(this.value)"/>
+      </div>
+      <select class="f-select" onchange="filterSpeed(this.value)">
+        <option value="all">All speeds</option>
+        <option value="50Mbps">50 Mbps</option>
+        <option value="100Mbps">100 Mbps</option>
+        <option value="200Mbps">200 Mbps</option>
+        <option value="300Mbps">300 Mbps</option>
+        <option value="1Gbps">1 Gbps</option>
+      </select>
+      <button style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);font-size:12px;color:var(--text-2);cursor:pointer;font-family:var(--font-b)" onclick="exportCSV()">
+        ⬇ Export CSV
+      </button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap fade-up d3">
+      <div class="t-header">
+        <div class="th">Subscriber</div>
+        <div class="th">Reference</div>
+        <div class="th">Plan</div>
+        <div class="th">Amount</div>
+        <div class="th">FN Number</div>
+        <div class="th">Submitted</div>
+        <div class="th">Actions</div>
+      </div>
+      <div id="orders-body"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer(event)">
+  <div class="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Order review</span>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+    <div class="drawer-actions" id="drawer-actions"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-modal">
+    <div class="confirm-icon" id="confirm-icon">✅</div>
+    <div class="confirm-title" id="confirm-title">Activate subscription?</div>
+    <div class="confirm-sub" id="confirm-sub">This will confirm the FiberX subscription for this user.</div>
+    <div class="confirm-btns">
+      <button class="btn-yes" id="confirm-yes-btn" onclick="executeAction()">Yes, confirm</button>
+      <button class="btn-no" onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div><div class="toast-text" id="toast-text">Done</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<script>
+// ── MOCK DATA ──────────────────────────────────────────────────
+const planColors = {
+  '50Mbps':  '#7AB8A8',
+  '100Mbps': '#378ADD',
+  '200Mbps': '#00C8A0',
+  '300Mbps': '#7F77DD',
+  '1Gbps':   '#F5C518',
+};
+
+const planPrices = {
+  '50Mbps': 29500, '100Mbps': 44500, '200Mbps': 69500,
+  '300Mbps': 99500, '1Gbps': 199500,
+};
+
+// Simulated receipt canvas colors
+const receiptColors = {
+  'NX-FBX-28501': '#0C1612',
+  'NX-FBX-28499': '#0A1510',
+  'NX-FBX-28497': '#0C1214',
+  'NX-FBX-28495': '#100C18',
+  'NX-FBX-28493': '#0C1612',
+  'NX-FBX-28491': '#0C1612',
+  'NX-FBX-28487': '#0C1612',
+  'NX-FBX-28483': '#0C1612',
+};
+
+let orders = [
+  {id:'NX-FBX-28501',name:'Omowunmi Kayode',phone:'0803-000-0000',initials:'OK',plan:'200Mbps',fn:'FN-4892037461',phone_notif:'08031234567',notes:'',time:'10:42 AM',date:'Today',status:'pending',reject_note:''},
+  {id:'NX-FBX-28499',name:'Tunde Afolabi',phone:'0802-111-2233',initials:'TA',plan:'100Mbps',fn:'FN-3310928475',phone_notif:'08021112233',notes:'Please activate before 5pm',time:'10:18 AM',date:'Today',status:'pending',reject_note:''},
+  {id:'NX-FBX-28497',name:'Chisom Eze',phone:'0806-334-5566',initials:'CE',plan:'50Mbps',fn:'FN-7829301847',phone_notif:'08063345566',notes:'',time:'09:55 AM',date:'Today',status:'pending',reject_note:''},
+  {id:'NX-FBX-28495',name:'Fatima Bello',phone:'0909-445-6677',initials:'FB',plan:'300Mbps',fn:'FN-1029384756',phone_notif:'09094456677',notes:'New installation',time:'09:30 AM',date:'Today',status:'pending',reject_note:''},
+  {id:'NX-FBX-28493',name:'Emeka Okafor',phone:'0803-556-7788',initials:'EO',plan:'1Gbps',fn:'FN-5647382910',phone_notif:'08035567788',notes:'',time:'09:10 AM',date:'Today',status:'pending',reject_note:''},
+  {id:'NX-FBX-28491',name:'Blessing Nwosu',phone:'0802-667-8899',initials:'BN',plan:'200Mbps',fn:'FN-8374619283',phone_notif:'08026678899',notes:'',time:'Yesterday',date:'Yesterday',status:'activated',reject_note:''},
+  {id:'NX-FBX-28487',name:'Adaeze Obi',phone:'0803-889-0011',initials:'AO',plan:'100Mbps',fn:'FN-2938475610',phone_notif:'08038890011',notes:'',time:'Yesterday',date:'Yesterday',status:'activated',reject_note:''},
+  {id:'NX-FBX-28483',name:'Grace Ikenna',phone:'0806-001-2233',initials:'GI',plan:'50Mbps',fn:'FN-7654321098',phone_notif:'08060012233',notes:'',time:'Yesterday',date:'Yesterday',status:'rejected',reject_note:'Receipt unclear — payment amount not visible'},
+];
+
+const fmt = n => '₦'+n.toLocaleString('en-NG');
+let currentFilter = 'all';
+let currentOrderId = null;
+let pendingAction = null;
+let rejectReason = '';
+
+function renderOrders(){
+  const body = document.getElementById('orders-body');
+  const visible = orders.filter(o => currentFilter === 'all' || o.status === currentFilter);
+
+  document.getElementById('count-pending').textContent = orders.filter(o => o.status==='pending').length;
+
+  if(!visible.length){
+    body.innerHTML = `<div style="padding:48px;text-align:center;color:var(--text-3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-size:14px;font-weight:500;color:var(--text-2)">No orders found</div></div>`;
+    return;
+  }
+
+  body.innerHTML = visible.map(o => `
+    <div class="t-row" id="row-${o.id}" onclick="openDrawer('${o.id}')">
+      <div class="user-cell">
+        <div class="user-av" style="background:${o.status==='activated'?'var(--teal)':o.status==='rejected'?'rgba(226,75,74,.3)':'rgba(0,200,160,.2)'};color:${o.status==='activated'?'#060D0B':'var(--teal)'}">
+          ${o.initials}
+        </div>
+        <div>
+          <div class="user-name">${o.name}</div>
+          <div class="user-phone">${o.phone}</div>
+        </div>
+      </div>
+      <div class="ref-cell">${o.id}</div>
+      <div>
+        <span class="speed-badge" style="background:${planColors[o.plan]}18;color:${planColors[o.plan]};border-color:${planColors[o.plan]}33">
+          🌐 ${o.plan}
+        </span>
+      </div>
+      <div style="font-size:13px;font-weight:600;color:var(--teal);font-family:var(--font-d)">${fmt(planPrices[o.plan])}</div>
+      <div style="font-family:var(--font-d);font-size:11px;color:var(--text-2)">${o.fn}</div>
+      <div style="font-size:12px;color:var(--text-2)">${o.date}<br><span style="color:var(--text-3);font-size:10px">${o.time}</span></div>
+      <div class="action-btns" onclick="event.stopPropagation()">
+        ${o.status === 'pending' ? `
+          <button class="btn-activate" onclick="confirmAction('activate','${o.id}')">✓ Activate</button>
+          <button class="btn-reject" onclick="confirmAction('reject','${o.id}')">✕</button>
+        ` : `<span class="t-status s-${o.status}">${o.status==='activated'?'✅ Activated':'❌ Rejected'}</span>`}
+        <button class="btn-view" onclick="openDrawer('${o.id}')">View</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterStatus(status, btn){
+  currentFilter = status;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders();
+}
+
+function filterSpeed(speed){
+  document.querySelectorAll('.t-row').forEach(row => {
+    if(speed === 'all') row.classList.remove('hidden');
+    else row.classList.toggle('hidden', !row.innerHTML.includes(speed));
+  });
+}
+
+function searchOrders(q){
+  const lower = q.toLowerCase();
+  document.querySelectorAll('.t-row').forEach(row => {
+    row.classList.toggle('hidden', !row.textContent.toLowerCase().includes(lower));
+  });
+}
+
+// ── RECEIPT CANVAS GENERATOR ───────────────────────────────────
+function generateReceipt(id){
+  const o = orders.find(x => x.id === id);
+  if(!o) return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = 380; canvas.height = 240;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#0A1510';
+  ctx.fillRect(0,0,380,240);
+
+  // Header bar
+  ctx.fillStyle = '#00C8A0';
+  ctx.fillRect(0,0,380,6);
+
+  // Bank name
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('OPAY DIGITAL SERVICES', 20, 30);
+
+  // Transaction successful
+  ctx.fillStyle = '#00C8A0';
+  ctx.font = 'bold 14px monospace';
+  ctx.fillText('✓ Transfer Successful', 20, 58);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '11px monospace';
+  ctx.fillText(`Amount: ₦${planPrices[o.plan].toLocaleString('en-NG')}`, 20, 86);
+  ctx.fillText(`To: Victor Sodimu`, 20, 108);
+  ctx.fillText(`Acct: 6504939725`, 20, 130);
+  ctx.fillText(`Ref: ${o.id}`, 20, 152);
+  ctx.fillText(`Date: ${o.date} at ${o.time}`, 20, 174);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '10px monospace';
+  ctx.fillText('Nexbit FiberX subscription payment', 20, 202);
+  ctx.fillText('Keep this receipt for your records', 20, 220);
+
+  return canvas.toDataURL();
+}
+
+// ── DRAWER ─────────────────────────────────────────────────────
+function openDrawer(id){
+  const o = orders.find(x => x.id === id);
+  if(!o) return;
+  currentOrderId = id;
+  const imgSrc = generateReceipt(id);
+
+  document.getElementById('drawer-body').innerHTML = `
+    <!-- Receipt -->
+    <div class="receipt-box">
+      <div class="receipt-header">
+        <span>🧾 Payment receipt</span>
+        <span style="font-size:10px;color:var(--text-3)">Click to zoom</span>
+      </div>
+      <img class="receipt-img" src="${imgSrc}" onclick="this.classList.toggle('zoomed')" alt="Payment receipt"/>
+    </div>
+
+    <!-- FN Verification -->
+    <div class="fn-verify-box">
+      <div class="fvb-title">⚠️ Verify FN number before activating</div>
+      <div class="fvb-fn">${o.fn}</div>
+      <div class="fvb-warn">Confirm this FN number is correct. Activating a wrong FN number cannot be reversed. Double-check with the user via WhatsApp if unsure.</div>
+    </div>
+
+    <!-- Order info -->
+    <div class="info-card">
+      <div class="info-row"><span class="info-label">Reference</span><span class="info-val" style="font-family:var(--font-d);font-size:12px">${o.id}</span></div>
+      <div class="info-row"><span class="info-label">Subscriber name</span><span class="info-val">${o.name}</span></div>
+      <div class="info-row"><span class="info-label">Phone (notification)</span><span class="info-val">${o.phone_notif}</span></div>
+      <div class="info-row"><span class="info-label">FN number</span><span class="info-val fn">${o.fn}</span></div>
+      <div class="info-row">
+        <span class="info-label">Plan selected</span>
+        <span class="speed-badge" style="background:${planColors[o.plan]}18;color:${planColors[o.plan]};border-color:${planColors[o.plan]}33">🌐 ${o.plan} FiberX</span>
+      </div>
+      <div class="info-row"><span class="info-label">Amount paid</span><span class="info-val teal">${fmt(planPrices[o.plan])}</span></div>
+      <div class="info-row"><span class="info-label">Payment account</span><span class="info-val">6504939725 — Victor Sodimu</span></div>
+      <div class="info-row"><span class="info-label">Submitted</span><span class="info-val">${o.date} at ${o.time}</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="t-status s-${o.status}">${o.status === 'activated' ? '✅ Activated' : o.status === 'rejected' ? '❌ Rejected' : '⏳ Pending'}</span></div>
+      ${o.notes ? `<div class="info-row"><span class="info-label">Customer note</span><span class="info-val" style="color:var(--text-2);font-style:italic">"${o.notes}"</span></div>` : ''}
+      ${o.reject_note ? `<div class="info-row"><span class="info-label">Rejection reason</span><span class="info-val" style="color:var(--red)">${o.reject_note}</span></div>` : ''}
+    </div>
+
+    ${o.status === 'pending' ? `
+    <!-- Reject form (hidden by default) -->
+    <div class="reject-form" id="reject-form" style="display:none">
+      <label class="reject-label">Rejection reason</label>
+      <textarea class="reject-textarea" id="reject-reason" placeholder="Describe why this order is being rejected..."></textarea>
+      <div class="reject-quick">
+        <button class="rq-btn" onclick="setRejectReason('Payment receipt is unclear or unreadable')">Unclear receipt</button>
+        <button class="rq-btn" onclick="setRejectReason('Amount paid does not match the selected plan')">Wrong amount</button>
+        <button class="rq-btn" onclick="setRejectReason('FN number appears incorrect — please verify and resubmit')">Wrong FN number</button>
+        <button class="rq-btn" onclick="setRejectReason('Receipt appears to be edited or manipulated')">Edited receipt</button>
+        <button class="rq-btn" onclick="setRejectReason('Payment was not found on our account — please re-send and resubmit')">Payment not received</button>
+      </div>
+    </div>` : ''}
+  `;
+
+  // Drawer action buttons
+  const actions = document.getElementById('drawer-actions');
+  if(o.status === 'pending'){
+    actions.innerHTML = `
+      <button class="btn-activate-lg" onclick="confirmAction('activate','${id}')">✅ Activate subscription</button>
+      <button class="btn-reject-lg" id="btn-show-reject" onclick="toggleRejectForm('${id}')">❌ Reject</button>
+      <a class="btn-wa" href="https://wa.me/${o.phone_notif.replace(/[^0-9]/g,'').replace(/^0/,'234')}?text=Hello%20${encodeURIComponent(o.name)}%2C%20this%20is%20Nexbit%20Support%20regarding%20your%20FiberX%20order%20${o.id}" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat
+      </a>
+    `;
+  } else {
+    actions.innerHTML = `
+      <div style="font-size:13px;color:var(--text-3);padding:4px 0;flex:1">This order has already been <strong style="color:var(--text)">${o.status}</strong>.</div>
+      <a class="btn-wa" href="https://wa.me/${o.phone_notif.replace(/[^0-9]/g,'').replace(/^0/,'234')}?text=Hello%20${encodeURIComponent(o.name)}%2C%20this%20is%20Nexbit%20Support." target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Contact user
+      </a>
+    `;
+  }
+
+  document.getElementById('drawer-overlay').classList.add('show');
+}
+
+function toggleRejectForm(id){
+  const form = document.getElementById('reject-form');
+  if(!form) return;
+  const showing = form.style.display !== 'none';
+  form.style.display = showing ? 'none' : 'block';
+  if(!showing){
+    document.getElementById('drawer-actions').innerHTML = `
+      <button class="btn-reject-lg" style="flex:1;background:rgba(226,75,74,.15);border-color:rgba(226,75,74,.4)" onclick="confirmReject()">Confirm rejection</button>
+      <button class="btn-no" onclick="toggleRejectForm('${id}')">Cancel</button>
+    `;
+  }
+}
+
+function setRejectReason(text){
+  document.getElementById('reject-reason').value = text;
+}
+
+function confirmReject(){
+  const reason = document.getElementById('reject-reason')?.value?.trim();
+  if(!reason){ showToast('Add a reason','Please provide a rejection reason before confirming.','⚠️'); return; }
+  rejectReason = reason;
+  confirmAction('reject', currentOrderId, reason);
+}
+
+function closeDrawer(e){
+  if(!e || e.target === document.getElementById('drawer-overlay')){
+    document.getElementById('drawer-overlay').classList.remove('show');
+  }
+}
+
+// ── CONFIRM MODAL ──────────────────────────────────────────────
+function confirmAction(action, id, reason = ''){
+  currentOrderId = id;
+  pendingAction  = action;
+  rejectReason   = reason;
+  const o = orders.find(x => x.id === id);
+
+  if(action === 'activate'){
+    document.getElementById('confirm-icon').textContent  = '✅';
+    document.getElementById('confirm-title').textContent = 'Activate subscription?';
+    document.getElementById('confirm-sub').textContent   = `This will activate the ${o.plan} FiberX plan for ${o.name} (FN: ${o.fn}). Make sure you have verified the FN number and confirmed payment.`;
+    const btn = document.getElementById('confirm-yes-btn');
+    btn.style.background = 'var(--teal)';
+    btn.style.color = '#060D0B';
+    btn.style.border = 'none';
+    btn.textContent = 'Yes, activate';
+  } else {
+    document.getElementById('confirm-icon').textContent  = '❌';
+    document.getElementById('confirm-title').textContent = 'Reject this order?';
+    document.getElementById('confirm-sub').textContent   = `The user will be notified with your rejection reason and can resubmit a corrected order.`;
+    const btn = document.getElementById('confirm-yes-btn');
+    btn.style.background = 'var(--red)';
+    btn.style.color = '#fff';
+    btn.style.border = 'none';
+    btn.textContent = 'Yes, reject';
+  }
+
+  document.getElementById('confirm-overlay').classList.add('show');
+}
+
+function executeAction(){
+  const o = orders.find(x => x.id === currentOrderId);
+  if(!o) return;
+
+  if(pendingAction === 'activate'){
+    o.status = 'activated';
+    showToast('Subscription activated!', `${o.plan} FiberX activated for ${o.name}.`, '✅');
+  } else {
+    o.status = 'rejected';
+    o.reject_note = rejectReason || 'Order rejected by admin';
+    showToast('Order rejected', `${o.name} will be notified with the reason.`, '❌');
+  }
+
+  closeConfirm();
+  closeDrawer();
+  renderOrders();
+}
+
+function closeConfirm(){
+  document.getElementById('confirm-overlay').classList.remove('show');
+  pendingAction = null;
+}
+
+// ── EXPORT CSV ─────────────────────────────────────────────────
+function exportCSV(){
+  const headers = ['Reference','Name','Phone','FN Number','Plan','Amount','Date','Status','Reject Note'];
+  const rows = orders.map(o => [
+    o.id, o.name, o.phone_notif, o.fn, o.plan,
+    planPrices[o.plan], `${o.date} ${o.time}`, o.status, o.reject_note
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nexbit-fiberx-orders.csv';
+  a.click();
+  showToast('Exported!', 'CSV file is downloading.', '⬇');
+}
+
+function showToast(text, sub = '', icon = '✅'){
+  document.getElementById('toast-text').textContent = text;
+  document.getElementById('toast-sub').textContent  = sub;
+  const ti = document.querySelector('.toast-icon');
+  ti.textContent = icon;
+  ti.style.background = icon === '✅' ? 'rgba(0,200,160,.15)' : icon === '❌' ? 'rgba(226,75,74,.15)' : 'rgba(245,197,24,.15)';
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Theme toggle ──────────────────────────────────────────────
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+});
+
+// Init
+renderOrders();
+</script>
+</body>
+</html>
