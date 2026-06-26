@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Airtime Exchange. Instant Cash.</title>
+<meta name="description" content="Nexbit is your trusted platform for selling airtime, trading gift cards, subscribing to MTN FiberX and getting instant cash across Africa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  
+
+  
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-mark {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+  }
+  .logo-mark span { color: #fff; font-family: var(--font-display); font-size: 13px; font-weight: 700; }
+  .logo-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--text); }
+  .logo-tag {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+    background: var(--green-light); color: var(--green-dark);
+    padding: 2px 7px; border-radius: 20px; margin-left: 2px;
+  }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { font-size: 14px; color: var(--text-2); text-decoration: none; font-weight: 400; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .toggle-theme {
+    width: 36px; height: 36px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-2); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .toggle-theme:hover { background: var(--bg); }
+  .btn-ghost {
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    color: var(--text); background: transparent;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 18px; cursor: pointer; transition: background 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-ghost:hover { background: var(--bg); }
+  .btn-primary {
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    color: #fff; background: var(--green);
+    border: none; border-radius: var(--radius-sm);
+    padding: 8px 18px; cursor: pointer; transition: opacity 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 40px 64px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+    background: var(--green-light); color: var(--green-dark);
+    padding: 5px 13px; border-radius: 20px; margin-bottom: 22px;
+  }
+  .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: inline-block; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: 52px; font-weight: 800; line-height: 1.1;
+    color: var(--text); margin-bottom: 18px; letter-spacing: -0.02em;
+  }
+  .hero h1 em { font-style: normal; color: var(--green); }
+  .hero p {
+    font-size: 16px; color: var(--text-2); line-height: 1.7;
+    margin-bottom: 32px; max-width: 400px; font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn-hero {
+    font-family: var(--font-body); font-size: 15px; font-weight: 500;
+    color: #fff; background: var(--green);
+    border: none; border-radius: var(--radius-sm);
+    padding: 13px 28px; cursor: pointer; transition: opacity 0.2s;
+  }
+  .btn-hero:hover { opacity: 0.88; }
+  .btn-hero-outline {
+    font-family: var(--font-body); font-size: 15px; font-weight: 500;
+    color: var(--text); background: transparent;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 13px 28px; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-hero-outline:hover { background: var(--surface); }
+  .hero-trust { margin-top: 28px; display: flex; align-items: center; gap: 10px; }
+  .trust-avatars { display: flex; }
+  .trust-avatars span {
+    width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--bg);
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: #fff; margin-left: -8px;
+  }
+  .trust-avatars span:first-child { margin-left: 0; }
+  .trust-avatars span:nth-child(2) { background: var(--blue); }
+  .trust-avatars span:nth-child(3) { background: var(--purple); }
+  .trust-text { font-size: 13px; color: var(--text-2); }
+  .trust-text strong { color: var(--text); font-weight: 500; }
+
+  /* HERO CARD */
+  .hero-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px; animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .card-header-label { font-size: 12px; color: var(--text-3); font-weight: 400; }
+  .card-header-live {
+    display: flex; align-items: center; gap: 5px; font-size: 11px;
+    color: var(--green); background: var(--green-light); padding: 3px 8px; border-radius: 20px;
+  }
+  .live-dot { width: 5px; height: 5px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .rate-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .rate-item:last-child { border-bottom: none; }
+  .rate-left { display: flex; align-items: center; gap: 10px; }
+  .rate-icon {
+    width: 34px; height: 34px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .rate-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .rate-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+  .rate-right { text-align: right; }
+  .rate-val { font-size: 14px; font-weight: 600; font-family: var(--font-display); color: var(--text); }
+  .rate-badge {
+    font-size: 10px; padding: 2px 7px; border-radius: 20px;
+    font-weight: 500; margin-top: 2px; display: inline-block;
+  }
+  .badge-up { background: var(--green-light); color: var(--green-dark); }
+  .card-action {
+    margin-top: 16px; width: 100%; padding: 11px;
+    background: var(--green); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-size: 14px; font-weight: 500;
+    font-family: var(--font-body); cursor: pointer; transition: opacity 0.2s;
+  }
+  .card-action:hover { opacity: 0.88; }
+
+  /* STATS */
+  .stats-bar {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .stats-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .stat-item {
+    padding: 24px 32px; border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-val { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 12px; color: var(--text-3); margin-top: 3px; }
+
+  /* SERVICES */
+  .services { padding: 72px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--green); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: 36px; font-weight: 700;
+    color: var(--text); margin-bottom: 10px; letter-spacing: -0.02em;
+  }
+  .section-sub { font-size: 15px; color: var(--text-2); max-width: 460px; line-height: 1.6; margin-bottom: 40px; font-weight: 300; }
+  .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .service-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    transition: border-color 0.2s, transform 0.2s; cursor: pointer;
+  }
+  .service-card:hover { border-color: var(--green); transform: translateY(-2px); }
+  .service-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+  .service-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .service-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; font-weight: 300; }
+  .service-arrow { margin-top: 16px; font-size: 13px; color: var(--green); font-weight: 500; }
+
+  /* HOW IT WORKS */
+  .how { padding: 72px 40px; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .how-inner { max-width: 1100px; margin: 0 auto; }
+  .how-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; margin-top: 40px; }
+  .step { display: flex; flex-direction: column; align-items: flex-start; }
+  .step-num {
+    font-family: var(--font-display); font-size: 13px; font-weight: 700;
+    color: var(--green); background: var(--green-light);
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  }
+  .step-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .step-desc { font-size: 13px; color: var(--text-2); line-height: 1.65; font-weight: 300; }
+
+  /* PAYMENT METHODS */
+  .payments { padding: 72px 40px; max-width: 1100px; margin: 0 auto; }
+  .payment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 32px; }
+  .payment-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 16px; text-align: center;
+  }
+  .payment-icon { font-size: 26px; margin-bottom: 8px; }
+  .payment-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .payment-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+  /* CTA */
+  .cta-section {
+    margin: 0 40px 72px; border-radius: 20px;
+    background: var(--green); padding: 56px 48px;
+    display: flex; justify-content: space-between; align-items: center; gap: 32px;
+  }
+  .cta-text h2 {
+    font-family: var(--font-display); font-size: 32px; font-weight: 700;
+    color: #fff; margin-bottom: 10px; letter-spacing: -0.02em;
+  }
+  .cta-text p { font-size: 15px; color: rgba(255,255,255,0.75); font-weight: 300; }
+  .cta-actions { display: flex; gap: 12px; flex-shrink: 0; }
+  .btn-cta-white {
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    color: var(--green); background: #fff;
+    border: none; border-radius: var(--radius-sm);
+    padding: 12px 24px; cursor: pointer; white-space: nowrap;
+  }
+  .btn-cta-outline {
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    color: #fff; background: transparent;
+    border: 1px solid rgba(255,255,255,0.35); border-radius: var(--radius-sm);
+    padding: 12px 24px; cursor: pointer; white-space: nowrap;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 40px; max-width: 100%;
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo { display: flex; align-items: center; gap: 8px; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--text-2); text-decoration: none; }
+  .footer-links a:hover { color: var(--text); }
+  .footer-copy { font-size: 12px; color: var(--text-3); }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 48px 20px; }
+    .hero h1 { font-size: 36px; }
+    .hero-card { display: none; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .stats-inner { grid-template-columns: repeat(2,1fr); }
+    .services, .how, .payments { padding: 48px 20px; }
+    .cta-section { margin: 0 20px 48px; flex-direction: column; padding: 36px 24px; }
+    footer { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body data-theme="light">
+<!-- ===================================================
+  index.html = THE HOMEPAGE (first page users see)
+  Flow: Homepage → Auth (sign up/login) → Dashboard
+  All "Create account" / "Get started" buttons → nexbit-auth.html  
+  All "Log in" buttons → nexbit-auth.html
+  Once logged in → redirect to nexbit-dashboard.html
+======================================================= -->
+
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#rates">Live rates</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="nexbit-fiberx.html">MTN FiberX 🌐</a></li>
+    <li><a href="#">KWCC Agency</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="toggle-theme" id="themeToggle" title="Toggle theme">🌙</button>
+    <a class="btn-ghost" href="nexbit-auth.html">Log in</a>
+    <a class="btn-primary" href="nexbit-auth.html">Get started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content fade-in">
+    <div class="hero-badge"><span></span> Airtime Exchange. Instant Cash.</div>
+    <h1>Your Airtime is<br>Worth <em>More.</em></h1>
+    <p>Sell airtime, trade gift cards, subscribe to MTN FiberX, and get instant cash — all in one platform built for Africa.</p>
+    <div class="hero-actions">
+      <a href="nexbit-auth.html" class="btn-hero" style="text-decoration:none;display:inline-block">Create free account</a>
+      <a href="#rates" class="btn-hero-outline" style="text-decoration:none;display:inline-block">See live rates →</a>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-avatars">
+        <span>AK</span><span>TF</span><span>OM</span>
+      </div>
+      <p class="trust-text"><strong>50,000+ traders</strong> across 15 African countries</p>
+    </div>
+  </div>
+
+  <!-- FLOATING RATE CARD -->
+  <div class="hero-card fade-in" id="rates" style="transition-delay:0.2s;">
+    <div class="card-header">
+      <span class="card-header-label">Live exchange rates</span>
+      <span class="card-header-live"><span class="live-dot"></span> Live</span>
+    </div>
+    <div class="rate-item">
+      <div class="rate-left">
+        <div class="rate-icon" style="background:#D6FBF3;">📱</div>
+        <div>
+          <div class="rate-name">Airtime (MTN)</div>
+          <div class="rate-sub">Sell to cash</div>
+        </div>
+      </div>
+      <div class="rate-right">
+        <div class="rate-val">75%</div>
+        <span class="rate-badge badge-up">+2%</span>
+      </div>
+    </div>
+    <div class="rate-item">
+      <div class="rate-left">
+        <div class="rate-icon" style="background:#E6F1FB;">🎁</div>
+        <div>
+          <div class="rate-name">Amazon gift card</div>
+          <div class="rate-sub">USD rate</div>
+        </div>
+      </div>
+      <div class="rate-right">
+        <div class="rate-val">₦1,560</div>
+        <span class="rate-badge badge-up">+1.2%</span>
+      </div>
+    </div>
+    <div class="rate-item">
+      <div class="rate-left">
+        <div class="rate-icon" style="background:#FAEEDA;">₿</div>
+        <div>
+          <div class="rate-name">Bitcoin</div>
+          <div class="rate-sub">BTC/NGN</div>
+        </div>
+      </div>
+      <div class="rate-right">
+        <div class="rate-val">₦98.4M</div>
+        <span class="rate-badge badge-up">+3.4%</span>
+      </div>
+    </div>
+    <div class="rate-item">
+      <div class="rate-left">
+        <div class="rate-icon" style="background:#EEEDFE;">💵</div>
+        <div>
+          <div class="rate-name">USDT</div>
+          <div class="rate-sub">Tether</div>
+        </div>
+      </div>
+      <div class="rate-right">
+        <div class="rate-val">₦1,572</div>
+        <span class="rate-badge badge-up">+0.8%</span>
+      </div>
+    </div>
+    <a href="nexbit-auth.html" class="card-action" style="text-decoration:none;display:block;text-align:center">Start trading now</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item fade-in">
+      <div class="stat-val">50K+</div>
+      <div class="stat-label">Active users</div>
+    </div>
+    <div class="stat-item fade-in" style="transition-delay:0.1s;">
+      <div class="stat-val">15</div>
+      <div class="stat-label">African countries</div>
+    </div>
+    <div class="stat-item fade-in" style="transition-delay:0.2s;">
+      <div class="stat-val">₦2B+</div>
+      <div class="stat-label">Traded monthly</div>
+    </div>
+    <div class="stat-item fade-in" style="transition-delay:0.3s;">
+      <div class="stat-val">99.9%</div>
+      <div class="stat-label">Uptime</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <p class="section-eyebrow">Our services</p>
+  <h2 class="section-title">Everything you need<br>in one place</h2>
+  <p class="section-sub">From airtime to automation — Nexbit powers your digital transactions across Africa.</p>
+  <div class="service-grid">
+    <div class="service-card fade-in">
+      <div class="service-icon" style="background:#D6FBF3;">📱</div>
+      <div class="service-name">Sell airtime</div>
+      <div class="service-desc">Convert excess airtime from any network to cash. MTN, Airtel, Glo, 9mobile. Max ₦10,000 per trade.</div>
+      <div class="service-arrow"><a href="nexbit-airtime.html" style="color:var(--green);text-decoration:none">Trade now →</a></div>
+    </div>
+    <div class="service-card fade-in" style="transition-delay:0.1s;">
+      <div class="service-icon" style="background:#E6F1FB;">🎁</div>
+      <div class="service-name">Gift cards</div>
+      <div class="service-desc">Buy and sell Amazon, iTunes, Steam, Google Play gift cards at the best rates in Africa.</div>
+      <div class="service-arrow"><a href="nexbit-auth.html" style="color:var(--green);text-decoration:none">See rates →</a></div>
+    </div>
+    <div class="service-card fade-in" style="transition-delay:0.15s;">
+      <div class="service-icon" style="background:#FAEEDA;">₿</div>
+      <div class="service-name">Crypto trading</div>
+      <div class="service-desc">Buy and sell Bitcoin, USDT and more. Fast settlements in NGN, GHS, or USDT.</div>
+      <div class="service-arrow"><a href="nexbit-auth.html" style="color:var(--green);text-decoration:none">Trade crypto →</a></div>
+    </div>
+    <div class="service-card fade-in" style="transition-delay:0.2s;">
+      <div class="service-icon" style="background:#D6FBF3;">📲</div>
+      <div class="service-name">Buy airtime</div>
+      <div class="service-desc">Top up airtime for any Nigerian network instantly. MTN, Airtel, Glo, 9mobile — any amount.</div>
+      <div class="service-arrow"><a href="nexbit-auth.html" style="color:var(--green);text-decoration:none">Buy now →</a></div>
+    </div>
+    <div class="service-card fade-in" style="transition-delay:0.25s;">
+      <div class="service-icon" style="background:#E6F1FB;">📶</div>
+      <div class="service-name">Buy data</div>
+      <div class="service-desc">Daily, weekly and monthly data bundles for MTN, Airtel, Glo and 9mobile. Fast delivery.</div>
+      <div class="service-arrow"><a href="nexbit-data.html" style="color:var(--green);text-decoration:none">Buy data →</a></div>
+    </div>
+    <div class="service-card fade-in" style="transition-delay:0.3s;border:1px solid rgba(0,200,160,.3);background:linear-gradient(135deg,rgba(0,200,160,.05),transparent)">
+      <div class="service-icon" style="background:#D6FBF3;">🌐</div>
+      <div class="service-name" style="color:var(--green)">MTN FiberX</div>
+      <div class="service-desc">Subscribe to MTN FiberX superfast internet. 50Mbps to 1Gbps. Unmatched experience.</div>
+      <div class="service-arrow"><a href="nexbit-fiberx.html" style="color:var(--green);text-decoration:none">Subscribe now →</a></div>
+    </div>
+    <div class="service-card fade-in" style="transition-delay:0.35s;">
+      <div class="service-icon" style="background:#EEEDFE;">⚡</div>
+      <div class="service-name">Smart solutions</div>
+      <div class="service-desc">Automate your business — bulk airtime, invoice tools, API access for companies.</div>
+      <div class="service-arrow"><a href="nexbit-auth.html" style="color:var(--green);text-decoration:none">Learn more →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <p class="section-eyebrow">How it works</p>
+    <h2 class="section-title">Up and running in minutes</h2>
+    <p class="section-sub">No complicated setup. No long verification. Just sign up and start trading.</p>
+    <div class="how-steps">
+      <div class="step fade-in">
+        <div class="step-num">01</div>
+        <div class="step-title">Create your account</div>
+        <div class="step-desc">Sign up with your email or phone number. Verification takes under 2 minutes.</div>
+      </div>
+      <div class="step fade-in" style="transition-delay:0.1s;">
+        <div class="step-num">02</div>
+        <div class="step-title">Fund your wallet</div>
+        <div class="step-desc">Add funds via bank transfer, USSD, card, or crypto. Multiple currencies supported.</div>
+      </div>
+      <div class="step fade-in" style="transition-delay:0.2s;">
+        <div class="step-num">03</div>
+        <div class="step-title">Choose a service</div>
+        <div class="step-desc">Pick from airtime, gift cards, crypto, or smart solutions. Rates update in real time.</div>
+      </div>
+      <div class="step fade-in" style="transition-delay:0.3s;">
+        <div class="step-num">04</div>
+        <div class="step-title">Get paid instantly</div>
+        <div class="step-desc">Funds hit your wallet or bank account within seconds. No delays, no hidden charges.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT METHODS -->
+<section class="payments">
+  <p class="section-eyebrow">Payment methods</p>
+  <h2 class="section-title">Pay any way you like</h2>
+  <p class="section-sub">We support all major payment options so you're never stuck.</p>
+  <div class="payment-grid">
+    <div class="payment-card fade-in">
+      <div class="payment-icon">🏦</div>
+      <div class="payment-name">Bank transfer</div>
+      <div class="payment-sub">All Nigerian & Ghanaian banks</div>
+    </div>
+    <div class="payment-card fade-in" style="transition-delay:0.1s;">
+      <div class="payment-icon">📟</div>
+      <div class="payment-name">USSD</div>
+      <div class="payment-sub">No internet required</div>
+    </div>
+    <div class="payment-card fade-in" style="transition-delay:0.2s;">
+      <div class="payment-icon">💳</div>
+      <div class="payment-name">Card payment</div>
+      <div class="payment-sub">Visa, Mastercard, Verve</div>
+    </div>
+    <div class="payment-card fade-in" style="transition-delay:0.3s;">
+      <div class="payment-icon">₿</div>
+      <div class="payment-name">Crypto</div>
+      <div class="payment-sub">BTC, USDT, ETH</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section fade-in">
+  <div class="cta-text">
+    <h2>Ready to start trading?</h2>
+    <p>Join 50,000+ Africans already using Nexbit to trade smarter every day.</p>
+  </div>
+  <div class="cta-actions">
+    <a href="nexbit-auth.html" class="btn-cta-white" style="text-decoration:none;display:inline-block;cursor:pointer">Create free account</a>
+    <a href="#" class="btn-cta-outline" style="text-decoration:none;display:inline-block;cursor:pointer">View agency services</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="logo-mark"><span>Nx</span></div>
+      <span class="logo-name">Nexbit</span>
+    </div>
+    <div class="footer-links">
+      <a href="#">Privacy policy</a>
+      <a href="#">Terms of service</a>
+      <a href="#">Support</a>
+      <a href="#">KWCC Agency</a>
+    </div>
+    <span class="footer-copy">© 2026 Nexbit. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const body = document.body;
+  toggle.addEventListener('click', () => {
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    toggle.textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // Session-aware nav
+  try {
+    const session = localStorage.getItem('nexbit_session');
+    if(session){
+      const loginBtn = document.querySelector('a.btn-ghost');
+      const signupBtn = document.querySelector('a.btn-primary');
+      if(loginBtn) loginBtn.style.display = 'none';
+      if(signupBtn){
+        signupBtn.textContent = '⚡ My dashboard';
+        signupBtn.href = 'nexbit-dashboard.html';
+      }
+    }
+  } catch(e){}
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
