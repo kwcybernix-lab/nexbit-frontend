@@ -327,8 +327,8 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
   </a>
   <div class="sb-bottom">
     <div class="sb-user">
-      <div class="avatar">OK</div>
-      <div><div class="sb-user-name">Omowunmi Kayode</div><div class="sb-user-email">omowunmi@email.com</div></div>
+      <div class="avatar" id="sb-user-avatar">--</div>
+      <div><div class="sb-user-name" id="sb-user-name">Loading...</div><div class="sb-user-email" id="sb-user-email"></div></div>
     </div>
   </div>
 </aside>
@@ -340,7 +340,7 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
   <div class="topbar">
     <div class="topbar-left">
       <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
-      <h1>Good morning, Omowunmi 👋</h1>
+      <h1 id="greeting-text">Good morning 👋</h1>
       <p>Monday, 18 May 2026 — Here's your account overview</p>
     </div>
     <div class="topbar-right">
@@ -349,7 +349,7 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
         🔔
         <span class="notif-dot"></span>
       </button>
-      <div class="avatar" style="cursor:pointer">OK</div>
+      <div class="avatar" style="cursor:pointer" id="topbar-avatar">--</div>
     </div>
   </div>
 
@@ -360,30 +360,30 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
     <div class="wallet-grid">
       <div class="wallet-card primary fade-up d1">
         <div class="wc-label">Total wallet balance</div>
-        <div class="wc-amount" id="balance-display">₦482,350.00</div>
-        <div class="wc-sub">≈ $298.40 USD</div>
-        <span class="wc-change up-white">↑ +₦12,400 this week</span>
+        <div class="wc-amount" id="balance-display">Loading...</div>
+        <div class="wc-sub" id="usd-equiv">≈ $0.00 USD</div>
+        <span class="wc-change up-white" id="balance-change">—</span>
         <div class="wallet-actions">
-          <button class="wa-btn solid" onclick="showToast('Deposit flow coming soon!')">+ Add funds</button>
-          <button class="wa-btn solid" onclick="showToast('Withdraw flow coming soon!')">Withdraw</button>
+          <button class="wa-btn solid" onclick="window.location.href='nexbit-wallet.html'">+ Add funds</button>
+          <button class="wa-btn solid" onclick="window.location.href='nexbit-wallet.html'">Withdraw</button>
         </div>
       </div>
       <div class="wallet-card fade-up d2">
         <div class="wc-label">Crypto balance</div>
-        <div class="wc-amount">$124.80</div>
-        <div class="wc-sub">0.00127 BTC · 42 USDT</div>
-        <span class="wc-change up">↑ +4.2% today</span>
+        <div class="wc-amount" id="crypto-balance">$0.00</div>
+        <div class="wc-sub" id="crypto-detail">0 BTC · 0 USDT</div>
+        <span class="wc-change up">Coming soon</span>
         <div class="wallet-actions">
           <button class="wa-btn outline" onclick="showToast('Crypto page coming soon!')">Trade →</button>
         </div>
       </div>
       <div class="wallet-card fade-up d3">
         <div class="wc-label">Total traded (30 days)</div>
-        <div class="wc-amount">₦1.2M</div>
-        <div class="wc-sub">38 transactions completed</div>
-        <span class="wc-change up">↑ +18% vs last month</span>
+        <div class="wc-amount" id="total-traded">₦0</div>
+        <div class="wc-sub" id="total-traded-count">0 transactions completed</div>
+        <span class="wc-change up" id="total-traded-change">—</span>
         <div class="wallet-actions">
-          <button class="wa-btn outline" onclick="showToast('Reports coming soon!')">View report →</button>
+          <button class="wa-btn outline" onclick="window.location.href='nexbit-transactions.html'">View report →</button>
         </div>
       </div>
     </div>
@@ -436,72 +436,7 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
           </div>
         </div>
         <div id="tx-list">
-          <div class="tx-item" data-type="credit">
-            <div class="tx-icon" style="background:var(--green-light)">📱</div>
-            <div class="tx-info">
-              <div class="tx-name">Airtime sale — MTN ₦5,000</div>
-              <div class="tx-meta">Today, 10:42 AM · Ref: NX-28471</div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount credit">+₦3,750</div>
-              <span class="tx-status status-done">Completed</span>
-            </div>
-          </div>
-          <div class="tx-item" data-type="credit">
-            <div class="tx-icon" style="background:var(--blue-light)">🎁</div>
-            <div class="tx-info">
-              <div class="tx-name">Amazon gift card — $50 USD</div>
-              <div class="tx-meta">Today, 08:15 AM · Ref: NX-28468</div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount credit">+₦78,000</div>
-              <span class="tx-status status-done">Completed</span>
-            </div>
-          </div>
-          <div class="tx-item" data-type="debit">
-            <div class="tx-icon" style="background:var(--amber-light)">₿</div>
-            <div class="tx-info">
-              <div class="tx-name">BTC purchase — 0.0005 BTC</div>
-              <div class="tx-meta">Yesterday, 6:30 PM · Ref: NX-28401</div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount debit">−₦49,200</div>
-              <span class="tx-status status-done">Completed</span>
-            </div>
-          </div>
-          <div class="tx-item" data-type="credit">
-            <div class="tx-icon" style="background:var(--purple-light)">💵</div>
-            <div class="tx-info">
-              <div class="tx-name">USDT sale — 30 USDT</div>
-              <div class="tx-meta">Yesterday, 2:10 PM · Ref: NX-28390</div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount credit">+₦47,160</div>
-              <span class="tx-status status-pending">Pending</span>
-            </div>
-          </div>
-          <div class="tx-item" data-type="debit">
-            <div class="tx-icon" style="background:var(--surface-2)">🏦</div>
-            <div class="tx-info">
-              <div class="tx-name">Bank withdrawal — GTBank</div>
-              <div class="tx-meta">18 May 2026, 9:00 AM · Ref: NX-28310</div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount debit">−₦100,000</div>
-              <span class="tx-status status-done">Completed</span>
-            </div>
-          </div>
-          <div class="tx-item" data-type="credit">
-            <div class="tx-icon" style="background:var(--green-light)">📱</div>
-            <div class="tx-info">
-              <div class="tx-name">Airtime sale — Airtel ₦2,000</div>
-              <div class="tx-meta">17 May 2026, 4:22 PM · Ref: NX-28290</div>
-            </div>
-            <div class="tx-right">
-              <div class="tx-amount credit">+₦1,480</div>
-              <span class="tx-status status-fail">Failed</span>
-            </div>
-          </div>
+          <div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">Loading transactions...</div>
         </div>
       </div>
 
@@ -703,6 +638,157 @@ function closeMobileSidebar(){
   document.querySelector('.sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('show');
 }
+
+// ═══════════════════════════════════════════════════════════════
+// NEXBIT — Live Backend Integration
+// ═══════════════════════════════════════════════════════════════
+const SUPABASE_URL  = 'https://qceprouiddkkzymiimxf.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZXByb3VpZGRra3p5bWlpbXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjgzMTMsImV4cCI6MjA5NjQwNDMxM30.ehg3OIW8XjbPDMh2t5ZN9yrevRdjmCN5KuAAsWXVqdo';
+const BACKEND_API_URL = 'https://api.nexbit.ng/api/v1';
+
+let supabaseClient = null;
+let currentSession = null;
+
+const fmtNaira = (n) => '₦' + Number(n || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtNairaShort = (n) => {
+  n = Number(n || 0);
+  if (n >= 1000000) return '₦' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '₦' + (n/1000).toFixed(0) + 'K';
+  return '₦' + n.toFixed(0);
+};
+const getInitials = (first, last) => ((first?.[0]||'') + (last?.[0]||'')).toUpperCase() || '??';
+const timeAgo = (dateStr) => {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  const time = d.toLocaleTimeString('en-NG', { hour: 'numeric', minute: '2-digit' });
+  if (isToday) return `Today, ${time}`;
+  const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
+  if (d.toDateString() === yesterday.toDateString()) return `Yesterday, ${time}`;
+  return d.toLocaleDateString('en-NG', { day: 'numeric', month: 'short' }) + `, ${time}`;
+};
+
+async function authedFetch(path, options = {}) {
+  if (!currentSession) throw new Error('Not authenticated');
+  const res = await fetch(`${BACKEND_API_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${currentSession.access_token}`,
+      ...(options.headers || {}),
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Request failed');
+  return data;
+}
+
+function renderUser(user) {
+  const initials = getInitials(user.first_name, user.last_name);
+  const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Nexbit User';
+  document.getElementById('sb-user-avatar').textContent = initials;
+  document.getElementById('topbar-avatar').textContent = initials;
+  document.getElementById('sb-user-name').textContent = fullName;
+  document.getElementById('sb-user-email').textContent = user.email || '';
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting-text').textContent = `${greeting}, ${user.first_name || ''} 👋`;
+}
+
+function renderWallet(wallet) {
+  const ngn = parseFloat(wallet.ngn_balance || 0);
+  const usd = parseFloat(wallet.usd_balance || 0);
+  const btc = parseFloat(wallet.btc_balance || 0);
+  const usdt = parseFloat(wallet.usdt_balance || 0);
+
+  document.getElementById('balance-display').textContent = fmtNaira(ngn);
+  document.getElementById('usd-equiv').textContent = `≈ $${(ngn / 1572).toFixed(2)} USD`;
+  document.getElementById('crypto-balance').textContent = '$' + ((btc * 98400000 + usdt * 1572) / 1572).toFixed(2);
+  document.getElementById('crypto-detail').textContent = `${btc.toFixed(8)} BTC · ${usdt.toFixed(2)} USDT`;
+}
+
+function renderSummary(summary) {
+  const totalTraded = parseFloat(summary.total_received || 0) + parseFloat(summary.total_spent || 0);
+  document.getElementById('total-traded').textContent = fmtNairaShort(totalTraded);
+  document.getElementById('total-traded-count').textContent = `${summary.completed_count || 0} transactions completed`;
+  document.getElementById('total-traded-change').textContent = summary.completed_count > 0 ? `${summary.completed_count} completed` : 'No trades yet';
+}
+
+function renderTransactions(transactions) {
+  const list = document.getElementById('tx-list');
+  if (!transactions || !transactions.length) {
+    list.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">No transactions yet.<br>Start trading to see activity here.</div>`;
+    return;
+  }
+
+  const typeIcons = {
+    fund: '📥', withdraw: '🏦', credit: '💰', debit: '💸',
+    trade_credit: '📱', trade_debit: '📤', fee: '⚙️', refund: '↩️', bonus: '🎁',
+  };
+  const typeColors = {
+    fund: 'var(--green-light)', withdraw: 'var(--surface-2)', credit: 'var(--green-light)',
+    debit: 'var(--surface-2)', trade_credit: 'var(--green-light)', trade_debit: 'var(--amber-light)',
+    fee: 'var(--surface-2)', refund: 'var(--blue-light)', bonus: 'var(--purple-light)',
+  };
+  const statusClass = { completed: 'status-done', pending: 'status-pending', failed: 'status-fail', reversed: 'status-fail' };
+  const statusLabel = { completed: 'Completed', pending: 'Pending', failed: 'Failed', reversed: 'Reversed' };
+  const isCredit = (t) => ['credit','fund','trade_credit','refund','bonus'].includes(t);
+
+  list.innerHTML = transactions.map(tx => `
+    <div class="tx-item" data-type="${isCredit(tx.type) ? 'credit' : 'debit'}">
+      <div class="tx-icon" style="background:${typeColors[tx.type] || 'var(--surface-2)'}">${typeIcons[tx.type] || '💳'}</div>
+      <div class="tx-info">
+        <div class="tx-name">${tx.description || tx.type}</div>
+        <div class="tx-meta">${timeAgo(tx.created_at)} · Ref: ${tx.reference}</div>
+      </div>
+      <div class="tx-right">
+        <div class="tx-amount ${isCredit(tx.type) ? 'credit' : 'debit'}">${isCredit(tx.type) ? '+' : '−'}${fmtNaira(tx.amount)}</div>
+        <span class="tx-status ${statusClass[tx.status] || 'status-pending'}">${statusLabel[tx.status] || tx.status}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function loadDashboardData() {
+  try {
+    const walletRes = await authedFetch('/wallet');
+    renderWallet(walletRes.data.wallet);
+    renderSummary(walletRes.data.summary);
+    renderTransactions(walletRes.data.recent_transactions);
+  } catch (err) {
+    console.error('Dashboard load error:', err);
+    showToast('Could not load data', err.message || 'Please refresh the page.', '⚠️');
+    document.getElementById('tx-list').innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">Could not load transactions.</div>`;
+  }
+}
+
+async function initNexbitAuth() {
+  const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+    window.location.href = 'nexbit-auth.html';
+    return;
+  }
+
+  currentSession = session;
+
+  try {
+    const meRes = await authedFetch('/users/me');
+    renderUser(meRes.data);
+  } catch (err) {
+    console.error('User load error:', err);
+    window.location.href = 'nexbit-auth.html';
+    return;
+  }
+
+  await loadDashboardData();
+}
+
+initNexbitAuth();
 </script>
 </body>
 </html>
