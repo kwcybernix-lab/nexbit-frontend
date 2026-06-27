@@ -316,7 +316,7 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     Settings
   </a>
-  <a class="sb-item" href="nexbit-auth.html">
+  <a class="sb-item" href="#" onclick="handleLogout(event)">
     <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
     Log out
   </a>
@@ -341,7 +341,7 @@ body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:fl
     <div class="topbar-left">
       <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
       <h1 id="greeting-text">Good morning 👋</h1>
-      <p>Monday, 18 May 2026 — Here's your account overview</p>
+      <p id="date-display">Loading date...</p>
     </div>
     <div class="topbar-right">
       <button class="tb-btn tb-theme" id="themeToggle" title="Toggle theme">🌙</button>
@@ -669,18 +669,42 @@ const timeAgo = (dateStr) => {
 };
 
 async function authedFetch(path, options = {}) {
-  if (!currentSession) throw new Error('Not authenticated');
-  const res = await fetch(`${BACKEND_API_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${currentSession.access_token}`,
-      ...(options.headers || {}),
-    },
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
+  if (!currentSession) throw new Error('Not authenticated — no session found.');
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second hard timeout
+
+  try {
+    const res = await fetch(`${BACKEND_API_URL}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentSession.access_token}`,
+        ...(options.headers || {}),
+      },
+    });
+    clearTimeout(timeoutId);
+
+    let data;
+    try {
+      data = await res.json();
+    } catch (parseErr) {
+      throw new Error(`Server returned non-JSON response (status ${res.status}). Endpoint may be wrong or down.`);
+    }
+
+    if (!res.ok) throw new Error(data.message || `Request failed with status ${res.status}`);
+    return data;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out after 10 seconds. Backend may be unreachable or CORS-blocked.');
+    }
+    if (err.message === 'Failed to fetch') {
+      throw new Error('Network error — could not reach backend. Likely CORS or DNS issue with api.nexbit.ng.');
+    }
+    throw err;
+  }
 }
 
 function renderUser(user) {
@@ -691,9 +715,13 @@ function renderUser(user) {
   document.getElementById('sb-user-name').textContent = fullName;
   document.getElementById('sb-user-email').textContent = user.email || '';
 
-  const hour = new Date().getHours();
+  const now = new Date();
+  const hour = now.getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('greeting-text').textContent = `${greeting}, ${user.first_name || ''} 👋`;
+
+  const dateStr = now.toLocaleDateString('en-NG', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('date-display').textContent = `${dateStr} — Here's your account overview`;
 }
 
 function renderWallet(wallet) {
@@ -766,10 +794,21 @@ async function loadDashboardData() {
 
 async function initNexbitAuth() {
   try {
-    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+    let createClient;
+    try {
+      const mod = await Promise.race([
+        import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Supabase script failed to load within 8 seconds. Check internet connection or CDN block.')), 8000)),
+      ]);
+      createClient = mod.createClient;
+    } catch (importErr) {
+      throw new Error('SUPABASE IMPORT FAILED: ' + importErr.message);
+    }
+
     supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+    if (sessionError) throw new Error('SESSION CHECK FAILED: ' + sessionError.message);
 
     if (!session) {
       window.location.href = 'nexbit-auth.html';
@@ -784,6 +823,7 @@ async function initNexbitAuth() {
     } catch (err) {
       console.error('User load error:', err);
       document.getElementById('balance-display').textContent = '⚠️ Error';
+      document.getElementById('date-display').textContent = '—';
       document.getElementById('tx-list').innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:12px;word-break:break-all">DEBUG ERROR (user load):<br><strong style="color:var(--red)">${err.message}</strong></div>`;
       return;
     }
@@ -792,8 +832,20 @@ async function initNexbitAuth() {
   } catch (outerErr) {
     console.error('Init error:', outerErr);
     document.getElementById('balance-display').textContent = '⚠️ Error';
+    document.getElementById('date-display').textContent = '—';
     document.getElementById('tx-list').innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:12px;word-break:break-all">DEBUG ERROR (init):<br><strong style="color:var(--red)">${outerErr.message}</strong></div>`;
   }
+}
+
+async function handleLogout(e) {
+  e.preventDefault();
+  try {
+    if (supabaseClient) await supabaseClient.auth.signOut();
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+  localStorage.removeItem('nexbit_session');
+  window.location.href = 'nexbit-auth.html';
 }
 
 initNexbitAuth();
