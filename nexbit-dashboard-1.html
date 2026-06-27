@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexbit — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00C8A0;--teal-light:#D6FBF3;--teal-dark:#004D3A;
+    --blue:#378ADD;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+    --amber:#BA7517;--amber-light:#FAEEDA;--amber-dark:#633806;
+    --purple:#7F77DD;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --yellow:#F5C518;--yellow-light:rgba(245,197,24,.12);
+    /* LIGHT MODE (default) */
+    --bg:#F0FAF7;
+    --surface:#FFFFFF;
+    --surface-2:#F4FBF8;
+    --border:rgba(0,0,0,0.08);
+    --border-2:rgba(0,200,160,0.25);
+    --text:#0D1F1A;
+    --text-2:#4A6058;
+    --text-3:#8AA39A;
+    --green:var(--teal);
+    --green-light:var(--teal-light);
+    --green-dark:var(--teal-dark);
+  }
+  [data-theme="dark"] {
+    --bg:#060D0B;
+    --surface:#0C1612;
+    --surface-2:#111F19;
+    --border:rgba(0,200,160,0.1);
+    --border-2:rgba(0,200,160,0.22);
+    --text:#E8FBF5;
+    --text-2:#7AB8A8;
+    --text-3:#3D6055;
+  }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+
+
+
+body{font-family:var(--font-b);background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:4px 8px;margin-bottom:28px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center}
+.logo-mark span{color:#fff;font-family:var(--font-d);font-size:13px;font-weight:700}
+.logo-name{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.logo-tag{font-size:9px;font-weight:600;letter-spacing:.08em;background:var(--green-light);color:var(--green-dark);padding:2px 6px;border-radius:20px}
+
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-3);text-transform:uppercase;padding:0 8px;margin:16px 0 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;text-decoration:none;color:var(--text-2);font-size:13px;font-weight:400;margin-bottom:2px}
+.sb-item:hover{background:var(--surface-2);color:var(--text)}
+.sb-item.active{background:var(--green-light);color:var(--green-dark);font-weight:500}
+.sb-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sb-badge{margin-left:auto;font-size:10px;background:var(--green);color:#fff;padding:1px 7px;border-radius:20px}
+
+.sb-bottom{margin-top:auto}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer}
+.sb-user:hover{background:var(--surface-2)}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-user-name{font-size:13px;font-weight:500;color:var(--text)}
+.sb-user-email{font-size:11px;color:var(--text-3)}
+.sb-user-arrow{margin-left:auto;font-size:14px;color:var(--text-3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* TOPBAR */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+}
+.topbar-left h1{font-family:var(--font-d);font-size:18px;font-weight:700;color:var(--text)}
+.topbar-left p{font-size:12px;color:var(--text-3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{
+  width:36px;height:36px;border-radius:var(--r-sm);border:1px solid var(--border);
+  background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;position:relative;
+}
+.tb-btn:hover{background:var(--surface-2)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+.tb-theme{cursor:pointer}
+
+/* CONTENT */
+.content{padding:24px 28px;flex:1}
+
+/* WALLET SECTION */
+.wallet-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px}
+.wallet-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;
+}
+.wallet-card.primary{background:var(--green);border-color:var(--green)}
+.wc-label{font-size:11px;font-weight:500;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;margin-bottom:10px}
+.wallet-card.primary .wc-label{color:rgba(255,255,255,.65)}
+.wc-amount{font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.wallet-card.primary .wc-amount{color:#fff}
+.wc-sub{font-size:12px;color:var(--text-3);margin-top:4px}
+.wallet-card.primary .wc-sub{color:rgba(255,255,255,.6)}
+.wc-change{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;margin-top:10px;padding:3px 8px;border-radius:20px}
+.wc-change.up{background:var(--green-light);color:var(--green-dark)}
+.wc-change.up-white{background:rgba(255,255,255,.18);color:#fff}
+.wc-change.down{background:var(--red-light);color:var(--red)}
+.wallet-actions{display:flex;gap:8px;margin-top:14px}
+.wa-btn{
+  flex:1;padding:8px;border-radius:var(--r-sm);font-size:12px;font-weight:500;
+  font-family:var(--font-b);cursor:pointer;border:none;transition:opacity .2s;
+}
+.wa-btn.solid{background:rgba(255,255,255,.25);color:#fff}
+.wa-btn.solid:hover{background:rgba(255,255,255,.35)}
+.wa-btn.outline{background:transparent;border:1px solid var(--border);color:var(--text-2)}
+.wa-btn.outline:hover{background:var(--surface-2)}
+
+/* QUICK TRADE */
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--text)}
+.section-link{font-size:12px;color:var(--green);text-decoration:none;font-weight:500}
+
+.trade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.trade-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;cursor:pointer;transition:border-color .2s,transform .2s;text-align:center;
+}
+.trade-card:hover{border-color:var(--green);transform:translateY(-2px)}
+.tc-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 10px}
+.tc-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.tc-rate{font-size:11px;color:var(--text-3)}
+.tc-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;margin-top:6px;font-weight:500}
+
+/* TWO COL LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:16px}
+
+/* TRANSACTIONS */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--font-d);font-size:14px;font-weight:700;color:var(--text)}
+.filter-tabs{display:flex;gap:4px}
+.f-tab{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;font-family:var(--font-b);transition:all .15s}
+.f-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+.tx-item{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer}
+.tx-item:last-child{border-bottom:none}
+.tx-item:hover{background:var(--surface-2)}
+.tx-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tx-info{flex:1;min-width:0}
+.tx-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{font-size:11px;color:var(--text-3);margin-top:2px}
+.tx-right{text-align:right;flex-shrink:0}
+.tx-amount{font-size:13px;font-weight:500;font-family:var(--font-d)}
+.tx-amount.credit{color:var(--green)}
+.tx-amount.debit{color:var(--text)}
+.tx-status{font-size:10px;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;font-weight:500}
+.status-done{background:var(--green-light);color:var(--green-dark)}
+.status-pending{background:var(--amber-light);color:var(--amber-dark)}
+.status-fail{background:var(--red-light);color:var(--red)}
+
+/* QUICK TRADE PANEL */
+.trade-panel{display:flex;flex-direction:column;gap:0}
+.trade-form{padding:20px}
+.trade-select-row{display:flex;gap:8px;margin-bottom:16px}
+.ts-btn{flex:1;padding:8px;border-radius:var(--r-sm);font-size:12px;font-weight:500;font-family:var(--font-b);cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-2);transition:all .15s}
+.ts-btn.active{background:var(--green-light);color:var(--green-dark);border-color:var(--green)}
+.trade-input-label{font-size:11px;font-weight:500;color:var(--text-2);margin-bottom:6px;display:block;letter-spacing:.03em}
+.trade-input-wrap{position:relative;margin-bottom:12px}
+.trade-input{
+  width:100%;padding:12px 14px;font-family:var(--font-b);font-size:15px;font-weight:500;
+  color:var(--text);background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-sm);outline:none;transition:border-color .2s;
+}
+.trade-input:focus{border-color:var(--green)}
+.trade-input-suffix{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-3);font-weight:500}
+.trade-type-select{
+  width:100%;padding:10px 14px;font-family:var(--font-b);font-size:13px;
+  color:var(--text);background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-sm);outline:none;margin-bottom:12px;-webkit-appearance:none;
+}
+.trade-type-select:focus{border-color:var(--green)}
+.rate-preview{background:var(--surface-2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:14px}
+.rate-preview-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.rate-preview-row:last-child{margin-bottom:0}
+.rp-label{font-size:11px;color:var(--text-3)}
+.rp-val{font-size:12px;font-weight:500;color:var(--text)}
+.rp-val.highlight{color:var(--green);font-family:var(--font-d)}
+.trade-submit{
+  width:100%;padding:12px;background:var(--green);color:#fff;border:none;
+  border-radius:var(--r-sm);font-size:14px;font-weight:500;font-family:var(--font-b);
+  cursor:pointer;transition:opacity .2s;
+}
+.trade-submit:hover{opacity:.88}
+
+/* LIVE RATES MINI */
+.rates-mini{padding:16px 20px}
+.rate-mini-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.rate-mini-item:last-child{border-bottom:none}
+.rmi-left{display:flex;align-items:center;gap:8px}
+.rmi-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.rmi-name{font-size:12px;color:var(--text-2)}
+.rmi-right{display:flex;align-items:center;gap:8px}
+.rmi-val{font-size:12px;font-weight:500;color:var(--text);font-family:var(--font-d)}
+.rmi-change{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500}
+.ch-up{background:var(--green-light);color:var(--green-dark)}
+.ch-down{background:var(--red-light);color:var(--red)}
+
+/* NOTIFICATION TOAST */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 18px;display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,.1);z-index:999;
+  transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;
+}
+.toast.show{transform:none;opacity:1}
+.toast-icon{width:32px;height:32px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.toast-text{font-size:13px;color:var(--text);font-weight:500}
+.toast-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+
+/* ANIM */
+.fade-up{opacity:0;transform:translateY(16px);animation:fadeUp .5s forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}.d5{animation-delay:.25s}.d6{animation-delay:.3s}
+
+@media(max-width:900px){
+  
+  .wallet-grid{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .trade-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  .wallet-grid{grid-template-columns:1fr}
+  .content{padding:16px}
+  .topbar{padding:12px 16px}
+}
+
+/* MOBILE SIDEBAR DRAWER */
+.mobile-menu-btn{display:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;align-items:center;justify-content:center;font-size:20px}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998}
+.sidebar-overlay.show{display:block}
+@media(max-width:900px){
+  .mobile-menu-btn{display:flex}
+  .sidebar{
+    display:flex !important;
+    position:fixed; top:0; left:0; height:100vh; z-index:999;
+    transform:translateX(-100%); transition:transform .25s ease;
+  }
+  .sidebar.open{transform:translateX(0)}
+}
+
+</style>
+</head>
+<body data-theme="light">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-mark"><span>Nx</span></div>
+    <span class="logo-name">Nexbit</span>
+    <span class="logo-tag">TRADE</span>
+  </div>
+  <div class="sb-section">Main</div>
+  <a class="sb-item active" href="nexbit-dashboard.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </a>
+  <a class="sb-item" href="nexbit-wallet.html">
+    <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8L5 7h14l-3-4z"/></svg>
+    Wallet
+  </a>
+  <a class="sb-item" href="nexbit-transactions.html">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    Transactions<span class="sb-badge">3</span>
+  </a>
+  <div class="sb-section">Trade</div>
+  <a class="sb-item" href="nexbit-airtime.html">
+    <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Sell airtime
+  </a>
+  <a class="sb-item" href="nexbit-data.html">
+    <svg viewBox="0 0 24 24"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/><path d="M13 6l5 5 5-5M13 12l5 5 5-5"/></svg>
+    Buy data
+  </a>
+  <a class="sb-item" href="nexbit-fiberx.html">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    MTN FiberX
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M20 12V8H4v12a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M20 8l-4-4H6a2 2 0 00-2 2v2"/><path d="M16 1l4 4-4 4"/></svg>
+    Gift cards<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Crypto<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <a class="sb-item" href="#">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Smart solutions<span style="margin-left:auto;font-size:9px;background:var(--text-3);color:var(--surface);padding:1px 6px;border-radius:20px">Soon</span>
+  </a>
+  <div class="sb-section">Account</div>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Profile
+  </a>
+  <a class="sb-item" href="nexbit-profile.html">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    Settings
+  </a>
+  <a class="sb-item" href="nexbit-auth.html">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Log out
+  </a>
+  <div class="sb-section">Support</div>
+  <a class="sb-item" href="https://wa.me/2348144340189?text=Hello%20Nexbit%20Support%2C%20my%20name%20is%20..." target="_blank" style="color:#25D366">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    WhatsApp Support
+  </a>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="avatar" id="sb-user-avatar">--</div>
+      <div><div class="sb-user-name" id="sb-user-name">Loading...</div><div class="sb-user-email" id="sb-user-email"></div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
+      <h1 id="greeting-text">Good morning 👋</h1>
+      <p>Monday, 18 May 2026 — Here's your account overview</p>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn tb-theme" id="themeToggle" title="Toggle theme">🌙</button>
+      <button class="tb-btn" title="Notifications">
+        🔔
+        <span class="notif-dot"></span>
+      </button>
+      <div class="avatar" style="cursor:pointer" id="topbar-avatar">--</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- WALLET CARDS -->
+    <div class="wallet-grid">
+      <div class="wallet-card primary fade-up d1">
+        <div class="wc-label">Total wallet balance</div>
+        <div class="wc-amount" id="balance-display">Loading...</div>
+        <div class="wc-sub" id="usd-equiv">≈ $0.00 USD</div>
+        <span class="wc-change up-white" id="balance-change">—</span>
+        <div class="wallet-actions">
+          <button class="wa-btn solid" onclick="window.location.href='nexbit-wallet.html'">+ Add funds</button>
+          <button class="wa-btn solid" onclick="window.location.href='nexbit-wallet.html'">Withdraw</button>
+        </div>
+      </div>
+      <div class="wallet-card fade-up d2">
+        <div class="wc-label">Crypto balance</div>
+        <div class="wc-amount" id="crypto-balance">$0.00</div>
+        <div class="wc-sub" id="crypto-detail">0 BTC · 0 USDT</div>
+        <span class="wc-change up">Coming soon</span>
+        <div class="wallet-actions">
+          <button class="wa-btn outline" onclick="showToast('Crypto page coming soon!')">Trade →</button>
+        </div>
+      </div>
+      <div class="wallet-card fade-up d3">
+        <div class="wc-label">Total traded (30 days)</div>
+        <div class="wc-amount" id="total-traded">₦0</div>
+        <div class="wc-sub" id="total-traded-count">0 transactions completed</div>
+        <span class="wc-change up" id="total-traded-change">—</span>
+        <div class="wallet-actions">
+          <button class="wa-btn outline" onclick="window.location.href='nexbit-transactions.html'">View report →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK TRADE ROW LABEL -->
+    <div class="section-row fade-up d4">
+      <span class="section-title">Quick trade</span>
+      <a class="section-link" href="index.html">See all services →</a>
+    </div>
+
+    <!-- QUICK TRADE CARDS -->
+    <div class="trade-grid fade-up d4">
+      <div class="trade-card" onclick="window.location.href='nexbit-airtime.html'">
+        <div class="tc-icon" style="background:var(--green-light)">📱</div>
+        <div class="tc-name">Sell airtime</div>
+        <div class="tc-rate">MTN · 75%</div>
+        <span class="tc-badge" style="background:var(--green-light);color:var(--green-dark)">↑ +2%</span>
+      </div>
+      <div class="trade-card" onclick="window.location.href='nexbit-auth.html'">
+        <div class="tc-icon" style="background:var(--blue-light)">🎁</div>
+        <div class="tc-name">Gift cards</div>
+        <div class="tc-rate">Amazon · ₦1,560/USD</div>
+        <span class="tc-badge" style="background:var(--blue-light);color:var(--blue-dark)">↑ +1.2%</span>
+      </div>
+      <div class="trade-card" onclick="window.location.href='nexbit-fiberx.html'" style="border-color:rgba(0,200,160,.25);background:linear-gradient(135deg,rgba(0,200,160,.04),transparent)">
+        <div class="tc-icon" style="background:var(--green-light)">🌐</div>
+        <div class="tc-name" style="color:var(--green)">MTN FiberX</div>
+        <div class="tc-rate">50Mbps – 1Gbps</div>
+        <span class="tc-badge" style="background:var(--green-light);color:var(--green-dark)">From ₦29,500</span>
+      </div>
+      <div class="trade-card" onclick="window.location.href='nexbit-data.html'">
+        <div class="tc-icon" style="background:var(--blue-light)">📶</div>
+        <div class="tc-name">Buy data</div>
+        <div class="tc-rate">All networks</div>
+        <span class="tc-badge" style="background:var(--blue-light);color:var(--blue-dark)">From ₦100</span>
+      </div>
+    </div>
+
+    <!-- TWO COL: TRANSACTIONS + TRADE PANEL -->
+    <div class="two-col fade-up d5">
+
+      <!-- TRANSACTIONS -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Recent transactions</span>
+          <div class="filter-tabs">
+            <button class="f-tab active" onclick="filterTx('all',this)">All</button>
+            <button class="f-tab" onclick="filterTx('credit',this)">Credit</button>
+            <button class="f-tab" onclick="filterTx('debit',this)">Debit</button>
+          </div>
+        </div>
+        <div id="tx-list">
+          <div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">Loading transactions...</div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- SERVICE SHORTCUTS -->
+        <div class="panel trade-panel">
+          <div class="panel-header">
+            <span class="panel-title">Services</span>
+            <span style="font-size:11px;color:var(--green);font-weight:500">Quick access</span>
+          </div>
+          <div style="padding:8px">
+
+            <!-- Sell airtime -->
+            <a href="nexbit-airtime.html" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--r-sm);text-decoration:none;transition:background .15s;margin-bottom:4px;border:1px solid var(--border)" onmouseover="this.style.background='var(--green-light)'" onmouseout="this.style.background='transparent'">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📱</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Sell airtime</div>
+                <div style="font-size:11px;color:var(--text-3)">Convert airtime to cash · Max ₦10,000</div>
+              </div>
+              <span style="color:var(--green);font-size:16px">→</span>
+            </a>
+
+            <!-- Buy data -->
+            <a href="nexbit-data.html" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--r-sm);text-decoration:none;transition:background .15s;margin-bottom:4px;border:1px solid var(--border)" onmouseover="this.style.background='var(--green-light)'" onmouseout="this.style.background='transparent'">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📶</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Buy data</div>
+                <div style="font-size:11px;color:var(--text-3)">MTN, Airtel, Glo, 9mobile bundles</div>
+              </div>
+              <span style="color:var(--green);font-size:16px">→</span>
+            </a>
+
+            <!-- MTN FiberX -->
+            <a href="nexbit-fiberx.html" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--r-sm);text-decoration:none;transition:background .15s;margin-bottom:4px;border:1px solid rgba(0,200,160,.25);background:rgba(0,200,160,.03)" onmouseover="this.style.background='var(--green-light)'" onmouseout="this.style.background='rgba(0,200,160,.03)'">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🌐</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:2px">MTN FiberX</div>
+                <div style="font-size:11px;color:var(--text-3)">50Mbps – 1Gbps · From ₦29,500</div>
+              </div>
+              <span style="color:var(--green);font-size:16px">→</span>
+            </a>
+
+            <!-- Gift cards (coming soon) -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--r-sm);margin-bottom:4px;border:1px solid var(--border);opacity:.55;cursor:not-allowed">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎁</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Gift cards</div>
+                <div style="font-size:11px;color:var(--text-3)">Buy & sell · Coming soon</div>
+              </div>
+              <span style="font-size:9px;font-weight:700;background:var(--text-3);color:var(--surface);padding:2px 7px;border-radius:20px">Soon</span>
+            </div>
+
+            <!-- Crypto (coming soon) -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--r-sm);border:1px solid var(--border);opacity:.55;cursor:not-allowed">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--amber-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">₿</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Crypto trading</div>
+                <div style="font-size:11px;color:var(--text-3)">BTC, USDT · Coming soon</div>
+              </div>
+              <span style="font-size:9px;font-weight:700;background:var(--text-3);color:var(--surface);padding:2px 7px;border-radius:20px">Soon</span>
+            </div>
+
+          </div>
+        </div>
+
+        
+        <!-- LIVE RATES<!-- LIVE RATES -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Live rates</span>
+            <span style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px">
+              <span style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span>
+              Live
+            </span>
+          </div>
+          <div class="rates-mini">
+            <div class="rate-mini-item">
+              <div class="rmi-left"><span class="rmi-dot" style="background:var(--green)"></span><span class="rmi-name">MTN Airtime</span></div>
+              <div class="rmi-right"><span class="rmi-val">75%</span><span class="rmi-change ch-up">+2%</span></div>
+            </div>
+            <div class="rate-mini-item">
+              <div class="rmi-left"><span class="rmi-dot" style="background:var(--blue)"></span><span class="rmi-name">Amazon GC</span></div>
+              <div class="rmi-right"><span class="rmi-val">₦1,560</span><span class="rmi-change ch-up">+1.2%</span></div>
+            </div>
+            <div class="rate-mini-item">
+              <div class="rmi-left"><span class="rmi-dot" style="background:var(--amber)"></span><span class="rmi-name">Bitcoin</span></div>
+              <div class="rmi-right"><span class="rmi-val">₦98.4M</span><span class="rmi-change ch-up">+3.4%</span></div>
+            </div>
+            <div class="rate-mini-item">
+              <div class="rmi-left"><span class="rmi-dot" style="background:var(--purple)"></span><span class="rmi-name">USDT</span></div>
+              <div class="rmi-right"><span class="rmi-val">₦1,572</span><span class="rmi-change ch-up">+0.8%</span></div>
+            </div>
+            <div class="rate-mini-item">
+              <div class="rmi-left"><span class="rmi-dot" style="background:#D4537E"></span><span class="rmi-name">iTunes GC</span></div>
+              <div class="rmi-right"><span class="rmi-val">₦1,490</span><span class="rmi-change ch-down">−0.5%</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div>
+    <div class="toast-text" id="toast-text">Trade submitted!</div>
+    <div class="toast-sub" id="toast-sub">Your transaction is being processed.</div>
+  </div>
+</div>
+
+<style>
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+
+<script>
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+});
+
+const rates = {
+  airtime:{rate:.75,label:'75% of face value',suffix:'NGN',time:'Instant'},
+  airtel:{rate:.72,label:'72% of face value',suffix:'NGN',time:'Instant'},
+  glo:{rate:.70,label:'70% of face value',suffix:'NGN',time:'Instant'},
+  amazon:{rate:1560,label:'₦1,560 per USD',suffix:'USD',time:'< 5 mins'},
+  itunes:{rate:1490,label:'₦1,490 per USD',suffix:'USD',time:'< 5 mins'},
+  steam:{rate:1420,label:'₦1,420 per USD',suffix:'USD',time:'< 10 mins'},
+  bitcoin:{rate:98400000,label:'₦98,400,000 per BTC',suffix:'BTC',time:'< 15 mins'},
+  usdt:{rate:1572,label:'₦1,572 per USDT',suffix:'USDT',time:'Instant'},
+};
+
+function updateRate(){
+  const type = document.getElementById('trade-select').value;
+  const amt = parseFloat(document.getElementById('trade-amount').value)||0;
+  const r = rates[type];
+  document.getElementById('rate-display').textContent = r.label;
+  document.getElementById('amount-suffix').textContent = r.suffix;
+  const recv = amt * r.rate;
+  document.getElementById('receive-display').textContent = recv > 0 ? '₦' + recv.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2}) : '₦0.00';
+}
+
+function setMode(mode){
+  document.getElementById('ts-sell').classList.toggle('active', mode==='sell');
+  document.getElementById('ts-buy').classList.toggle('active', mode==='buy');
+  updateRate();
+}
+
+function setTradeType(type){
+  const map={airtime:'airtime',giftcard:'amazon',bitcoin:'bitcoin',usdt:'usdt'};
+  document.getElementById('trade-select').value = map[type]||type;
+  updateRate();
+  document.getElementById('trade-type-label').textContent =
+    {airtime:'Sell airtime',giftcard:'Gift cards',bitcoin:'Bitcoin',usdt:'USDT'}[type]||type;
+  document.getElementById('trade-amount').focus();
+}
+
+function submitTrade(){
+  const amt = parseFloat(document.getElementById('trade-amount').value)||0;
+  if(!amt){showToast('Please enter an amount to trade.','Enter a valid amount first.','⚠️');return;}
+  const recv = document.getElementById('receive-display').textContent;
+  showToast('Trade submitted!', 'You will receive ' + recv + ' shortly.');
+  document.getElementById('trade-amount').value='';
+  updateRate();
+}
+
+function showToast(text, sub='Your transaction is being processed.', icon='✅'){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-text').textContent=text;
+  document.getElementById('toast-sub').textContent=sub;
+  t.querySelector('.toast-icon').textContent=icon;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function filterTx(type, btn){
+  document.querySelectorAll('.f-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tx-item').forEach(item=>{
+    item.style.display = (type==='all'||item.dataset.type===type)?'flex':'none';
+  });
+}
+
+updateRate();
+
+function toggleMobileSidebar(){
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+function closeMobileSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NEXBIT — Live Backend Integration
+// ═══════════════════════════════════════════════════════════════
+const SUPABASE_URL  = 'https://qceprouiddkkzymiimxf.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjZXByb3VpZGRra3p5bWlpbXhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjgzMTMsImV4cCI6MjA5NjQwNDMxM30.ehg3OIW8XjbPDMh2t5ZN9yrevRdjmCN5KuAAsWXVqdo';
+const BACKEND_API_URL = 'https://api.nexbit.ng/api/v1';
+
+let supabaseClient = null;
+let currentSession = null;
+
+const fmtNaira = (n) => '₦' + Number(n || 0).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtNairaShort = (n) => {
+  n = Number(n || 0);
+  if (n >= 1000000) return '₦' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '₦' + (n/1000).toFixed(0) + 'K';
+  return '₦' + n.toFixed(0);
+};
+const getInitials = (first, last) => ((first?.[0]||'') + (last?.[0]||'')).toUpperCase() || '??';
+const timeAgo = (dateStr) => {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  const time = d.toLocaleTimeString('en-NG', { hour: 'numeric', minute: '2-digit' });
+  if (isToday) return `Today, ${time}`;
+  const yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
+  if (d.toDateString() === yesterday.toDateString()) return `Yesterday, ${time}`;
+  return d.toLocaleDateString('en-NG', { day: 'numeric', month: 'short' }) + `, ${time}`;
+};
+
+async function authedFetch(path, options = {}) {
+  if (!currentSession) throw new Error('Not authenticated');
+  const res = await fetch(`${BACKEND_API_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${currentSession.access_token}`,
+      ...(options.headers || {}),
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Request failed');
+  return data;
+}
+
+function renderUser(user) {
+  const initials = getInitials(user.first_name, user.last_name);
+  const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Nexbit User';
+  document.getElementById('sb-user-avatar').textContent = initials;
+  document.getElementById('topbar-avatar').textContent = initials;
+  document.getElementById('sb-user-name').textContent = fullName;
+  document.getElementById('sb-user-email').textContent = user.email || '';
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting-text').textContent = `${greeting}, ${user.first_name || ''} 👋`;
+}
+
+function renderWallet(wallet) {
+  const ngn = parseFloat(wallet.ngn_balance || 0);
+  const usd = parseFloat(wallet.usd_balance || 0);
+  const btc = parseFloat(wallet.btc_balance || 0);
+  const usdt = parseFloat(wallet.usdt_balance || 0);
+
+  document.getElementById('balance-display').textContent = fmtNaira(ngn);
+  document.getElementById('usd-equiv').textContent = `≈ $${(ngn / 1572).toFixed(2)} USD`;
+  document.getElementById('crypto-balance').textContent = '$' + ((btc * 98400000 + usdt * 1572) / 1572).toFixed(2);
+  document.getElementById('crypto-detail').textContent = `${btc.toFixed(8)} BTC · ${usdt.toFixed(2)} USDT`;
+}
+
+function renderSummary(summary) {
+  const totalTraded = parseFloat(summary.total_received || 0) + parseFloat(summary.total_spent || 0);
+  document.getElementById('total-traded').textContent = fmtNairaShort(totalTraded);
+  document.getElementById('total-traded-count').textContent = `${summary.completed_count || 0} transactions completed`;
+  document.getElementById('total-traded-change').textContent = summary.completed_count > 0 ? `${summary.completed_count} completed` : 'No trades yet';
+}
+
+function renderTransactions(transactions) {
+  const list = document.getElementById('tx-list');
+  if (!transactions || !transactions.length) {
+    list.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-3);font-size:13px">No transactions yet.<br>Start trading to see activity here.</div>`;
+    return;
+  }
+
+  const typeIcons = {
+    fund: '📥', withdraw: '🏦', credit: '💰', debit: '💸',
+    trade_credit: '📱', trade_debit: '📤', fee: '⚙️', refund: '↩️', bonus: '🎁',
+  };
+  const typeColors = {
+    fund: 'var(--green-light)', withdraw: 'var(--surface-2)', credit: 'var(--green-light)',
+    debit: 'var(--surface-2)', trade_credit: 'var(--green-light)', trade_debit: 'var(--amber-light)',
+    fee: 'var(--surface-2)', refund: 'var(--blue-light)', bonus: 'var(--purple-light)',
+  };
+  const statusClass = { completed: 'status-done', pending: 'status-pending', failed: 'status-fail', reversed: 'status-fail' };
+  const statusLabel = { completed: 'Completed', pending: 'Pending', failed: 'Failed', reversed: 'Reversed' };
+  const isCredit = (t) => ['credit','fund','trade_credit','refund','bonus'].includes(t);
+
+  list.innerHTML = transactions.map(tx => `
+    <div class="tx-item" data-type="${isCredit(tx.type) ? 'credit' : 'debit'}">
+      <div class="tx-icon" style="background:${typeColors[tx.type] || 'var(--surface-2)'}">${typeIcons[tx.type] || '💳'}</div>
+      <div class="tx-info">
+        <div class="tx-name">${tx.description || tx.type}</div>
+        <div class="tx-meta">${timeAgo(tx.created_at)} · Ref: ${tx.reference}</div>
+      </div>
+      <div class="tx-right">
+        <div class="tx-amount ${isCredit(tx.type) ? 'credit' : 'debit'}">${isCredit(tx.type) ? '+' : '−'}${fmtNaira(tx.amount)}</div>
+        <span class="tx-status ${statusClass[tx.status] || 'status-pending'}">${statusLabel[tx.status] || tx.status}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function loadDashboardData() {
+  try {
+    const walletRes = await authedFetch('/wallet');
+    renderWallet(walletRes.data.wallet);
+    renderSummary(walletRes.data.summary);
+    renderTransactions(walletRes.data.recent_transactions);
+  } catch (err) {
+    console.error('Dashboard load error:', err);
+    document.getElementById('balance-display').textContent = '⚠️ Error';
+    document.getElementById('tx-list').innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:12px;word-break:break-all">DEBUG ERROR:<br><strong style="color:var(--red)">${err.message}</strong></div>`;
+    showToast('Could not load data', err.message || 'Please refresh the page.', '⚠️');
+  }
+}
+
+async function initNexbitAuth() {
+  try {
+    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+    supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+
+    if (!session) {
+      window.location.href = 'nexbit-auth.html';
+      return;
+    }
+
+    currentSession = session;
+
+    try {
+      const meRes = await authedFetch('/users/me');
+      renderUser(meRes.data);
+    } catch (err) {
+      console.error('User load error:', err);
+      document.getElementById('balance-display').textContent = '⚠️ Error';
+      document.getElementById('tx-list').innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:12px;word-break:break-all">DEBUG ERROR (user load):<br><strong style="color:var(--red)">${err.message}</strong></div>`;
+      return;
+    }
+
+    await loadDashboardData();
+  } catch (outerErr) {
+    console.error('Init error:', outerErr);
+    document.getElementById('balance-display').textContent = '⚠️ Error';
+    document.getElementById('tx-list').innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-3);font-size:12px;word-break:break-all">DEBUG ERROR (init):<br><strong style="color:var(--red)">${outerErr.message}</strong></div>`;
+  }
+}
+
+initNexbitAuth();
+</script>
+</body>
+</html>
