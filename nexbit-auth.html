@@ -577,7 +577,7 @@
             phone:      `${pc}${ph}`,
             country:    co,
           },
-          emailRedirectTo: `${window.location.origin}/dashboard.html`,
+          emailRedirectTo: `${window.location.origin}/nexbit-dashboard.html`,
         },
       });
 
@@ -710,7 +710,7 @@
     if (!email) return showError('login-error', 'Enter your email address first, then click "Forgot password".');
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password.html`,
+      redirectTo: `${window.location.origin}/nexbit-auth.html`,
     });
 
     if (!error) {
